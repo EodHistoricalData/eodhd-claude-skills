@@ -1,0 +1,22 @@
+{
+  "name": "eodhd-claude-skills",
+  "owner": {
+    "name": "Alex Chernyshev",
+    "email": "supportlevel1@eodhistoricaldata.com"
+  },
+  "metadata": {
+    "description": "EODHD financial data API skills for Claude Code — 72 endpoints, Python client, analysis templates",
+    "version": "0.3.5"
+  },
+  "plugins": [
+    {
+      "name": "eodhd-api",
+      "description": "Financial data skill for EODHD API — historical prices, fundamentals, options, technicals, news, sentiment, macro indicators, and more",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/eodhd-api"
+      ]
+    }
+  ]
+}
