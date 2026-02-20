@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-EODHD Claude Skills — a skill adapter enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`Enlavan/eodhd-claude-skills`).
+EODHD Claude Skills — a skill adapter enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`).
 
 The project is primarily documentation: markdown reference files covering 70+ API endpoints, general guides, and analysis workflows. It also includes a lightweight Python client and adapter configs.
 
