@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "EODHD financial data API skills for Claude Code — 72 endpoints, Python client, analysis templates",
-    "version": "0.3.5"
+    "version": "0.3.6"
   },
   "plugins": [
     {

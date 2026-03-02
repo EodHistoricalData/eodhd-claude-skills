@@ -89,6 +89,7 @@ Key partnerships include:
 
 ## Related Resources
 
+- **Subscription Plans (detailed)**: See `../subscriptions/README.md` for per-plan feature breakdowns
 - **Rate Limits**: See `rate-limits.md` for quota details
 - **Authentication**: See `authentication.md` for API key setup
 - **Pricing Page**: https://eodhd.com/pricing

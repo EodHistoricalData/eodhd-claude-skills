@@ -256,6 +256,11 @@ Each endpoint has its own documentation covering:
 - Example requests and responses
 - Common issues and solutions
 
+### Subscription Plans
+
+- **Subscriptions**: `../subscriptions/` directory — detailed per-plan feature breakdown
+- **Plans Index**: `../subscriptions/README.md` — plan comparison and choosing guide
+
 ### Other Resources
 
 - **Workflows**: `../workflows.md` - Common API usage patterns
