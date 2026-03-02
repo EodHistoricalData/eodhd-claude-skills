@@ -290,6 +290,7 @@ python eodhd_client.py --endpoint ust/real-yield-rates --filter-year 2024
 - **Rate Limits**: `references/general/rate-limits.md` - Quotas (~17 req/sec), optimization, error codes
 - **Fundamentals API**: `references/general/fundamentals-api.md` - Complete guide to company fundamentals, ETFs, funds, and indices
 - **Pricing & Plans**: `references/general/pricing-and-plans.md` - Subscription tiers, WebSocket limits, marketplace
+- **Subscription Plans**: `references/subscriptions/README.md` - Detailed per-plan feature breakdowns
 - **SDKs & Integrations**: `references/general/sdks-and-integrations.md` - Official Python/.NET/R SDKs, MCP Server, tools
 - **Versioning**: `references/general/versioning.md` - API stability guarantees, backwards-compatibility
 - **Glossary**: `references/general/glossary.md` - Financial, technical, and EODHD-specific terms
