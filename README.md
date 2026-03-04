@@ -25,7 +25,7 @@ Reusable skills and adapters for using the [EOD Historical Data (EODHD) API](htt
 
 ```bash
 # Register the marketplace
-/plugin marketplace add Enlavan/eodhd-claude-skills
+/plugin marketplace add EodHistoricalData/eodhd-claude-skills
 
 # Install the plugin
 /plugin install eodhd-api@eodhd-claude-skills
@@ -45,7 +45,7 @@ Reusable skills and adapters for using the [EOD Historical Data (EODHD) API](htt
 Clone the repository and set your API token:
 
 ```bash
-git clone https://github.com/Enlavan/eodhd-claude-skills.git
+git clone https://github.com/EodHistoricalData/eodhd-claude-skills.git
 export EODHD_API_TOKEN="your_token_here"
 ```
 
