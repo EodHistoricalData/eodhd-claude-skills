@@ -882,6 +882,10 @@ Market → EODHD Database → Your Client (query)
 
 ## Best Practices
 
+### 0. Security
+
+- **Security**: The API token is passed as a URL query parameter. Be aware that URLs may appear in server logs, proxy logs, and browser history. Do not expose WebSocket URLs in client-side code or public repositories.
+
 ### 1. Connection Management
 
 **Implement Reconnection Logic**:

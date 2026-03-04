@@ -156,7 +156,7 @@ Returns delayed quote snapshots for one or more US stock symbols. Each quote inc
 | sharesFloat | integer | Free float shares |
 | pe | float | Trailing price-to-earnings ratio |
 | forwardPE | float | Forward price-to-earnings ratio |
-| dividendYield | float | Dividend yield (percent) |
+| dividendYield | float | Dividend yield in percent (decimal form, e.g., 0.51 = 0.51%, not 51%) |
 | dividend | float | Dividend per share (TTM or latest) |
 | payoutRatio | float | Dividend payout ratio (percent) |
 | ethPrice | float | Extended hours last price (if available) |

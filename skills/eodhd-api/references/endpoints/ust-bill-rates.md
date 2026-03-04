@@ -21,6 +21,7 @@ Provides Daily Treasury Bill Rates (T-Bills): discount and coupon rates, average
 | filter[year] | No | integer | Filter by year (1900 – current year + 1). If not mentioned – current year |
 | page[limit] | No | integer | Number of records per page |
 | page[offset] | No | integer | Offset for pagination |
+| fmt | No | string | Output format: 'json' |
 
 ## Response (shape)
 

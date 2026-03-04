@@ -15,11 +15,12 @@ close and divisor plus basic metadata needed to select an index code for the
 feed endpoint.
 
 ## Parameters
-- Required:
-  - api_token: EODHD API key.
-- Optional:
-  - fmt: json or xml (default json).
-  - pagination: follow the URL in links.next until null (no manual params).
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| api_token | Yes | string | EODHD API key |
+| fmt | No | string | Output format: 'json' or 'xml' (default json) |
+| pagination | No | — | Follow the URL in links.next until null (no manual params) |
 
 ## Response (shape)
 - meta.total: integer total returned in this response.
@@ -40,6 +41,7 @@ curl "https://eodhd.com/api/cboe/indices?api_token=YOUR_API_KEY&fmt=json"
 ```
 
 ## Notes
+- **Subscription**: Available in plans that include CBOE data. Check your subscription for access.
 - API call consumption: 10 calls per request.
 - Use this endpoint to discover supported indices and the index_code for
   the detailed feed endpoint.

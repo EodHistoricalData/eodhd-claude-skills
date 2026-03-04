@@ -99,6 +99,7 @@ python eodhd_client.py --endpoint eod --symbol AAPL.US --from-date 2025-01-01 --
 
 ## Notes
 
+- **Default format is CSV**: Always pass `fmt=json` for programmatic access. Without it, the API returns CSV which is harder to parse.
 - API call consumption: 1 call per request (any length of history)
 - Symbol format: `{TICKER}.{EXCHANGE}` (e.g., `AAPL.US`, `BMW.XETRA`, `BTC-USD.CC`)
 - Free plan: Limited to 1 year of historical data

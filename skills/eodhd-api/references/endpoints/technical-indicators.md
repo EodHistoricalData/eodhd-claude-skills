@@ -1,15 +1,13 @@
-# Technical Indicators API - Complete Reference
+# Technical Indicators API
 
-**Status**: Complete
-**Source**: EODHD Technical Analysis Indicators API
-**Docs**: https://eodhd.com/financial-apis/technical-indicators-api
-**Provider**: EODHD
-**Base URL**: https://eodhd.com/api
-**Path**: /technical/{SYMBOL}
-**Method**: GET
-**Auth**: api_token (query parameter)
-
----
+Status: complete
+Source: financial-apis (Technical Indicators API)
+Docs: https://eodhd.com/financial-apis/technical-indicators-api
+Provider: EODHD
+Base URL: https://eodhd.com/api
+Path: /technical/{SYMBOL}
+Method: GET
+Auth: api_token (query)
 
 ## Overview
 

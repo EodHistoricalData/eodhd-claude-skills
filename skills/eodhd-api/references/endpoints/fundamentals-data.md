@@ -14,11 +14,13 @@ Return comprehensive fundamental data for a company including financial statemen
 valuation metrics, earnings history, dividends, and company profile information.
 
 ## Parameters
-- Required:
-  - api_token: EODHD API key
-  - {SYMBOL}: Symbol with exchange suffix (e.g., AAPL.US)
-- Optional:
-  - filter: Comma-separated list of sections to return (e.g., General,Highlights,Valuation)
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| api_token | Yes | string | EODHD API key |
+| {SYMBOL} | Yes | string | Symbol with exchange suffix (e.g., AAPL.US) |
+| filter | No | string | Comma-separated list of sections to return (e.g., General,Highlights,Valuation) |
+| fmt | No | string | Output format: 'json' or 'csv'. Defaults to 'json' |
 
 ## Response (shape)
 Large nested JSON object containing multiple sections:

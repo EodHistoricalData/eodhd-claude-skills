@@ -24,6 +24,7 @@ identifying unusual trading patterns, and fundamental analysis.
 | from | No | string (YYYY-MM-DD) | Start date for transaction data |
 | to | No | string (YYYY-MM-DD) | End date for transaction data |
 | limit | No | integer | Number of results to return. Default: 100 |
+| fmt | No | string | Output format: 'json' or 'csv'. Default: 'json' |
 
 ## Response (shape)
 

@@ -19,6 +19,9 @@ Provides long-term Treasury rates. This feed combines "Daily Treasury Real Long-
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
 | filter[year] | No | integer | Filter by year (1900 – current year + 1). If not mentioned – current year |
+| page[limit] | No | integer | Number of results per page |
+| page[offset] | No | integer | Pagination offset |
+| fmt | No | string | Output format: 'json' |
 
 ## Response (shape)
 

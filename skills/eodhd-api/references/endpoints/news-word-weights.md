@@ -78,7 +78,7 @@ longer response times. If you encounter timeouts, narrow the date range or focus
 
 ```bash
 # Top 10 words for AAPL over a week
-curl "https://eodhd.com/api/news-word-weights?s=AAPL&filter[date_from]=2025-04-08&filter[date_to]=2025-04-16&page[limit]=10&api_token=demo&fmt=json"
+curl "https://eodhd.com/api/news-word-weights?s=AAPL.US&filter[date_from]=2025-04-08&filter[date_to]=2025-04-16&page[limit]=10&api_token=demo&fmt=json"
 
 # Top 20 words for TSLA over a month
 curl "https://eodhd.com/api/news-word-weights?s=TSLA.US&filter[date_from]=2025-01-01&filter[date_to]=2025-01-31&page[limit]=20&api_token=demo&fmt=json"
@@ -132,7 +132,7 @@ curl "https://eodhd.com/api/news-word-weights?s=BTC-USD.CC&filter[date_from]=202
 ### Extract top themes with jq
 ```bash
 # Get top 5 words
-curl "https://eodhd.com/api/news-word-weights?s=AAPL&filter[date_from]=2025-01-01&filter[date_to]=2025-01-31&page[limit]=5&api_token=demo&fmt=json" | jq '.data'
+curl "https://eodhd.com/api/news-word-weights?s=AAPL.US&filter[date_from]=2025-01-01&filter[date_to]=2025-01-31&page[limit]=5&api_token=demo&fmt=json" | jq '.data'
 
 # Get metadata
 curl "..." | jq '.meta'
@@ -140,8 +140,8 @@ curl "..." | jq '.meta'
 
 ### Compare themes across stocks
 ```bash
-# Compare AAPL vs MSFT word weights for same period
-for ticker in AAPL MSFT; do
+# Compare AAPL.US vs MSFT.US word weights for same period
+for ticker in AAPL.US MSFT.US; do
   echo "=== $ticker ==="
   curl -s "https://eodhd.com/api/news-word-weights?s=$ticker&filter[date_from]=2025-01-01&filter[date_to]=2025-01-15&page[limit]=10&api_token=demo&fmt=json" | jq '.data'
 done

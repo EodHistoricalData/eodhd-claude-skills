@@ -40,9 +40,9 @@ For dividend details, navigate to the Corporate Actions: Splits and Dividends AP
     "date_eq": null
   },
   "data": [
-    { "date": "2025-08-11", "symbol": "AAPL.US" },
-    { "date": "2025-05-12", "symbol": "AAPL.US" },
-    { "date": "2025-02-10", "symbol": "AAPL.US" }
+    { "date": "2025-08-11", "symbol": "AAPL.US", "amount": 0.25, "currency": "USD" },
+    { "date": "2025-05-12", "symbol": "AAPL.US", "amount": 0.25, "currency": "USD" },
+    { "date": "2025-02-10", "symbol": "AAPL.US", "amount": 0.25, "currency": "USD" }
   ],
   "links": {
     "next": null
@@ -70,6 +70,8 @@ Each item in the data array:
 |-------|------|-------------|
 | date | string (YYYY-MM-DD) | Dividend date |
 | symbol | string | Ticker |
+| amount | number | Dividend amount per share (split-adjusted) |
+| currency | string | Dividend currency (ISO Alpha-3, e.g. USD) |
 
 **Links object:**
 

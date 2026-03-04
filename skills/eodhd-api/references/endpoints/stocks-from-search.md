@@ -51,7 +51,12 @@ Available in: **All-In-One**, **EOD Historical Data — All World**, **EOD+Intra
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `api_token` | string | Your API key |
-| `fmt` | string | Response format. Use `json` |
+
+### Query (format)
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `fmt` | string | `json` | Response format. Use `json` |
 
 ### Query (optional)
 

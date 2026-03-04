@@ -101,7 +101,7 @@ python eodhd_client.py --endpoint news --symbol TSLA.US --from-date 2025-01-01 -
 
 ## Available Tags
 
-### Standard Tags (50)
+### Standard Tags (53)
 
 `balance sheet`, `capital employed`, `class action`, `company announcement`, `consensus eps estimate`,
 `consensus estimate`, `credit rating`, `discounted cash flow`, `dividend payments`, `earnings estimate`,

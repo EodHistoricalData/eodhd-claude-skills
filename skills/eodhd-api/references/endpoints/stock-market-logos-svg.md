@@ -145,6 +145,7 @@ For PNG logos covering 60+ exchanges, see the standard Stock Market Logos API (s
 
 ## Notes
 
+- **URL path**: This endpoint uses `/logo-svg/` (not `/mp/` like other Marketplace products).
 - **Marketplace product**: Requires a separate Unicorn Data Services marketplace subscription, not included in main EODHD plans.
 - **SVG response**: Unlike most EODHD endpoints that return JSON, this endpoint returns an SVG XML document. Use text mode for writing (not binary).
 - **Limited exchange coverage**: SVG format is only available for US and TO exchanges. For other exchanges, use the PNG endpoint (`/logo/{symbol}`).

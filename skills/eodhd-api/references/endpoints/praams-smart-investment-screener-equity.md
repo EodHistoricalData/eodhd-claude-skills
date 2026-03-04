@@ -365,6 +365,7 @@ See the full list of 100+ country codes in the API documentation. Common example
 - **Pagination**: Use `skip` and `take` query parameters. The response `totalCount` tells you how many total matches exist. For example, with `totalCount: 71`, you can page through with `skip=0&take=20`, `skip=20&take=20`, etc.
 - **Coverage**: Stocks from US, UK, Europe, China, India, Middle East, Asia & Oceania, LatAm, and Africa, including small & micro-caps.
 - **Currency filter**: Uses ISO Alpha-3 currency codes (e.g. `"USD"`, `"EUR"`, `"CNY"`).
+- **Scoring scales**: Filter parameters accept values 1-7 (risk tolerance/investment preference), while response `ratio` values are on a 1-10 scale (composite scoring). These are different scales serving different purposes.
 - **Related endpoint**: Use `/explore/bond` for bond screening (see praams-smart-investment-screener-bond.md).
 
 ## HTTP Status Codes

@@ -14,13 +14,14 @@ Return real-time (delayed 15-20 minutes for most exchanges) quote data
 for a symbol including last price, change, volume, and trading range.
 
 ## Parameters
-- Required:
-  - api_token: EODHD API key
-  - {SYMBOL}: Symbol with exchange suffix (e.g., AAPL.US)
-- Optional:
-  - fmt: csv or json (default csv)
-  - s: Additional symbols for batch request (comma-separated)
-  - ex: Set to `US` to fetch aggregated live data for all U.S. exchanges in a single request (consumes 100 API calls)
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| api_token | Yes | string | EODHD API key |
+| {SYMBOL} | Yes | string | Symbol with exchange suffix (e.g., AAPL.US) |
+| fmt | No | string | Output format: 'csv' or 'json' (default csv) |
+| s | No | string | Additional symbols for batch request (comma-separated) |
+| ex | No | string | Set to `US` to fetch aggregated live data for all U.S. exchanges in a single request (consumes 100 API calls) |
 
 ## Response (shape)
 Single quote object or array for batch requests:

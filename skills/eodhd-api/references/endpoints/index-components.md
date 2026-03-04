@@ -119,6 +119,7 @@ curl "https://eodhd.com/api/mp/unicornbay/spglobal/comp/GSPC.INDX?fmt=json&api_t
 ```
 
 ## Notes
+- **Note**: This endpoint may return `401 Unauthorized` and `404 Not Found` in addition to the standard `402`/`403` codes used by most other endpoints.
 - This is a Marketplace product: 1 API request = 10 API calls.
 - Limits: 100,000 API calls per 24 hours; 1,000 API requests per minute.
 - Only JSON format is supported.
