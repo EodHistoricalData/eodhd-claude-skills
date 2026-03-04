@@ -4,7 +4,7 @@
 
 Skill adapter enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.3.6**.
 
-Primarily documentation: markdown reference files covering 73 API endpoints, 29 general guides, 8 subscription plans, analysis workflows, and a lightweight Python client.
+Primarily documentation: markdown reference files covering 72 API endpoints, 29 general guides, 8 subscription plans, analysis workflows, and a lightweight Python client.
 
 ## File Structure
 
@@ -15,7 +15,7 @@ skills/eodhd-api/
   SKILL.md                      # Skill definition — triggers, workflow, supported endpoints
   references/
     general/                    # 29 general guides (symbol format, exchanges, rate limits, etc.)
-    endpoints/                  # 73 individual endpoint docs (one .md per endpoint)
+    endpoints/                  # 72 individual endpoint docs (one .md per endpoint)
     subscriptions/              # 8 subscription plan docs (free → all-in-one-extended)
     workflows.md                # 4 analysis workflow patterns
   scripts/
@@ -49,7 +49,7 @@ adapters/
 |---------|-------------|-------------|
 | Plugin distribution | Claude Code plugin system installation | `.claude-plugin/marketplace.json` |
 | API client | 30+ endpoint Python CLI (stdlib-only, JSON stdout) | `skills/eodhd-api/scripts/eodhd_client.py` |
-| Endpoint reference | 73 individual endpoint docs with params/response/examples | `skills/eodhd-api/references/endpoints/README.md` |
+| Endpoint reference | 72 individual endpoint docs with params/response/examples | `skills/eodhd-api/references/endpoints/README.md` |
 | General guides | Auth, symbol format, exchanges, rate limits, fundamentals | `skills/eodhd-api/references/general/README.md` |
 | Analysis workflows | Historical+fundamentals, screener, event window, macro overlay | `skills/eodhd-api/references/workflows.md` |
 | Multi-agent adapters | Claude and Codex environment setup guides | `adapters/` |

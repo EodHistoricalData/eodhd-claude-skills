@@ -48,6 +48,8 @@ Use this skill whenever the user's task involves **financial data, markets, inve
 - Trading hours, market status, and market holidays (from EODHD Marketplace — TradingHours)
 - Company logos and branding assets
 
+> **Note:** Marketplace endpoints (options, ESG/Investverte, PRAAMS, Illio, TradingHours, tick data) are not supported by the Python client. Use curl per the endpoint docs in `references/endpoints/`.
+
 ### Building financial tools and applications
 Activate this skill when the user is **programming or designing** any of:
 - **Stock screeners / scanners** — filtering stocks by P/E, market cap, sector, growth, dividends, etc.
@@ -109,7 +111,7 @@ Activate this skill when the user is performing or asking for:
    - Determine output format (tables, charts, summary)
 
 2. **Select endpoint(s)**
-   - Reference `references/endpoints.md` or `references/endpoints/` for endpoint specs
+   - Reference `references/endpoints/README.md` or individual files in `references/endpoints/` for endpoint specs
    - Choose minimal set of endpoints to satisfy the request
    - Consider endpoint-specific parameters
 
@@ -143,7 +145,7 @@ Activate this skill when the user is performing or asking for:
 | `fundamentals` | Company data | `--symbol` |
 | `news` | Financial news with sentiment | `--symbol`, `--limit`, `--from-date` |
 | `sentiment` | Daily sentiment scores | `--symbol`, `--from-date`, `--to-date` |
-| `news-word-weights` | Trending topics in news | `--symbol`, `--from-date`, `--to-date`, `--limit` |
+| `news-word-weights` | Trending topics in news (AI-processed, higher latency) | `--symbol`, `--from-date`, `--to-date`, `--limit` |
 | `technical` | Technical indicators | `--symbol`, `--function`, `--period` |
 | `dividends` | Dividend history | `--symbol` |
 | `splits` | Stock splits | `--symbol` |
@@ -153,21 +155,25 @@ Activate this skill when the user is performing or asking for:
 | `calendar/trends` | Earnings trends | `--symbol` (comma-separated) |
 | `calendar/ipos` | IPO calendar | `--from-date`, `--to-date` |
 | `calendar/splits` | Stock splits calendar | `--from-date`, `--to-date` or `--symbol` |
-| `calendar/dividends` | Dividends calendar | `--symbol` |
+| `calendar/dividends` | Dividends calendar | `--symbol`, `--from-date`, `--to-date`, `--limit`, `--offset` |
 | `economic-events` | Economic events | `--from-date`, `--to-date` |
 | `insider-transactions` | Insider trading activity | `--symbol`, `--from-date`, `--to-date`, `--limit` |
 | `exchange-symbol-list` | Exchange tickers | `--symbol` (exchange code) |
 | `exchanges-list` | All exchanges | (no symbol needed) |
+| `exchanges-details` | Exchange details + trading hours + holidays | `--symbol` (exchange code) |
 | `eod-bulk-last-day` | Bulk EOD data | `--symbol` (exchange code) |
 | `bulk-fundamentals` | Bulk fundamentals for exchange | `--symbol` (exchange code), `--symbols`, `--limit`, `--offset`, `--version` |
+| `index-components` | Index constituents + historical membership | `--symbol` (index ID, e.g. `GSPC.INDX`) |
 | `user` | Account details and API usage | (no parameters needed) |
-| `us-quote-delayed` | US extended quotes (Live v2) | `--symbol` (comma-separated for batch) |
-| `ust/bill-rates` | US Treasury Bill Rates | `--filter-year` |
-| `ust/long-term-rates` | US Treasury Long-Term Rates | `--filter-year` |
-| `ust/yield-rates` | US Treasury Par Yield Curve Rates | `--filter-year` |
-| `ust/real-yield-rates` | US Treasury Par Real Yield Curve Rates | `--filter-year` |
+| `us-quote-delayed` | US extended quotes (Live v2) | `--symbol` (comma-separated for batch), `--limit`, `--offset` |
+| `ust/bill-rates` | US Treasury Bill Rates | `--filter-year`, `--limit`, `--offset` |
+| `ust/long-term-rates` | US Treasury Long-Term Rates | `--filter-year`, `--limit`, `--offset` |
+| `ust/yield-rates` | US Treasury Par Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
+| `ust/real-yield-rates` | US Treasury Par Real Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
 
-**API call costs**: Most endpoints cost 1 call. `technical` and `intraday` cost 5 calls. `fundamentals` costs 10 calls. News-related endpoints (`news`, `sentiment`, `news-word-weights`) cost 5 calls + 5 per ticker. Bulk endpoints cost 100 calls (+ N symbols if `--symbols` used). See `references/general/rate-limits.md` for full details.
+> The table above covers Python client support only. An additional 40+ endpoints (Marketplace: options, ESG/Investverte, PRAAMS, Illio, TradingHours, tick data, logos, search, WebSockets, etc.) are documented in `references/endpoints/` and require curl or manual HTTP calls. See `references/endpoints/README.md` for the full index.
+
+**API call costs**: Most endpoints cost 1 call. `technical` and `intraday` cost 5 calls. `fundamentals` costs 10 calls. News-related endpoints (`news`, `sentiment`, `news-word-weights`) cost 5 calls + 5 per ticker. Bulk endpoints cost 100 calls (+ N symbols if `--symbols` used). Marketplace endpoints (options, ESG, PRAAMS, Illio, index-components, tick data) typically cost 10 calls per request. See `references/general/rate-limits.md` for full details.
 
 ## Output requirements
 
@@ -188,6 +194,10 @@ Activate this skill when the user is performing or asking for:
 - **Handle errors gracefully**: provide actionable error messages
 - **Warn on large requests**: ask for confirmation before broad multi-exchange pulls
 - **Protect the API key**: never echo or print the token in plain text to the user. Always redact it in example commands (`EODHD_API_TOKEN=***`). If the user suspects their key is compromised, prompt them to supply a new one and re-export it
+- **Disclaim on advice**: when providing investment recommendations or analysis that could be interpreted as advice, include "This is not financial advice. Data is for informational purposes only."
+- **Warn on stale data**: for real-time/intraday endpoints outside US market hours or on weekends/holidays, note that data may be delayed or from a prior session
+- **Check Marketplace access**: before calling Marketplace endpoints (options, ESG, PRAAMS, Illio, TradingHours, tick data), warn that these require specific subscription tiers and consume 10+ API calls per request
+- **Note currency context**: prices are in local exchange currency, not always USD — mention this when presenting data from non-US exchanges
 
 ## Common patterns
 
@@ -296,7 +306,7 @@ python eodhd_client.py --endpoint ust/real-yield-rates --filter-year 2024
 - **Glossary**: `references/general/glossary.md` - Financial, technical, and EODHD-specific terms
 
 ### Endpoint Documentation
-- **Endpoint catalog**: `references/endpoints.md` - Overview of all endpoints
+- **Endpoint catalog**: `references/endpoints/README.md` - Overview of all endpoints
 - **Individual endpoint docs**: `references/endpoints/*.md` - Detailed specs per endpoint
 - **Analysis workflows**: `references/workflows.md` - Common usage patterns
 - **Output template**: `templates/analysis_report.md` - Structured report format
