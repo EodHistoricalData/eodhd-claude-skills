@@ -14,14 +14,15 @@ Screen and filter stocks based on fundamental metrics, market cap, sector, excha
 and other criteria. Returns a list of matching symbols with key metrics.
 
 ## Parameters
-- Required:
-  - api_token: EODHD API key
-- Optional:
-  - sort: Field to sort by (e.g., market_capitalization, name)
-  - order: Sort order: a (ascending) or d (descending)
-  - limit: Number of results (default 50, max 100)
-  - offset: Pagination offset
-  - filters: JSON array of filter conditions (see below)
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| api_token | Yes | string | EODHD API key |
+| sort | No | string | Field to sort by (e.g., market_capitalization, name) |
+| order | No | string | Sort order: 'a' (ascending) or 'd' (descending) |
+| limit | No | integer | Number of results (default 50, max 100) |
+| offset | No | integer | Pagination offset |
+| filters | No | string | JSON array of filter conditions (see below) |
 
 ## Filter Syntax
 Filters are passed as a JSON array with field, operation, and value:

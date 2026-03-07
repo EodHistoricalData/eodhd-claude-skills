@@ -105,27 +105,27 @@ Download fundamental data for hundreds of companies in a single request. Returns
         "epsDifference": 0.17,
         "surprisePercent": 6.367
       },
-      "Last_1": { "..." : "..." },
-      "Last_2": { "..." : "..." },
-      "Last_3": { "..." : "..." }
+      "Last_1": { "reportDate": "2025-10-30", "date": "2025-09-30", "epsActual": 1.64, "epsEstimate": 1.60, "epsDifference": 0.04, "surprisePercent": 2.5 },
+      "Last_2": { "reportDate": "2025-07-31", "date": "2025-06-30", "epsActual": 1.40, "epsEstimate": 1.35, "epsDifference": 0.05, "surprisePercent": 3.7 },
+      "Last_3": { "reportDate": "2025-05-01", "date": "2025-03-31", "epsActual": 1.65, "epsEstimate": 1.62, "epsDifference": 0.03, "surprisePercent": 1.85 }
     },
     "Financials": {
       "Balance_Sheet": {
         "currency_symbol": "USD",
-        "quarterly_last_0": { "date": "2025-12-31", "totalAssets": "379297000000.00", "..." : "..." },
-        "quarterly_last_1": { "..." : "..." },
-        "quarterly_last_2": { "..." : "..." },
-        "quarterly_last_3": { "..." : "..." },
-        "yearly_last_0": { "..." : "..." },
-        "yearly_last_1": { "..." : "..." },
-        "yearly_last_2": { "..." : "..." },
-        "yearly_last_3": { "..." : "..." }
+        "quarterly_last_0": { "date": "2025-12-31", "totalAssets": "379297000000.00", "totalLiab": "302083000000.00" },
+        "quarterly_last_1": { "date": "2025-09-30", "totalAssets": "364980000000.00", "totalLiab": "290437000000.00" },
+        "quarterly_last_2": { "date": "2025-06-30", "totalAssets": "352583000000.00", "totalLiab": "279414000000.00" },
+        "quarterly_last_3": { "date": "2025-03-31", "totalAssets": "337411000000.00", "totalLiab": "268158000000.00" },
+        "yearly_last_0": { "date": "2025-09-30", "totalAssets": "364980000000.00", "totalLiab": "290437000000.00" },
+        "yearly_last_1": { "date": "2024-09-30", "totalAssets": "352583000000.00", "totalLiab": "279414000000.00" },
+        "yearly_last_2": { "date": "2023-09-30", "totalAssets": "337411000000.00", "totalLiab": "268158000000.00" },
+        "yearly_last_3": { "date": "2022-09-30", "totalAssets": "352755000000.00", "totalLiab": "302083000000.00" }
       },
-      "Cash_Flow": { "..." : "..." },
-      "Income_Statement": { "..." : "..." }
+      "Cash_Flow": { "currency_symbol": "USD", "quarterly_last_0": { "date": "2025-12-31", "totalCashFromOperatingActivities": "39895000000.00" } },
+      "Income_Statement": { "currency_symbol": "USD", "quarterly_last_0": { "date": "2025-12-31", "totalRevenue": "124300000000.00" } }
     }
   },
-  "1": { "..." : "..." }
+  "1": { "General": { "Code": "MSFT", "Name": "Microsoft Corporation" } }
 }
 ```
 

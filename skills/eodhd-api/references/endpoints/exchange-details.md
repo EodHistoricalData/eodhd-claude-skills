@@ -24,7 +24,7 @@ Get detailed information about a specific exchange, including:
 ## Plans & API Calls
 
 - **Available in**: All-In-One, EOD+Intraday — All World Extended plans
-- **API call consumption**: 5 API calls per ticker (per request)
+- **API call consumption**: 5 API calls per request
 
 ## Parameters
 
@@ -163,6 +163,7 @@ for key, holiday in data['ExchangeHolidays'].items():
 
 ## Notes
 
+- **Default format is CSV**: Always pass `fmt=json` for programmatic access. Without it, the API returns CSV which is harder to parse.
 - Exchange holidays default to 6 months back and 6 months forward from the current date
 - Use `from` and `to` parameters to query historical or future holiday data
 - Holiday types: `official` (exchange fully closed) and `bank` (varies by country)

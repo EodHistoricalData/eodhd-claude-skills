@@ -14,13 +14,14 @@ Return detailed index feed data for a single CBOE index on a specific date and
 feed type, including index-level fields and full component composition.
 
 ## Parameters
-- Required:
-  - filter[index_code]: CBOE index code (e.g., BAT20N).
-  - filter[feed_type]: feed type (e.g., snapshot_official_closing).
-  - filter[date]: YYYY-MM-DD.
-  - api_token: EODHD API key.
-- Optional:
-  - fmt: json or xml (default json).
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| filter[index_code] | Yes | string | CBOE index code (e.g., BAT20N) |
+| filter[feed_type] | Yes | string | Feed type (e.g., snapshot_official_closing) |
+| filter[date] | Yes | string | Date in YYYY-MM-DD format |
+| api_token | Yes | string | EODHD API key |
+| fmt | No | string | Output format: 'json' or 'xml' (default json) |
 
 ## Response (shape)
 - meta.total: integer (usually 1).
@@ -65,6 +66,7 @@ curl "https://eodhd.com/api/cboe/index?filter[index_code]=BDE30P&filter[feed_typ
 ```
 
 ## Notes
+- **Subscription**: Available in plans that include CBOE data. Check your subscription for access.
 - API call consumption: 10 calls per request.
 - Use `/cboe/indices` first to discover supported index_code values.
 

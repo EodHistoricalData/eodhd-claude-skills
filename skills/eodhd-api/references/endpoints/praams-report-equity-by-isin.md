@@ -2,7 +2,7 @@
 
 Status: complete
 Source: marketplace (PRAAMS API)
-Docs: https://eodhd.com/marketplace/unicornbay/options/docs
+Docs: https://eodhd.com/marketplace/unicornbay/praams/docs
 Provider: PRAAMS via EODHD Marketplace
 Base URL: `https://eodhd.com/api/mp/praams`
 Path: `/reports/equity/isin/{isin}`

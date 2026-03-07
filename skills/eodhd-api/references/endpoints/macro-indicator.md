@@ -14,12 +14,13 @@ Retrieve macroeconomic indicators for countries including GDP, inflation, unempl
 interest rates, trade balance, and other economic metrics from sources like the World Bank.
 
 ## Parameters
-- Required:
-  - api_token: EODHD API key
-  - {COUNTRY}: ISO 3166-1 alpha-3 country code (e.g., USA, GBR, DEU, JPN, CHN)
-- Optional:
-  - indicator: Specific indicator code (see list below)
-  - fmt: csv or json (default csv)
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| api_token | Yes | string | EODHD API key |
+| {COUNTRY} | Yes | string | ISO 3166-1 alpha-3 country code (e.g., USA, GBR, DEU, JPN, CHN) |
+| indicator | No | string | Specific indicator code (see list below) |
+| fmt | No | string | Output format: 'csv' or 'json' (default csv) |
 
 ## Common Indicators
 | Code | Description |
@@ -52,14 +53,18 @@ Array of time-series data points:
 ]
 ```
 
-When no specific indicator is provided, returns all available indicators:
+When no specific indicator is provided, returns all available indicators as an object with arrays per indicator:
 ```json
 {
   "CountryCode": "USA",
   "CountryName": "United States",
-  "gdp_current_usd": [...],
-  "inflation_consumer_prices_annual": [...],
-  ...
+  "gdp_current_usd": [
+    {"CountryCode": "USA", "Date": "2023-12-31", "Period": "2023", "Value": 25462700000000},
+    {"CountryCode": "USA", "Date": "2022-12-31", "Period": "2022", "Value": 25744100000000}
+  ],
+  "inflation_consumer_prices_annual": [
+    {"CountryCode": "USA", "Date": "2023-12-31", "Period": "2023", "Value": 4.1178}
+  ]
 }
 ```
 

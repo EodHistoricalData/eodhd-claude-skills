@@ -133,6 +133,7 @@ AS, AT, AU, BA, BK, BR, BSE, CN, CO, CSE, DU, F, HE, HK, HM, IC, IR, IS, JK, JSE
 
 ## Notes
 
+- **URL path**: This endpoint uses `/logo/` (not `/mp/` like other Marketplace products).
 - **Marketplace product**: Requires a separate Unicorn Data Services marketplace subscription, not included in main EODHD plans.
 - **PNG response**: Unlike most EODHD endpoints that return JSON, this endpoint returns a binary PNG image. Use appropriate file handling (binary write mode).
 - **Image format**: All logos are 200x200px PNG files with transparency.

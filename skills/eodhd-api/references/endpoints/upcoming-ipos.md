@@ -20,8 +20,8 @@ Data available from January 2015 and up to 2-3 weeks into the future.
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| from | No | string (YYYY-MM-DD) | Start date of the query window. Default: today. This parameter uses start of a trade |
-| to | No | string (YYYY-MM-DD) | End date of the query window. Default: today + 7 days. This parameter uses start of a trade |
+| from | No | string (YYYY-MM-DD) | Start date for data retrieval (YYYY-MM-DD). Default: today |
+| to | No | string (YYYY-MM-DD) | End date for data retrieval (YYYY-MM-DD). Default: today + 7 days |
 | fmt | No | string | json or csv (default) |
 
 ## Response (shape)
@@ -109,6 +109,7 @@ python eodhd_client.py --endpoint calendar/ipos --from-date 2026-02-10 --to-date
 
 ## Notes
 
+- **Default format is CSV**: Always pass `fmt=json` for programmatic access. Without it, the API returns CSV which is harder to parse.
 - Numbers may be 0 when the value is unknown or not yet set (for example before pricing)
 - `start_date` may be null for filings without a scheduled first trading date
 - Use `deal_type` to track lifecycle changes (for example, Amended or Priced updates)

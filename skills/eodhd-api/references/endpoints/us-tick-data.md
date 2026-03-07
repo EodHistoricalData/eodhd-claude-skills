@@ -21,8 +21,8 @@ high-frequency analysis, market microstructure research, and detailed intraday p
 |-----------|----------|------|-------------|
 | {SYMBOL} | Yes | path | Ticker symbol with exchange suffix (e.g., 'AAPL.US') |
 | api_token | Yes | string | Your API key for authentication |
-| from | No | integer/string | Start time (Unix timestamp) or date (YYYY-MM-DD) |
-| to | No | integer/string | End time (Unix timestamp) or date (YYYY-MM-DD) |
+| from | No | integer/string | Start time as Unix timestamp in seconds, or date (YYYY-MM-DD) |
+| to | No | integer/string | End time as Unix timestamp in seconds, or date (YYYY-MM-DD) |
 | limit | No | integer | Number of ticks to return. Default: 100, Max: 10000 |
 | fmt | No | string | Output format: 'json' or 'csv'. Default: 'json' |
 
@@ -35,21 +35,30 @@ high-frequency analysis, market microstructure research, and detailed intraday p
     "gmtoffset": -18000,
     "datetime": "2025-01-10 09:30:00",
     "price": 185.25,
-    "volume": 500
+    "volume": 500,
+    "mkt": "Q",
+    "sl": "@",
+    "seq": 1
   },
   {
     "timestamp": 1704888001,
     "gmtoffset": -18000,
     "datetime": "2025-01-10 09:30:01",
     "price": 185.30,
-    "volume": 200
+    "volume": 200,
+    "mkt": "T",
+    "sl": " ",
+    "seq": 2
   },
   {
     "timestamp": 1704888002,
     "gmtoffset": -18000,
     "datetime": "2025-01-10 09:30:02",
     "price": 185.28,
-    "volume": 1000
+    "volume": 1000,
+    "mkt": "D",
+    "sl": "T",
+    "seq": 3
   }
 ]
 ```
@@ -63,6 +72,9 @@ high-frequency analysis, market microstructure research, and detailed intraday p
 | datetime | string | Human-readable datetime (YYYY-MM-DD HH:MM:SS) |
 | price | number | Trade execution price |
 | volume | integer | Number of shares traded |
+| mkt | string | Market center code (see market center table below). `D` = dark pool |
+| sl | string | Sale condition code (exchange-specific trade condition flags) |
+| seq | integer | Sequence number for ordering ticks within the same timestamp |
 
 ## Example Requests
 

@@ -20,7 +20,7 @@ Data available from January 2015 to several months into the future. For full his
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| symbols | No | string | Ticker in EODHD format (e.g., TSLA.US) |
+| symbols | No | string | Comma-separated list of tickers in EODHD format (e.g., TSLA.US or TSLA.US,AAPL.US) |
 | from | Conditional | string (YYYY-MM-DD) | Start of the calendar window. Required if symbols not provided |
 | to | Conditional | string (YYYY-MM-DD) | End of the calendar window. Required if symbols not provided |
 | fmt | No | string | json or csv (default) |
@@ -102,6 +102,7 @@ python eodhd_client.py --endpoint calendar/splits --symbols TSLA.US --from-date 
 
 ## Notes
 
+- **Default format is CSV**: Always pass `fmt=json` for programmatic access. Without it, the API returns CSV which is harder to parse.
 - Forward splits (new_shares > old_shares) are more common for high-priced stocks
 - Reverse splits (new_shares < old_shares) often indicate struggling companies trying to meet exchange listing requirements
 - Historical prices are typically split-adjusted automatically in EOD data

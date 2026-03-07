@@ -144,6 +144,8 @@ curl "https://eodhd.com/api/mp/illio/chapters/volume/SnP500?api_token=demo"
 - **Supported indices**: S&P 500 (`SnP500`), Dow Jones (`DJI`), Nasdaq-100 (`NDX`).
 - **Disclaimer**: Data does not constitute financial advice or investment recommendations.
 
+> **Note**: Despite the filename, this endpoint serves volume data (path: `/volume/`), not volatility data.
+
 ## HTTP Status Codes
 
 | Status Code | Meaning | Description |

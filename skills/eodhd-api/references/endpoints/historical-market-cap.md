@@ -123,6 +123,7 @@ for key, entry in data.items():
 
 ## Notes
 
+- **Response format**: Returns an object keyed by index (e.g., `{"0": {...}, "1": {...}}`), not an array. Iterate over values or convert to a list.
 - **Weekly data** — not daily. Typically one point per week on Thursday/Friday
 - **US only** — NYSE and NASDAQ. International stocks not currently supported
 - **Values in raw USD** — divide by `1e9` for billions, `1e12` for trillions

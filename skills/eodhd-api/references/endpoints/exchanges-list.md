@@ -2,7 +2,7 @@
 
 Status: complete
 Source: financial-apis (Exchanges API)
-Docs: https://eodhd.com/financial-apis/exchanges-api-list-of-tickers-and-டrading-hours
+Docs: https://eodhd.com/financial-apis/exchanges-api-list-of-tickers-and-trading-hours
 Provider: EODHD
 Base URL: https://eodhd.com/api
 Path: /exchanges-list

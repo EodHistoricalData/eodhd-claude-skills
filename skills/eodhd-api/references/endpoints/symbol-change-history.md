@@ -120,6 +120,7 @@ for change in changes:
 
 ## Notes
 
+- **Default format is CSV**: Always pass `fmt=json` for programmatic access. Without it, the API returns CSV which is harder to parse.
 - History starts from **2022-07-22** — no data available before this date
 - **US exchanges only** — other exchanges are planned
 - Updated daily

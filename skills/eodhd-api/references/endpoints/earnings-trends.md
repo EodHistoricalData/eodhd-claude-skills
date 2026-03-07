@@ -122,6 +122,7 @@ python eodhd_client.py --endpoint calendar/trends --symbols F.US,AI.PA
 - Each symbol gets its own array in the `trends` array
 - Period values: 0q (current quarter), +1q (next quarter), 0y (current fiscal year), +1y (next fiscal year)
 - All numeric values are returned as stringified numbers
+- **Field naming**: `revenueEstimateYearAgoEps` is named as-is in the upstream API response (the `Eps` suffix is a known misnomer)
 - API call consumption: 1 call per request
 
 ## HTTP Status Codes

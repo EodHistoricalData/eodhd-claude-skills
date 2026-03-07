@@ -103,6 +103,7 @@ python eodhd_client.py --endpoint calendar/earnings --from-date 2026-02-10 --to-
 
 ## Notes
 
+- **Default format is CSV**: Always pass `fmt=json` for programmatic access. Without it, the API returns CSV which is harder to parse.
 - Without dates, default window is "today +7 days"
 - When using `symbols` parameter, `from` and `to` parameters are ignored
 - `before_after_market` indicates when earnings are released relative to market hours

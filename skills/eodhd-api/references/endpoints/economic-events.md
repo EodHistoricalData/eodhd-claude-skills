@@ -26,6 +26,7 @@ inflation reports, and central bank decisions. Useful for macro analysis and eve
 | comparison | No | string | Comparison type: 'mom' (month-over-month), 'qoq' (quarter-over-quarter), 'yoy' (year-over-year) |
 | offset | No | integer | Data offset (0-1000). Default: 0 |
 | limit | No | integer | Number of results (0-1000). Default: 50 |
+| fmt | No | string | Output format: 'json' or 'csv'. Default: 'json' |
 
 ## Response (shape)
 
@@ -84,6 +85,38 @@ Array of economic event objects:
 - Housing: Existing Home Sales, Building Permits, Housing Starts
 - Central Bank: Fed Interest Rate Decision, ECB Rate Decision
 
+## Example Requests
+
+```bash
+# Economic events for the next week
+curl "https://eodhd.com/api/economic-events?api_token=demo&fmt=json"
+
+# US events for specific date range
+curl "https://eodhd.com/api/economic-events?country=US&from=2025-01-01&to=2025-01-31&api_token=demo&fmt=json"
+
+# Year-over-year comparisons only
+curl "https://eodhd.com/api/economic-events?comparison=yoy&limit=20&api_token=demo&fmt=json"
+
+# German events with pagination
+curl "https://eodhd.com/api/economic-events?country=DE&limit=50&offset=0&api_token=demo&fmt=json"
+
+# Using the helper client
+python eodhd_client.py --endpoint economic-events --from-date 2025-01-01 --to-date 2025-01-31
+```
+
+## Notes
+
+- `actual` is null for upcoming events not yet released
+- Times are in the format 'YYYY-MM-DD HH:MM:SS' (typically UTC)
+- Country codes use ISO 3166-1 alpha-2 (US, GB, DE, JP, CN, etc.)
+- Use `comparison` filter to get only specific comparison types
+- Maximum 1000 results per request; use offset for pagination
+- API call consumption: 1 call per request
+- **Timezone**: All event timestamps are in **UTC**.
+- **From/to parameters and limit**: By default, the API returns only 50 events per response. To access older events, use the `&limit=` parameter and specify `from` and `to` dates precisely. For example, to retrieve events from the year 2020, use both `&from=2020-01-01&to=2020-12-31` along with an appropriate limit.
+- **Offset beyond 1000**: If the maximum offset of 1000 is not enough, use the `from` and `to` parameters in conjunction with `offset` to paginate deeper into history by narrowing the date range.
+- **Data depth**: Economic events data is available from **2020** onwards.
+
 ## Federal Reserve Interest Rate Events
 
 ### Overview
@@ -103,13 +136,13 @@ Array of economic event objects:
 **Filter by Type**:
 ```bash
 # Get recent Fed rate decisions
-curl "https://eodhd.com/api/economic-events?country=US&from=2023-01-01&to=2024-12-31&api_token=YOUR_API_KEY&fmt=json" | jq '.[] | select(.type | contains("Fed Interest Rate"))'
+curl "https://eodhd.com/api/economic-events?country=US&from=2023-01-01&to=2024-12-31&api_token=demo&fmt=json" | jq '.[] | select(.type | contains("Fed Interest Rate"))'
 ```
 
 **Search by Date Range** (FOMC meeting dates):
 ```bash
 # Get Fed events for specific date range
-curl "https://eodhd.com/api/economic-events?country=US&from=2024-01-01&to=2024-12-31&api_token=YOUR_API_KEY&fmt=json"
+curl "https://eodhd.com/api/economic-events?country=US&from=2024-01-01&to=2024-12-31&api_token=demo&fmt=json"
 ```
 
 ### Example Response
@@ -424,38 +457,6 @@ The Economic Events API also includes interest rate decisions from other major c
 - **RBA** (Reserve Bank of Australia): `"RBA Rate Decision"`
 
 These can be queried using the same approach with appropriate country codes (e.g., `country=GB` for BOE).
-
-## Example Requests
-
-```bash
-# Economic events for the next week
-curl "https://eodhd.com/api/economic-events?api_token=demo&fmt=json"
-
-# US events for specific date range
-curl "https://eodhd.com/api/economic-events?country=US&from=2025-01-01&to=2025-01-31&api_token=demo&fmt=json"
-
-# Year-over-year comparisons only
-curl "https://eodhd.com/api/economic-events?comparison=yoy&limit=20&api_token=demo&fmt=json"
-
-# German events with pagination
-curl "https://eodhd.com/api/economic-events?country=DE&limit=50&offset=0&api_token=demo&fmt=json"
-
-# Using the helper client
-python eodhd_client.py --endpoint economic-events --from-date 2025-01-01 --to-date 2025-01-31
-```
-
-## Notes
-
-- `actual` is null for upcoming events not yet released
-- Times are in the format 'YYYY-MM-DD HH:MM:SS' (typically UTC)
-- Country codes use ISO 3166-1 alpha-2 (US, GB, DE, JP, CN, etc.)
-- Use `comparison` filter to get only specific comparison types
-- Maximum 1000 results per request; use offset for pagination
-- API call consumption: 1 call per request
-- **Timezone**: All event timestamps are in **UTC**.
-- **From/to parameters and limit**: By default, the API returns only 50 events per response. To access older events, use the `&limit=` parameter and specify `from` and `to` dates precisely. For example, to retrieve events from the year 2020, use both `&from=2020-01-01&to=2020-12-31` along with an appropriate limit.
-- **Offset beyond 1000**: If the maximum offset of 1000 is not enough, use the `from` and `to` parameters in conjunction with `offset` to paginate deeper into history by narrowing the date range.
-- **Data depth**: Economic events data is available from **2020** onwards.
 
 ## HTTP Status Codes
 
