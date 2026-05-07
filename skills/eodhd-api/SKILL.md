@@ -1,3 +1,15 @@
+---
+name: eodhd-api
+description: >-
+  Fetch financial data from EODHD API — historical prices, fundamentals, options,
+  technical indicators, news, sentiment, macro indicators, corporate events,
+  ESG scores, risk analytics, bank data, US Treasury rates, and trading hours.
+  Use when the user asks for stock prices, company fundamentals, financial analysis,
+  market data, earnings, dividends, splits, IPOs, insider transactions, screener,
+  or building financial tools with EODHD data.
+version: 0.3.7
+---
+
 # Skill: eodhd-api
 
 ## Purpose
