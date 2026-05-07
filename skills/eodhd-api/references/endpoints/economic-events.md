@@ -102,6 +102,9 @@ curl "https://eodhd.com/api/economic-events?country=DE&limit=50&offset=0&api_tok
 
 # Using the helper client
 python eodhd_client.py --endpoint economic-events --from-date 2025-01-01 --to-date 2025-01-31
+
+# Using the helper client (US events, year-over-year)
+python eodhd_client.py --endpoint economic-events --from-date 2025-01-01 --to-date 2025-01-31 --country US --comparison yoy
 ```
 
 ## Notes

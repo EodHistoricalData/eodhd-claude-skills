@@ -111,7 +111,7 @@ curl "https://eodhd.com/api/calendar/trends?symbols=AAPL.US,MSFT.US,AI.PA&api_to
 curl "https://eodhd.com/api/calendar/trends?symbols=F.US,AI.PA&api_token=demo&fmt=json"
 
 # Using the helper client
-python eodhd_client.py --endpoint calendar/trends --symbols F.US,AI.PA
+python eodhd_client.py --endpoint calendar/trends --symbol F.US,AI.PA
 ```
 
 ## Notes

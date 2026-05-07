@@ -20,10 +20,13 @@ Examples:
   # Dividends
   python eodhd_client.py --endpoint dividends --symbol AAPL.US --from-date 2020-01-01
 
-  # Earnings
+  # Earnings (by date window)
   python eodhd_client.py --endpoint calendar/earnings --from-date 2025-01-01 --to-date 2025-01-31
 
-  # Earnings Trends
+  # Earnings (by symbol — note: --symbol maps to API 'symbols=' param)
+  python eodhd_client.py --endpoint calendar/earnings --symbol AAPL.US,MSFT.US
+
+  # Earnings Trends (--symbol maps to API 'symbols=' param)
   python eodhd_client.py --endpoint calendar/trends --symbol AAPL.US,MSFT.US
 
   # Dividends Calendar
@@ -40,6 +43,12 @@ Examples:
 
   # Bulk EOD data for exchange
   python eodhd_client.py --endpoint eod-bulk-last-day --symbol US
+
+  # Economic events (with country and comparison filters)
+  python eodhd_client.py --endpoint economic-events --from-date 2025-01-01 --to-date 2025-01-31 --country US --comparison yoy
+
+  # Screener with filters
+  python eodhd_client.py --endpoint screener --filters '[["market_capitalization",">",1000000000],["sector","=","Technology"]]' --sort market_capitalization --limit 20
 
   # Sentiment data
   python eodhd_client.py --endpoint sentiment --symbol AAPL.US --from-date 2025-01-01 --to-date 2025-01-31
@@ -303,6 +312,26 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
         help="API version for bulk-fundamentals (e.g., 1.2)",
     )
     parser.add_argument(
+        "--country",
+        help="ISO 3166-1 alpha-2 country code for economic-events (e.g., US, GB, DE)",
+    )
+    parser.add_argument(
+        "--comparison",
+        help="Comparison type for economic-events: mom, qoq, yoy",
+    )
+    parser.add_argument(
+        "--filters",
+        help='JSON filter array for screener (e.g., \'[["market_capitalization",">",1000000000]]\')',
+    )
+    parser.add_argument(
+        "--sort",
+        help="Sort field for screener (e.g., market_capitalization)",
+    )
+    parser.add_argument(
+        "--signals",
+        help="Signal filter for screener (e.g., 200d_new_hi, bookvalue_neg)",
+    )
+    parser.add_argument(
         "--filter-year",
         type=int,
         help="Filter by year for UST endpoints (e.g., 2023)",
@@ -404,6 +433,22 @@ def main() -> int:
             params["page[limit]"] = params.pop("limit", args.limit)
         if args.offset is not None:
             params["page[offset]"] = params.pop("offset", args.offset)
+
+    # Special handling for economic-events endpoint (country, comparison)
+    if args.endpoint == "economic-events":
+        if args.country:
+            params["country"] = args.country
+        if args.comparison:
+            params["comparison"] = args.comparison
+
+    # Special handling for screener endpoint (filters, sort, signals)
+    if args.endpoint == "screener":
+        if args.filters:
+            params["filters"] = args.filters
+        if args.sort:
+            params["sort"] = args.sort
+        if args.signals:
+            params["signals"] = args.signals
 
     # Special handling for calendar/trends endpoint (requires symbols parameter)
     if args.endpoint == "calendar/trends":

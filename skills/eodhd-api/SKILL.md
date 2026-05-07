@@ -150,13 +150,13 @@ Activate this skill when the user is performing or asking for:
 | `dividends` | Dividend history | `--symbol` |
 | `splits` | Stock splits | `--symbol` |
 | `macro-indicator` | Macro data | `--symbol` (country code), `--indicator` |
-| `screener` | Stock screener | `--limit`, `--offset` |
-| `calendar/earnings` | Earnings calendar | `--from-date`, `--to-date` or `--symbol` |
-| `calendar/trends` | Earnings trends | `--symbol` (comma-separated) |
+| `screener` | Stock screener | `--filters` (JSON), `--sort`, `--signals`, `--limit`, `--offset` |
+| `calendar/earnings` | Earnings calendar | `--from-date`, `--to-date` or `--symbol`¹ |
+| `calendar/trends` | Earnings trends | `--symbol`¹ (comma-separated, required) |
 | `calendar/ipos` | IPO calendar | `--from-date`, `--to-date` |
-| `calendar/splits` | Stock splits calendar | `--from-date`, `--to-date` or `--symbol` |
-| `calendar/dividends` | Dividends calendar | `--symbol`, `--from-date`, `--to-date`, `--limit`, `--offset` |
-| `economic-events` | Economic events | `--from-date`, `--to-date` |
+| `calendar/splits` | Stock splits calendar | `--from-date`, `--to-date` or `--symbol`¹ |
+| `calendar/dividends` | Dividends calendar | `--symbol`², `--from-date`, `--to-date`, `--limit`, `--offset` |
+| `economic-events` | Economic events | `--from-date`, `--to-date`, `--country`, `--comparison`, `--limit`, `--offset` |
 | `insider-transactions` | Insider trading activity | `--symbol`, `--from-date`, `--to-date`, `--limit` |
 | `exchange-symbol-list` | Exchange tickers | `--symbol` (exchange code) |
 | `exchanges-list` | All exchanges | (no symbol needed) |
@@ -171,6 +171,10 @@ Activate this skill when the user is performing or asking for:
 | `ust/yield-rates` | US Treasury Par Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
 | `ust/real-yield-rates` | US Treasury Par Real Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
 
+> **¹ Calendar parameter mapping**: The Python client accepts `--symbol`, but the underlying API parameter is `symbols=` (plural). If you build curl commands directly, use `symbols=AAPL.US,MSFT.US` — using `symbol=` (singular) will be silently ignored, returning empty results with HTTP 200. For `calendar/earnings`, providing `symbols=` causes the API to ignore `from`/`to` dates.
+>
+> **² Dividends calendar parameter mapping**: The API uses bracket-style parameters: `filter[symbol]`, `filter[date_from]`, `filter[date_to]`, `page[limit]`, `page[offset]`. The Python client translates `--symbol`/`--from-date`/`--to-date`/`--limit`/`--offset` automatically. For raw curl, use the bracket format directly (see `references/endpoints/upcoming-dividends.md`).
+>
 > The table above covers Python client support only. An additional 40+ endpoints (Marketplace: options, ESG/Investverte, PRAAMS, Illio, TradingHours, tick data, logos, search, WebSockets, etc.) are documented in `references/endpoints/` and require curl or manual HTTP calls. See `references/endpoints/README.md` for the full index.
 
 **API call costs**: Most endpoints cost 1 call. `technical` and `intraday` cost 5 calls. `fundamentals` costs 10 calls. News-related endpoints (`news`, `sentiment`, `news-word-weights`) cost 5 calls + 5 per ticker. Bulk endpoints cost 100 calls (+ N symbols if `--symbols` used). Marketplace endpoints (options, ESG, PRAAMS, Illio, index-components, tick data) typically cost 10 calls per request. See `references/general/rate-limits.md` for full details.

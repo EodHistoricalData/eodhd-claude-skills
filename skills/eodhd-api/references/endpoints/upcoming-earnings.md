@@ -97,8 +97,11 @@ curl "https://eodhd.com/api/calendar/earnings?from=2026-02-10&to=2026-02-10&api_
 # Default (today + 7 days)
 curl "https://eodhd.com/api/calendar/earnings?api_token=demo&fmt=json"
 
-# Using the helper client
+# Using the helper client (by date window)
 python eodhd_client.py --endpoint calendar/earnings --from-date 2026-02-10 --to-date 2026-02-10
+
+# Using the helper client (by symbol — note: --symbol maps to API 'symbols=' param)
+python eodhd_client.py --endpoint calendar/earnings --symbol AAPL.US,MSFT.US
 ```
 
 ## Notes
