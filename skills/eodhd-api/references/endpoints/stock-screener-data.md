@@ -23,6 +23,7 @@ and other criteria. Returns a list of matching symbols with key metrics.
 | limit | No | integer | Number of results (default 50, max 100) |
 | offset | No | integer | Pagination offset |
 | filters | No | string | JSON array of filter conditions (see below) |
+| signals | No | string | Signal filter (e.g., 200d_new_lo, 200d_new_hi, bookvalue_neg, bookvalue_pos, wallstreet_lo, wallstreet_hi) |
 
 ## Filter Syntax
 Filters are passed as a JSON array with field, operation, and value:
@@ -113,6 +114,9 @@ curl 'https://eodhd.com/api/screener?api_token=demo&fmt=json&filters=[["exchange
 
 # Using the helper client (basic)
 python eodhd_client.py --endpoint screener --limit 20
+
+# Using the helper client (with filters and sort)
+python eodhd_client.py --endpoint screener --filters '[["market_capitalization",">",1000000000],["sector","=","Technology"]]' --sort market_capitalization --limit 20
 ```
 
 ## Notes
@@ -121,7 +125,7 @@ python eodhd_client.py --endpoint screener --limit 20
 - Sorting by metrics helps prioritize results
 - Null values may exist for stocks missing certain metrics
 - Screener data is updated daily
-- API call consumption: 1 call per request
+- API call consumption: 5 calls per request
 - **Latest day only**: The screener works only for the **latest trading day**. It is not possible to screen based on a specific past date. Historical screening is not supported.
 
 ## HTTP Status Codes

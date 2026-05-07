@@ -97,7 +97,7 @@ curl "https://eodhd.com/api/calendar/splits?symbols=TSLA.US&from=2010-01-01&to=2
 curl "https://eodhd.com/api/calendar/splits?from=2024-01-01&to=2024-01-03&api_token=demo&fmt=json"
 
 # Using the helper client
-python eodhd_client.py --endpoint calendar/splits --symbols TSLA.US --from-date 2010-01-01 --to-date 2030-01-01
+python eodhd_client.py --endpoint calendar/splits --symbol TSLA.US --from-date 2010-01-01 --to-date 2030-01-01
 ```
 
 ## Notes
