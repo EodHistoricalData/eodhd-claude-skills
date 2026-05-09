@@ -1,0 +1,6 @@
+{
+  "eodhd": {
+    "type": "http",
+    "url": "https://mcp.eodhd.dev/v2/mcp"
+  }
+}

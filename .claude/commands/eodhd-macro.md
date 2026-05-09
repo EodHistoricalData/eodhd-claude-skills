@@ -1,0 +1,29 @@
+Generate a macro-economic dashboard using EODHD data.
+
+Use the `macro-dashboard` skill workflow:
+
+1. Fetch key macro indicators for USA (and other countries if specified in $ARGUMENTS):
+   - GDP growth (gdp_growth_annual)
+   - Inflation / CPI (inflation_consumer_prices_annual)
+   - Unemployment (unemployment_total_percent)
+   - Interest rate (interest_rate)
+   - Trade balance (trade_balance_percent_gdp)
+   - Government debt (government_debt_percent_gdp)
+
+2. Fetch US Treasury yield curve:
+   - Bill rates (ust/bill-rates)
+   - Yield curve rates (ust/yield-rates)
+   - Real yield rates (ust/real-yield-rates)
+
+3. Fetch upcoming economic events (economic-events, next 2 weeks)
+
+Present:
+- **Key Indicators Table** with latest value, previous, YoY change, trend arrow
+- **Yield Curve Table** with all standard maturities + 2Y-10Y spread + curve shape assessment
+- **Real Yields** — inflation-adjusted yields for 5Y, 10Y, 30Y
+- **Upcoming Economic Events** — next 10 events with date, country, forecast, previous
+- **Economic Narrative** — 3-5 bullet point summary of current economic state
+
+If $ARGUMENTS specifies countries (e.g., "USA vs EU" or "G7"), include multi-country comparison.
+
+Include disclaimer: "This is not financial advice. Data is for informational purposes only."
