@@ -85,6 +85,7 @@ Examples:
 from __future__ import annotations
 
 import argparse
+import datetime
 import json
 import os
 import sys
@@ -381,6 +382,17 @@ def main() -> int:
     # Intraday interval
     if args.interval:
         params["interval"] = args.interval
+
+    # Intraday endpoint requires Unix timestamps for from/to (not YYYY-MM-DD)
+    if args.endpoint == "intraday":
+        for key in ("from", "to"):
+            value = params.get(key)
+            if isinstance(value, str) and "-" in value:
+                try:
+                    dt = datetime.datetime.strptime(value, "%Y-%m-%d")
+                    params[key] = int(dt.replace(tzinfo=datetime.timezone.utc).timestamp())
+                except ValueError:
+                    pass  # Leave unchanged; API will surface the error
 
     # Technical indicators
     if args.function:

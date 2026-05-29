@@ -6,7 +6,7 @@ Method:
 
 Data sources (EODHD API):
   - /eod/{SYMBOL}          → daily OHLCV (close price)
-  - /fundamentals/{SYMBOL} → SharesOutstanding from Highlights
+  - /fundamentals/{SYMBOL} → SharesOutstanding from SharesStats
 
 For US stocks only, an alternative --method=api flag uses the dedicated
 /historical-market-cap/{SYMBOL} endpoint (weekly frequency, from 2019).
@@ -67,10 +67,13 @@ def get_shares_outstanding(symbol: str, token: str) -> float | None:
     params = urllib.parse.urlencode({
         "api_token": token,
         "fmt": "json",
-        "filter": "Highlights::SharesOutstanding",
+        "filter": "SharesStats::SharesOutstanding",
     })
     url = f"{BASE_URL}/fundamentals/{symbol}?{params}"
     data = fetch_json(url)
+    # A "Field::Subfield" filter returns the scalar value directly, not a dict
+    if isinstance(data, (int, float)):
+        return float(data)
     if isinstance(data, dict):
         if "error" in data:
             raise RuntimeError(f"Fundamentals API error: {data['error']}")

@@ -6,7 +6,7 @@ Developer-first financial data for Claude — 150,000+ tickers across 70+ exchan
 
 ## Highlights
 
-- **MCP Server v2** with OAuth 2.0 — 75 tools, 100+ embedded docs, smart ticker resolution
+- **MCP Server v2** with OAuth 2.0 — 80 tools, 100+ embedded docs, smart ticker resolution
 - **7 curated workflow skills** — company briefs, earnings, market overview, screening, risk, macro, options
 - **Financial analyst agent** — autonomous multi-source analysis
 - **5 slash commands** — `/eodhd-analyze`, `/eodhd-compare`, `/eodhd-market`, `/eodhd-screen`, `/eodhd-macro`
@@ -168,7 +168,7 @@ The `agents/financial-analyst.md` agent autonomously:
 ## MCP Server
 
 The EODHD MCP Server v2 provides:
-- **75 tools** across 15 categories (prices, fundamentals, options, technicals, news, sentiment, macro, etc.)
+- **80 tools** across 15 categories (prices, fundamentals, options, technicals, news, sentiment, macro, etc.)
 - **OAuth 2.0** authentication
 - **100+ embedded docs** as MCP resources
 - **3 prompt templates** for common workflows

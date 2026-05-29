@@ -21,7 +21,7 @@ jobs:
       - name: Validate plugin.json schema
         run: |
           python3 - <<'PY'
-          import json, sys
+          import json
           m = json.load(open('.claude-plugin/plugin.json'))
           assert isinstance(m.get('name'), str), 'name must be string'
           assert isinstance(m.get('version'), str), 'version must be string'
@@ -43,34 +43,12 @@ jobs:
           print(f'version sync OK: {p}')
           PY
 
-      - name: Validate SKILL.md frontmatter
-        run: |
-          pip install pyyaml --quiet
-          python3 - <<'PY'
-          import yaml, sys, pathlib
-          fails = []
-          for skill in pathlib.Path('skills').glob('*/SKILL.md'):
-              text = skill.read_text()
-              if not text.startswith('---'):
-                  fails.append(f'{skill}: missing YAML frontmatter')
-                  continue
-              fm_end = text.find('---', 3)
-              if fm_end == -1:
-                  fails.append(f'{skill}: unterminated frontmatter')
-                  continue
-              try:
-                  fm = yaml.safe_load(text[3:fm_end])
-              except Exception as e:
-                  fails.append(f'{skill}: YAML parse error: {e}')
-                  continue
-              for k in ('name', 'description'):
-                  if k not in fm:
-                      fails.append(f'{skill}: missing required key "{k}"')
-          if fails:
-              print('\n'.join(fails))
-              sys.exit(1)
-          print('all SKILL.md frontmatter OK')
-          PY
+      - name: Static skill/agent/command references
+        run: python3 tests/test_skill_references.py
+        env:
+          # If repo has an EODHD_API_TOKEN secret, the manifest tool-count check
+          # also cross-validates against live MCP server. Missing secret = check skipped.
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
 
   mcp-endpoint:
     runs-on: ubuntu-latest
@@ -95,3 +73,34 @@ jobs:
             000)         echo "FAIL: connection error"; exit 1 ;;
             *)           echo "WARN: unexpected $CODE — review manually"; exit 0 ;;
           esac
+
+  e2e-python-client:
+    # Run only when EODHD_API_TOKEN secret is configured in repo settings.
+    # On forks / un-secret PRs, this job is skipped (no false negatives).
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check token availability
+        id: token
+        env:
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+        run: |
+          if [ -n "$EODHD_API_TOKEN" ]; then
+            echo "have=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "have=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::EODHD_API_TOKEN secret not set — e2e tests skipped"
+          fi
+
+      - name: Run Python client e2e against live API
+        if: steps.token.outputs.have == 'true'
+        env:
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+        run: python3 tests/test_python_client.py
+
+      - name: Run MCP v1 + v2 e2e
+        if: steps.token.outputs.have == 'true'
+        env:
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+        run: python3 tests/test_mcp_v1.py
