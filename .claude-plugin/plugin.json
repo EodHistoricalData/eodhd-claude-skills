@@ -1,6 +1,6 @@
 {
   "name": "eodhd-claude-skills",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Developer-first financial data for Claude — 150k+ tickers, 70+ exchanges, real-time & historical prices, fundamentals, options, technicals, news, sentiment, macro indicators, ESG, and more via EODHD API and MCP Server.",
   "author": {
     "name": "EOD Historical Data",
@@ -30,7 +30,7 @@
   "mcp": {
     "eodhd": {
       "type": "http",
-      "url": "https://mcp.eodhd.dev/v2/mcp"
+      "url": "https://mcpv2.eodhd.dev/v2/mcp"
     }
   },
   "capabilities": {

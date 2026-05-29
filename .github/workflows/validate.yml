@@ -1,0 +1,97 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON manifests
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+          python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
+          python3 -c "import json; json.load(open('.mcp.json'))"
+
+      - name: Validate plugin.json schema
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          m = json.load(open('.claude-plugin/plugin.json'))
+          assert isinstance(m.get('name'), str), 'name must be string'
+          assert isinstance(m.get('version'), str), 'version must be string'
+          assert isinstance(m.get('repository'), str), 'repository must be string URL (Claude Code schema)'
+          assert m['repository'].startswith('https://'), 'repository must be https URL'
+          mcp = m.get('mcp', {}).get('eodhd', {})
+          assert mcp.get('type') == 'http', 'mcp.eodhd.type must be http'
+          assert mcp.get('url', '').startswith('https://'), 'mcp.eodhd.url must be https URL'
+          print('plugin.json OK')
+          PY
+
+      - name: Version sync (plugin.json == marketplace.json)
+        run: |
+          python3 - <<'PY'
+          import json
+          p = json.load(open('.claude-plugin/plugin.json'))['version']
+          m = json.load(open('.claude-plugin/marketplace.json'))['metadata']['version']
+          assert p == m, f'version drift: plugin.json={p} marketplace.json={m}'
+          print(f'version sync OK: {p}')
+          PY
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          pip install pyyaml --quiet
+          python3 - <<'PY'
+          import yaml, sys, pathlib
+          fails = []
+          for skill in pathlib.Path('skills').glob('*/SKILL.md'):
+              text = skill.read_text()
+              if not text.startswith('---'):
+                  fails.append(f'{skill}: missing YAML frontmatter')
+                  continue
+              fm_end = text.find('---', 3)
+              if fm_end == -1:
+                  fails.append(f'{skill}: unterminated frontmatter')
+                  continue
+              try:
+                  fm = yaml.safe_load(text[3:fm_end])
+              except Exception as e:
+                  fails.append(f'{skill}: YAML parse error: {e}')
+                  continue
+              for k in ('name', 'description'):
+                  if k not in fm:
+                      fails.append(f'{skill}: missing required key "{k}"')
+          if fails:
+              print('\n'.join(fails))
+              sys.exit(1)
+          print('all SKILL.md frontmatter OK')
+          PY
+
+  mcp-endpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract MCP URL from .mcp.json
+        id: url
+        run: |
+          URL=$(python3 -c "import json; print(json.load(open('.mcp.json'))['eodhd']['url'])")
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "MCP URL: $URL"
+
+      - name: Probe MCP endpoint (expect 401/405, not 404)
+        run: |
+          URL="${{ steps.url.outputs.url }}"
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 10 "$URL" || echo "000")
+          echo "HTTP $CODE from $URL"
+          case "$CODE" in
+            401|405|400) echo "OK: server is up, just needs proper auth/method"; exit 0 ;;
+            404)         echo "FAIL: 404 — likely wrong domain (Cloudflare fallback)"; exit 1 ;;
+            000)         echo "FAIL: connection error"; exit 1 ;;
+            *)           echo "WARN: unexpected $CODE — review manually"; exit 0 ;;
+          esac

@@ -1,0 +1,69 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .claude-plugin/plugin.json
+      - .claude-plugin/marketplace.json
+
+permissions:
+  contents: write
+
+jobs:
+  tag-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Read version
+        id: ver
+        run: |
+          V=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "tag=v$V" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if tag exists
+        id: check
+        run: |
+          if git rev-parse "refs/tags/${{ steps.ver.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "tag ${{ steps.ver.outputs.tag }} already exists — skipping"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate changelog (commits since last tag)
+        if: steps.check.outputs.exists == 'false'
+        id: log
+        run: |
+          PREV=$(git tag --sort=-creatordate | head -1)
+          if [ -n "$PREV" ]; then
+            RANGE="$PREV..HEAD"
+            HEADER="### Changes since $PREV"
+          else
+            RANGE="HEAD"
+            HEADER="### Initial release"
+          fi
+          {
+            echo "body<<EOF_BODY"
+            echo "$HEADER"
+            echo ""
+            git log --pretty=format:"- %s (%h)" $RANGE
+            echo ""
+            echo "EOF_BODY"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create tag and release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag "${{ steps.ver.outputs.tag }}"
+          git push origin "${{ steps.ver.outputs.tag }}"
+          gh release create "${{ steps.ver.outputs.tag }}" \
+            --title "${{ steps.ver.outputs.tag }}" \
+            --notes "${{ steps.log.outputs.body }}"

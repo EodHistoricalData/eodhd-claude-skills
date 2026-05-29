@@ -19,7 +19,7 @@ Includes MCP Server connector (OAuth), 8 skills (1 core + 7 workflow), financial
     eodhd-market.md             # /eodhd-market
     eodhd-screen.md             # /eodhd-screen <criteria>
     eodhd-macro.md              # /eodhd-macro
-.mcp.json                       # MCP Server connector → mcp.eodhd.dev/v2/mcp
+.mcp.json                       # MCP Server connector → mcpv2.eodhd.dev/v2/mcp
 agents/
   financial-analyst.md          # Financial analyst agent definition
 skills/
@@ -118,4 +118,4 @@ No runtime deployment. Distributed via GitHub releases.
 
 - GitHub: https://github.com/EodHistoricalData/eodhd-claude-skills
 - EODHD API: https://eodhd.com/financial-apis/
-- MCP Server: https://mcp.eodhd.dev/v2/mcp
+- MCP Server: https://mcpv2.eodhd.dev/v2/mcp
