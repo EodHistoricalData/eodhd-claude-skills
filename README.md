@@ -2,7 +2,7 @@
 
 Developer-first financial data for Claude — 150,000+ tickers across 70+ exchanges, powered by [EODHD API](https://eodhd.com/) and an OAuth-secured MCP Server.
 
-> **Disclaimer**: This plugin may differ from actual EODHD API behavior due to documentation discrepancies or API evolution. Claude may interpret information incorrectly. For questions, email supportlevel1@eodhistoricaldata.com
+> ⚠ **Not financial advice.** This plugin delivers AI-generated analysis on top of EODHD market data. Always verify figures against [eodhd.com](https://eodhd.com/) and the underlying issuer filings before making any investment, trading, or risk decision. Support: [supportlevel1@eodhistoricaldata.com](mailto:supportlevel1@eodhistoricaldata.com).
 
 ## Highlights
 
@@ -47,8 +47,22 @@ export EODHD_API_TOKEN="your_token_here"
 
 ## Prerequisites
 
-1. **EODHD API Token** — get one at [eodhd.com](https://eodhd.com/) (free tier available)
-2. **Python 3.8+** for the helper client (stdlib-only, no pip install needed)
+1. **EODHD account + API token** — sign up at [eodhd.com](https://eodhd.com/). Free tier works for evaluation; production usage typically needs a paid plan (see Access Tiers below).
+2. **Python 3.8+** for the helper client (stdlib-only, no `pip install` needed)
+
+## Access Tiers
+
+The plugin itself is MIT-licensed and free. Data access is gated by your EODHD subscription. The skills degrade gracefully — if an endpoint requires a tier you don't have, you'll get a clear `402 Payment Required` (not a crash).
+
+| Tier | Price | What works in this plugin |
+|---|---|---|
+| **Free** ([details](skills/eodhd-api/references/subscriptions/free.md)) | $0/mo, 20 calls/day | US tickers, EOD prices (past year), 15-min delayed quotes, exchanges list, US Treasury rates. Good for testing the plugin. |
+| **EOD Historical Data — All World** ([details](skills/eodhd-api/references/subscriptions/eod-historical-data-all-world.md)) | from $19.99/mo | Full 70+ exchanges, 30+ years of EOD prices, dividends, splits. Enables `market-overview`, basic `stock-screener`. |
+| **Fundamentals Data Feed** ([details](skills/eodhd-api/references/subscriptions/fundamentals-data-feed.md)) | from $59.99/mo | Adds fundamentals, financial statements, insiders, sentiment, ratios. Enables `company-brief`, `earnings-monitor`, `portfolio-risk`. |
+| **All-In-One** ([details](skills/eodhd-api/references/subscriptions/all-in-one.md)) | from $99.99/mo | Everything above + intraday bars (1m/5m/1h), live quotes, technical indicators, screener, news, macro. Recommended for full plugin usage. |
+| **Marketplace add-ons** (separate SKUs) | varies | Required for `options-analyzer` (US options chains), Investverte ESG, PRAAMS risk/bank/bond analytics, Illio portfolio analytics, TradingHours. |
+
+Pricing on this page is indicative — see [eodhd.com/pricing](https://eodhd.com/pricing) for current rates.
 
 ## Repository Structure
 
