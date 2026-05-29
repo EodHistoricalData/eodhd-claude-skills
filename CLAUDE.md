@@ -82,7 +82,12 @@ python skills/eodhd-api/scripts/eodhd_client.py --endpoint exchanges-list
 python skills/eodhd-api/scripts/eodhd_client.py --endpoint eod --symbol AAPL.US --from-date 2025-01-01 --to-date 2025-01-31
 ```
 
-No test framework — validation is manual against live API.
+Automated tests live in `tests/` (stdlib-only, no pytest dependency):
+- `tests/test_python_client.py` — 30 e2e cases hitting every endpoint in `SUPPORTED_ENDPOINTS` against the live API. Requires `EODHD_API_TOKEN`.
+- `tests/test_mcp_v1.py` — MCP protocol e2e: v2 OAuth challenge, v1 initialize/tools-list/tools-call.
+- `tests/test_skill_references.py` — static cross-reference validation (SKILL.md frontmatter, endpoint docs, slash commands, agent frontmatter, manifest tool count vs MCP).
+
+CI (`.github/workflows/validate.yml`) runs the static suite on every push/PR. The two e2e suites run automatically when `EODHD_API_TOKEN` is configured as a GitHub Actions secret; otherwise the e2e job emits a skip warning and the CI passes (no false negatives).
 
 ## Deployment
 

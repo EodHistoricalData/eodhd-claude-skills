@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Developer-first financial data for Claude — 150k+ tickers, 70+ exchanges, MCP Server with OAuth, 7 curated workflow skills, Python client, 72 endpoint docs",
-    "version": "0.4.3"
+    "version": "0.4.4"
   },
   "plugins": [
     {
