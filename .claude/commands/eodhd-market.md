@@ -6,7 +6,9 @@ Use the `market-overview` skill workflow:
 2. Fetch sector ETF performance: XLK, XLF, XLV, XLE, XLI, XLY, XLP, XLU, XLRE, XLB, XLC
 3. Fetch US Treasury yield curve (ust/yield-rates) — latest data
 4. Fetch key macro indicators for USA — GDP growth, CPI, unemployment
-5. Fetch commodity prices — Gold (GC.COMEX), Crude Oil (CL.COMEX)
+5. Fetch commodity prices via liquid ETF proxies — Gold (GLD.US), Crude Oil (USO.US). The COMEX futures
+   symbols (GC.COMEX, CL.COMEX) are unreliable on standard plans (empty array / error), so prefer the ETF
+   proxies and note them as proxies in the output.
 
 Present:
 - **Major Indices** table with last price, daily change, % change

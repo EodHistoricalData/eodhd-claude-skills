@@ -30,7 +30,10 @@ Activate when the user asks for:
 1. **Determine scope** — country/countries and indicators of interest
 2. **Fetch macro indicators** — `macro-indicator` for GDP, CPI, unemployment, etc.
 3. **Fetch Treasury rates** — `ust/yield-rates`, `ust/bill-rates`, `ust/long-term-rates`, `ust/real-yield-rates`
-4. **Fetch economic events** — `economic-events` for upcoming releases
+4. **Fetch economic events** — `economic-events` for upcoming releases. Always pass an explicit
+   `--from-date`/`--to-date` window (e.g. today → +14d) and `--country` — without them the API returns
+   arbitrary far-future events with empty fields. Field mapping: event name = `type` (NOT `event`),
+   forecast = `estimate` (NOT `forecast`), plus `previous`/`actual` (`actual` is null until released).
 5. **Calculate trends** — YoY changes, trends, inflection points
 6. **Compile dashboard**
 

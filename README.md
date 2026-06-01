@@ -229,6 +229,28 @@ Claude Code treats installed skills as optional context. To ensure the skill act
 2. **Add to CLAUDE.md**: `Always use available skills for financial data requests.`
 3. **Use slash commands**: They always activate the skill
 
+## Troubleshooting
+
+**`SSL: CERTIFICATE_VERIFY_FAILED` on macOS** — Python installed from the official python.org installer
+does not register the system CA certificates, so the client's HTTPS calls fail with:
+
+```
+Request failed: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed:
+unable to get local issuer certificate
+```
+
+Fix it once by running the bundled certificate installer for your Python version:
+
+```bash
+# Adjust the version to match your install (3.11, 3.12, 3.13, ...)
+open "/Applications/Python 3.13/Install Certificates.command"
+```
+
+(Homebrew/pyenv Python builds usually don't need this.)
+
+**MCP tools fail to authenticate / OAuth page shows an error** — confirm the MCP server is reachable, then
+fall back to the Python client by setting `export EODHD_API_TOKEN="your_token"`, which bypasses OAuth.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. Priority areas:

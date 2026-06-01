@@ -47,8 +47,9 @@ Examples:
   # Economic events (with country and comparison filters)
   python eodhd_client.py --endpoint economic-events --from-date 2025-01-01 --to-date 2025-01-31 --country US --comparison yoy
 
-  # Screener with filters
-  python eodhd_client.py --endpoint screener --filters '[["market_capitalization",">",1000000000],["sector","=","Technology"]]' --sort market_capitalization --limit 20
+  # Screener with filters (filters = JSON array of [field, op, value]; dividend_yield is a fraction, 0.03 = 3%;
+  # sort is field.direction e.g. market_capitalization.desc; add ["exchange","=","us"] to keep caps in USD)
+  python eodhd_client.py --endpoint screener --filters '[["market_capitalization",">=",1000000000],["sector","=","Technology"],["exchange","=","us"]]' --sort market_capitalization.desc --limit 20
 
   # Sentiment data
   python eodhd_client.py --endpoint sentiment --symbol AAPL.US --from-date 2025-01-01 --to-date 2025-01-31
@@ -252,6 +253,46 @@ SUPPORTED_ENDPOINTS = [
 ]
 
 
+def _lowercase_keys(obj):
+    """Recursively lowercase all dict keys.
+
+    Used to normalize endpoints that return PascalCase keys (e.g.
+    macro-indicator's Date/Value/CountryCode) so downstream consumers can rely
+    on the same lowercase keys every other endpoint uses.
+    """
+    if isinstance(obj, dict):
+        return {str(k).lower(): _lowercase_keys(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_lowercase_keys(v) for v in obj]
+    return obj
+
+
+def normalize_response(endpoint: str, parsed):
+    """Smooth over per-endpoint response-shape inconsistencies (QA v0.4.2).
+
+    Most list endpoints (eod, news, screener data, ...) return a bare array
+    with lowercase keys. Two endpoints diverge and broke downstream parsing:
+
+    - BUG-05: UST endpoints wrap rows in {"meta", "data", "links"} instead of a
+      bare array, so naive `data[-1]` indexing raised KeyError. Unwrap to the
+      bare `data` array (error payloads, which lack a list `data`, pass through).
+    - BUG-06: macro-indicator returns PascalCase keys (Date/Value/CountryCode)
+      while every other endpoint uses lowercase, so `d.get("date")` returned
+      None. Lowercase the keys.
+
+    Use --raw to bypass normalization and see the exact API payload.
+    """
+    if endpoint.startswith("ust/") and isinstance(parsed, dict):
+        data = parsed.get("data")
+        if isinstance(data, list):
+            return data
+
+    if endpoint == "macro-indicator":
+        return _lowercase_keys(parsed)
+
+    return parsed
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Query EODHD API",
@@ -326,7 +367,7 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
     )
     parser.add_argument(
         "--sort",
-        help="Sort field for screener (e.g., market_capitalization)",
+        help="Sort for screener as field.direction (e.g., market_capitalization.desc, pe.asc)",
     )
     parser.add_argument(
         "--signals",
@@ -543,6 +584,7 @@ def main() -> int:
         print(payload)
         return 0
 
+    parsed = normalize_response(args.endpoint, parsed)
     print(json.dumps(parsed, indent=2, sort_keys=True))
     return 0
 
