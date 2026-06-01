@@ -32,17 +32,45 @@ Activate when the user asks for:
 5. **Add price context** — `eod` for recent price trends
 6. **Compile screener report**
 
+## Filter Format (critical)
+
+`filters` is a **JSON array of `[field, operation, value]` triples** — NOT dot-notation
+(`market_capitalization.gte`) and NOT a JSON object. If the shape is wrong, the EODHD API
+silently ignores the filter and returns unfiltered, irrelevant results.
+
+Operations: `=`, `!=`, `>`, `>=`, `<`, `<=`, `match`. A JSON object is rejected with HTTP 422.
+
+```json
+[["market_capitalization",">=",10000000000],["sector","=","Technology"]]
+```
+
+**Sort:** `--sort field.direction` (e.g. `market_capitalization.desc`, `pe.asc`). A bare field name is
+rejected with HTTP 422 ("sort.0.direction is required").
+
+**Currency caveat (important):** absolute-money fields — `market_capitalization`, `revenue`, `ebitda` — are
+in each listing's **local currency**, not USD. A raw threshold leaks huge non-USD companies (e.g. a
+Vietnam-listed firm at "3.88T" ₫ ≈ $150M passes `>= 10B`). Each result row has a `currency_symbol` field
+indicating its currency. So:
+- Filtering/sorting by an absolute-money field → **scope to one market** with `["exchange","=","us"]` (or the
+  intended exchange) so the threshold is currency-consistent.
+- Multi-market screens → don't compare raw caps across rows; group/label by `currency_symbol`.
+- Ratio/percent fields (`pe`, `pb`, `ps`, `peg`, `roe`, `roa`, `beta`, `dividend_yield`) are
+  currency-independent and safe to compare across markets.
+
 ## Available Filters
 
 The screener supports these filter fields:
-- `market_capitalization` — market cap range
+- `market_capitalization` — market cap in the listing's **local currency** (see currency caveat; scope by `exchange` for a consistent threshold)
 - `earnings_share` — EPS
-- `dividend_yield` — dividend yield %
-- `sector` — sector name
-- `industry` — industry name
-- `exchange` — exchange code
+- `dividend_yield` — dividend yield as a **fraction** (0.03 = 3%, not 3)
+- `sector` — sector name (exact match)
+- `industry` — industry name (exact match)
+- `exchange` — exchange code (e.g., `us`)
+- `pe` — P/E ratio
 - `wallstreet_target_price` — analyst target price
-- Plus many more fundamental fields
+- Plus many more fundamental fields (see endpoint reference)
+
+Each result row also returns `currency_symbol` (currency of the absolute-money fields) and `exchange` — surface these when presenting caps.
 
 ## Available Signals
 
@@ -61,8 +89,10 @@ The screener supports these filter fields:
 ```
 
 **Results ([N] matches)**
-| # | Ticker | Name | Sector | Mkt Cap | P/E | Div Yield | Price |
-|---|--------|------|--------|---------|-----|-----------|-------|
+| # | Ticker | Name | Sector | Mkt Cap (ccy) | P/E | Div Yield | Price |
+|---|--------|------|--------|---------------|-----|-----------|-------|
+
+Show the `currency_symbol` alongside Mkt Cap; never render a non-USD cap as USD. If the screen spans multiple currencies, say so in the Summary caveats.
 
 **Top Picks — Detailed Analysis**
 For each top 5 result:
@@ -85,14 +115,14 @@ For each top 5 result:
 ## Example Filters
 
 ```bash
-# High-dividend large caps
-python eodhd_client.py --endpoint screener --filters '{"market_capitalization.gte":10000000000,"dividend_yield.gte":3}' --sort market_capitalization.desc --limit 20
+# High-dividend large caps (dividend_yield is a fraction: 0.03 = 3%; exchange=us keeps caps in USD)
+python eodhd_client.py --endpoint screener --filters '[["dividend_yield",">=",0.03],["market_capitalization",">=",10000000000],["exchange","=","us"]]' --sort market_capitalization.desc --limit 20
 
 # Undervalued growth stocks
-python eodhd_client.py --endpoint screener --filters '{"market_capitalization.gte":1000000000,"earnings_share.gte":1}' --signals 200d_new_lo --limit 20
+python eodhd_client.py --endpoint screener --filters '[["market_capitalization",">=",1000000000],["earnings_share",">=",1],["exchange","=","us"]]' --signals 200d_new_lo --limit 20
 
 # Tech sector screening
-python eodhd_client.py --endpoint screener --filters '{"sector":"Technology","market_capitalization.gte":5000000000}' --limit 30
+python eodhd_client.py --endpoint screener --filters '[["sector","=","Technology"],["market_capitalization",">=",5000000000],["exchange","=","us"]]' --sort market_capitalization.desc --limit 30
 ```
 
 ## Endpoints Used

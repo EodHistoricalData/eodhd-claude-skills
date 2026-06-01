@@ -102,6 +102,8 @@ python eodhd_client.py --endpoint ust/bill-rates --filter-year 2012 --limit 100
 - Pagination is supported via `page[limit]` and `page[offset]`
 - API call consumption: 1 call per request
 - Part of the US Treasury (UST) Interest Rates API (beta)
+- **Helper client normalization**: `eodhd_client.py` unwraps the `{"meta", "data", "links"}` envelope and
+  returns the bare `data` array (consistent with other list endpoints). Use `--raw` for the full envelope.
 
 ## HTTP Status Codes
 

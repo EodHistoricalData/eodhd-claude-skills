@@ -15,7 +15,12 @@ Use the `macro-dashboard` skill workflow:
    - Yield curve rates (ust/yield-rates)
    - Real yield rates (ust/real-yield-rates)
 
-3. Fetch upcoming economic events (economic-events, next 2 weeks)
+3. Fetch upcoming economic events (`economic-events`). **Always pass an explicit date window and country** —
+   e.g. `--from-date <today> --to-date <today+14d> --country US` — otherwise the API returns arbitrary
+   far-future events with empty fields. Field mapping (the API does NOT use `event`/`forecast` keys):
+   - event name → `type`
+   - forecast/consensus → `estimate`
+   - previous → `previous`, actual → `actual` (null for not-yet-released)
 
 Present:
 - **Key Indicators Table** with latest value, previous, YoY change, trend arrow

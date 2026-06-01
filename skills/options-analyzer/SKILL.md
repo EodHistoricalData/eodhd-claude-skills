@@ -33,7 +33,11 @@ Activate when the user asks for:
 5. **Analyze** — IV analysis, strategy payoff, Greeks exposure
 6. **Compile options report**
 
-> **Note:** Options endpoints are EODHD Marketplace features requiring appropriate subscription. They are not supported by the Python client — use curl per endpoint docs.
+> **Note:** Options endpoints (`us-options-eod`, `us-options-underlyings`) are **not wired into the
+> `eodhd_client.py` helper** — call them with `curl` per the endpoint docs. Access depends on your plan/tier:
+> on many paid plans the US options endpoints return data directly (HTTP 200), so don't assume a separate
+> Marketplace add-on is required — verify against your account before telling the user it's gated. Option
+> chains can be large (multi-MB); summarize, don't dump raw JSON into the chat.
 
 ## Output Structure
 

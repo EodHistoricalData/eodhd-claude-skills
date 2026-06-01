@@ -18,8 +18,7 @@ and other criteria. Returns a list of matching symbols with key metrics.
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | EODHD API key |
-| sort | No | string | Field to sort by (e.g., market_capitalization, name) |
-| order | No | string | Sort order: 'a' (ascending) or 'd' (descending) |
+| sort | No | string | Sort as `field.direction` (e.g., `market_capitalization.desc`, `pe.asc`). A bare field name without a direction is rejected with HTTP 422 (`sort.0.direction is required`). |
 | limit | No | integer | Number of results (default 50, max 100) |
 | offset | No | integer | Pagination offset |
 | filters | No | string | JSON array of filter conditions (see below) |
@@ -81,6 +80,7 @@ Array of matching stocks with key metrics:
       "code": "AAPL",
       "name": "Apple Inc",
       "exchange": "NASDAQ",
+      "currency_symbol": "$",
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "market_capitalization": 2500000000000,
@@ -106,8 +106,8 @@ Array of matching stocks with key metrics:
 # Large-cap tech stocks
 curl 'https://eodhd.com/api/screener?api_token=demo&fmt=json&filters=[["market_capitalization",">",100000000000],["sector","=","Technology"]]'
 
-# High dividend yield stocks
-curl 'https://eodhd.com/api/screener?api_token=demo&fmt=json&filters=[["dividend_yield",">",0.04]]&sort=dividend_yield&order=d'
+# High dividend yield stocks (dividend_yield is a fraction; sort uses field.direction)
+curl 'https://eodhd.com/api/screener?api_token=demo&fmt=json&filters=[["dividend_yield",">",0.04],["exchange","=","us"]]&sort=dividend_yield.desc'
 
 # Low P/E stocks in US market
 curl 'https://eodhd.com/api/screener?api_token=demo&fmt=json&filters=[["exchange","=","us"],["pe",">",0],["pe","<",15]]&limit=20'
@@ -120,7 +120,10 @@ python eodhd_client.py --endpoint screener --filters '[["market_capitalization",
 ```
 
 ## Notes
-- Filters must be URL-encoded when passed as query parameters
+- Filters must be a **JSON array of `[field, operation, value]` triples** (a JSON object → HTTP 422) and URL-encoded when passed as query parameters
+- **Sort** uses `field.direction` (e.g. `market_capitalization.desc`); a bare field name → HTTP 422
+- **Absolute-money fields (`market_capitalization`, `revenue`, `ebitda`) are in each listing's local currency**, not normalized to USD — a raw threshold matches large non-USD companies. Each result row includes a `currency_symbol` field indicating the currency. Add `["exchange","=","us"]` (or the intended exchange) to keep an absolute-money threshold currency-consistent; ratio/percent fields (`pe`, `pb`, `ps`, `peg`, `roe`, `roa`, `beta`, `dividend_yield`) are currency-independent
+- **`dividend_yield` is a fraction** (0.03 = 3%), matching the response field
 - Maximum 100 results per request; use offset for pagination
 - Sorting by metrics helps prioritize results
 - Null values may exist for stocks missing certain metrics
