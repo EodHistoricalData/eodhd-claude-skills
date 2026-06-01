@@ -2,6 +2,26 @@
 
 All notable changes to this plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.5] — 2026-06-01
+
+Repo-side fixes from the v0.4.2 manual QA pass (EODHD-1524), verified live against the production API.
+
+### Fixed
+- **Screener filters** — documented the correct request shape: `filters` must be a JSON array of `[field, operation, value]` triples (a JSON object is rejected with HTTP 422) and `sort` must be `field.direction` (e.g. `market_capitalization.desc`; a bare field name → HTTP 422). Corrected the wrong dot-notation/object mappings in the `eodhd-screen` command, `stock-screener` skill, and the endpoint reference. `dividend_yield` clarified as a fraction (0.03 = 3%).
+- **macro-indicator** — the Python client now lowercases the API's PascalCase keys (`Date`/`Value`/`CountryCode` → `date`/`value`/`countrycode`) for consistency with every other endpoint.
+- **UST rates** (`ust/*`) — the Python client now unwraps the `{meta, data, links}` envelope to the bare `data` array, so indexing like `data[-1]` works.
+- **economic-events** — documented that the event name field is `type` (not `event`) and the forecast field is `estimate` (not `forecast`); workflows now pass an explicit date window and country to avoid empty far-future results.
+- **Commodities** — `market-overview` switched gold/oil from the unreliable `GC.COMEX`/`CL.COMEX` futures symbols to liquid ETF proxies `GLD.US`/`USO.US`.
+- **options-analyzer** — removed the misleading "requires Marketplace subscription" note; US options endpoints are reachable on many paid plans.
+
+### Changed
+- **Currency handling in screener** — documented that absolute-money fields (`market_capitalization`, `revenue`, `ebitda`) are in each listing's local currency (rows carry a `currency_symbol`); skills now scope money thresholds to one market (`exchange=us`), label currency in output, and avoid cross-currency comparison.
+- **README** — added a Troubleshooting section (macOS SSL certificate install, OAuth fallback via `EODHD_API_TOKEN`).
+
+### Notes
+- The MCP v2 OAuth login flow (PKCE) is fixed server-side (EODHD-1536) — unrelated to this plugin release.
+- `eodhd_client.py` gains client-side response normalization; pass `--raw` to bypass it and see the exact API payload.
+
 ## [0.4.4] — 2026-05-29
 
 ### Added
