@@ -50,6 +50,9 @@ jobs:
           # also cross-validates against live MCP server. Missing secret = check skipped.
           EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
 
+      - name: Registry parity checks
+        run: python3 tests/test_registry.py
+
   mcp-endpoint:
     runs-on: ubuntu-latest
     steps:

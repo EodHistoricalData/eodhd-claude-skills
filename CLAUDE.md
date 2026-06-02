@@ -2,7 +2,7 @@
 
 ## Overview
 
-Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.4.0**.
+Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.5.0**.
 
 Includes MCP Server connector (OAuth), 8 skills (1 core + 7 workflow), financial analyst agent, 5 slash commands, 72 endpoint docs, 28 general guides, and a stdlib-only Python client.
 
@@ -46,6 +46,10 @@ skills/
 adapters/
   claude/eodhd-api.md
   codex/eodhd-api.md
+registry/
+  capabilities.json             # Single source of truth for all endpoints (75 entries)
+  build.py                      # Generates support-matrix.md; --check for CI freshness
+  README.md                     # Registry schema + workflow
 ```
 
 ## Key Components
@@ -59,9 +63,11 @@ adapters/
 | Workflow skills (7) | Curated analysis workflows | `skills/*/SKILL.md` |
 | Financial analyst | Agent definition | `agents/financial-analyst.md` |
 | Slash commands (5) | User-facing commands | `.claude/commands/*.md` |
-| eodhd_client.py | Stdlib-only Python client, 30+ endpoints | `skills/eodhd-api/scripts/eodhd_client.py` |
+| eodhd_client.py | Stdlib-only Python client, 31 endpoints | `skills/eodhd-api/scripts/eodhd_client.py` |
 | Endpoint docs | Per-endpoint API reference | `skills/eodhd-api/references/endpoints/` |
 | General guides | Cross-cutting topics | `skills/eodhd-api/references/general/` |
+| Capabilities registry | Machine-readable source of truth for endpoints + support tiers | `registry/capabilities.json` |
+| Support matrix | Generated agent-facing endpoint/tier table | `skills/eodhd-api/references/general/support-matrix.md` |
 
 ## Development Setup
 
@@ -86,6 +92,7 @@ Automated tests live in `tests/` (stdlib-only, no pytest dependency):
 - `tests/test_python_client.py` — 30 e2e cases hitting every endpoint in `SUPPORTED_ENDPOINTS` against the live API. Requires `EODHD_API_TOKEN`.
 - `tests/test_mcp_v1.py` — MCP protocol e2e: v2 OAuth challenge, v1 initialize/tools-list/tools-call.
 - `tests/test_skill_references.py` — static cross-reference validation (SKILL.md frontmatter, endpoint docs, slash commands, agent frontmatter, manifest tool count vs MCP).
+- `tests/test_registry.py` — static parity: registry ↔ client `SUPPORTED_ENDPOINTS`, registry ↔ endpoint docs, validated-tier ↔ e2e cases, and support-matrix freshness. Stdlib-only, runs in CI.
 
 CI (`.github/workflows/validate.yml`) runs the static suite on every push/PR. The two e2e suites run automatically when `EODHD_API_TOKEN` is configured as a GitHub Actions secret; otherwise the e2e job emits a skip warning and the CI passes (no false negatives).
 
