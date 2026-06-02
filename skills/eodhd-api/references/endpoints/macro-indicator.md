@@ -90,6 +90,10 @@ python eodhd_client.py --endpoint macro-indicator --symbol USA --indicator gdp_c
 - Values are in the units specified by the indicator (%, USD, count, etc.)
 - Data sourced from World Bank and other official sources
 - API call consumption: 1 call per request
+- **Helper client normalization**: the raw API returns PascalCase keys (`Date`, `Value`, `CountryCode`,
+  `CountryName`, `Indicator`, `Period`). `eodhd_client.py` recursively lowercases all keys (→ `date`,
+  `value`, `countrycode`, ...) so they match every other endpoint and `d.get("date")`/`d.get("value")`
+  work. Pass `--raw` to see the original PascalCase keys.
 - **Data sources**: EODHD uses more than 5 sources for macroeconomic data and compiles it internally. The primary source is the [World Bank](https://www.worldbank.org/en/home), supplemented by government news and publications.
 - **Fertility indicator**: The `fertility_rate` indicator represents the **birth rate** (total fertility rate per woman).
 

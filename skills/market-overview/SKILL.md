@@ -31,7 +31,9 @@ Activate when the user asks for:
 3. **Fetch sector ETFs** — `eod-bulk-last-day` or individual sector ETF prices (XLK, XLF, XLV, XLE, XLI, etc.)
 4. **Fetch Treasury rates** — `ust/yield-rates`, `ust/bill-rates` for yield curve
 5. **Fetch macro data** — `macro-indicator` for latest GDP, CPI, unemployment
-6. **Fetch commodities** — `eod` for gold (`GC.COMEX`), oil (`CL.COMEX`), etc.
+6. **Fetch commodities** — `eod` via liquid ETF proxies: gold (`GLD.US`), oil (`USO.US`). The COMEX
+   futures symbols (`GC.COMEX`, `CL.COMEX`) are unreliable on standard plans (empty array / error) — prefer
+   the ETF proxies and label them as proxies in the output.
 7. **Compile overview**
 
 ## Output Structure

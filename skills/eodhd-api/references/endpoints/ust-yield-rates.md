@@ -112,6 +112,9 @@ python eodhd_client.py --endpoint ust/yield-rates --filter-year 2023
 - Useful for constructing yield curves, calculating spreads (e.g., 2Y-10Y spread), and term structure analysis
 - API call consumption: 1 call per request
 - Part of the US Treasury (UST) Interest Rates API (beta)
+- **Helper client normalization**: the raw API wraps rows in a `{"meta", "data", "links"}` envelope, but
+  `eodhd_client.py` unwraps it and returns the bare `data` array (consistent with other list endpoints, so
+  `data[-1]` works). Pass `--raw` to see the full envelope with `meta`/`links` pagination info.
 
 ## HTTP Status Codes
 
