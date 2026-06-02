@@ -2,6 +2,10 @@
 
 All notable changes to this plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] — 2026-06-01
+
+### Fixed
+- Plugin install failure (`conflicting manifests: both plugin.json and marketplace entry specify components`). The marketplace entry used `strict: false` while declaring a `skills` component array, conflicting with the components declared by `plugin.json` and directory conventions. Set the entry to `strict: true` and removed the redundant `skills` array — all skills, commands, the agent, and the MCP server now load via convention-based discovery.
 ## [0.4.5] — 2026-06-01
 
 Repo-side fixes from the v0.4.2 manual QA pass (EODHD-1524), verified live against the production API.

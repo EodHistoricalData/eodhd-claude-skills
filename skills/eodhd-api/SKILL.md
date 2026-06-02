@@ -60,7 +60,13 @@ Use this skill whenever the user's task involves **financial data, markets, inve
 - Trading hours, market status, and market holidays (from EODHD Marketplace — TradingHours)
 - Company logos and branding assets
 
-> **Note:** Marketplace endpoints (options, ESG/Investverte, PRAAMS, Illio, TradingHours, tick data) are not supported by the Python client. Use curl per the endpoint docs in `references/endpoints/`.
+> **Endpoint support tiers** — not all endpoints are equally reliable. Check
+> [`references/general/support-matrix.md`](references/general/support-matrix.md) (generated
+> from `registry/capabilities.json`) for the authoritative list:
+> - **validated** — call via the Python client (`scripts/eodhd_client.py`); covered by e2e tests.
+> - **fallback** — in the Python client but not e2e-verified; works, but verify the response.
+> - **documented** — marketplace add-ons (options, ESG/Investverte, PRAAMS, Illio, TradingHours,
+>   tick data); call via `curl` per the endpoint doc. Not in the Python client.
 
 ### Building financial tools and applications
 Activate this skill when the user is **programming or designing** any of:
