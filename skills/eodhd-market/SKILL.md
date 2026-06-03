@@ -1,3 +1,12 @@
+---
+name: eodhd-market
+description: >-
+  Comprehensive market overview using EODHD data — major indices, sector
+  performance, Treasury yield curve, macro snapshot, and commodities.
+  Invoke as /eodhd-market [region].
+argument-hint: "[optional region, e.g. Europe, Asia]"
+---
+
 Generate a comprehensive market overview using EODHD data.
 
 Use the `market-overview` skill workflow:

@@ -1,3 +1,12 @@
+---
+name: eodhd-screen
+description: >-
+  Screen stocks by fundamental and technical criteria using the EODHD screener —
+  market cap, P/E, dividend yield, sector, exchange, and signals, with currency-
+  aware thresholds. Invoke as /eodhd-screen <criteria>.
+argument-hint: "<criteria, e.g. high dividend large cap US>"
+---
+
 Screen stocks using EODHD screener based on these criteria: $ARGUMENTS
 
 Translate the user's criteria into EODHD screener filters.

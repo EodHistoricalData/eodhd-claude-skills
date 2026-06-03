@@ -2,6 +2,15 @@
 
 All notable changes to this plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.5.2] — 2026-06-03
+
+### Fixed
+- **Plugin loaded only 5 skills and slash commands did not register on newer Claude Code (2.1.16x)** (EODHD-1524, surfaced by QA). Root cause: the plugin shipped BOTH a legacy `commands/` directory (5 flat files) and a modern `skills/` directory (8). `claude plugin details` merges them (reports 13), but the in-session loader on newer Claude Code resolved only the flat `commands/` files (5) and did not register them as `/`-commands — so `/eodhd-analyze` returned "Unknown command".
+
+### Changed
+- Consolidated all components into `skills/`. Migrated the 5 slash commands (`eodhd-analyze`, `eodhd-compare`, `eodhd-macro`, `eodhd-market`, `eodhd-screen`) from flat `commands/*.md` into `skills/<name>/SKILL.md` as standard skills with YAML frontmatter (`name`, `description`, `argument-hint`), and removed the legacy `commands/` directory. Per the Claude Code plugin docs, `skills/` is the supported directory for new plugins; consolidating removes the dual-directory ambiguity that broke loading.
+- **Verified in a live session** (not just `claude plugin details`): on Claude Code **2.1.158 AND 2.1.161** all **13 skills load** (namespaced `eodhd-api:<name>`), including the 5 `eodhd-*` commands. On v0.5.1 the same live probe loaded only the 8 `skills/` entries — the flat `commands/*.md` files did **not** load as usable commands, which is why `/eodhd-analyze` returned "Unknown command". Commands are now invoked namespaced, e.g. `/eodhd-api:eodhd-analyze`.
+
 ## [0.5.1] — 2026-06-03
 
 ### Fixed

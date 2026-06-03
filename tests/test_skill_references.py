@@ -23,8 +23,12 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILLS = REPO_ROOT / "skills"
-COMMANDS = REPO_ROOT / "commands"
 AGENTS = REPO_ROOT / "agents"
+# User-facing slash commands are now first-class skills under skills/ (v0.5.2);
+# the legacy commands/ directory was removed to avoid dual-directory load ambiguity.
+COMMAND_SKILLS = {
+    "eodhd-analyze", "eodhd-compare", "eodhd-macro", "eodhd-market", "eodhd-screen",
+}
 CLIENT = SKILLS / "eodhd-api" / "scripts" / "eodhd_client.py"
 
 
@@ -122,17 +126,29 @@ def check_client_examples() -> list[str]:
 
 
 def check_slash_commands() -> list[str]:
-    """Each commands/*.md should be loadable and reference real things."""
+    """The user-facing slash commands are skills under skills/ (v0.5.2).
+    Each must exist with valid frontmatter and reference only real skills."""
     fails = []
-    if not COMMANDS.exists():
-        return ["no commands directory"]
     available_skills = {p.parent.name for p in SKILLS.glob("*/SKILL.md")}
-    for cmd in sorted(COMMANDS.glob("*.md")):
-        text = cmd.read_text()
-        # Find skill mentions like `skill: eodhd-api` or `skills/<name>/`
-        for skill_ref in re.findall(r"skills/([\w\-]+)/", text):
+    if not COMMAND_SKILLS.issubset(available_skills):
+        missing = sorted(COMMAND_SKILLS - available_skills)
+        fails.append(f"missing command skills under skills/: {missing}")
+    # Guard against re-introducing the legacy dual directory.
+    if (REPO_ROOT / "commands").exists():
+        fails.append("legacy commands/ directory present — commands must live in skills/ (see v0.5.2)")
+    for name in sorted(COMMAND_SKILLS & available_skills):
+        skill_md = SKILLS / name / "SKILL.md"
+        fm, body = parse_frontmatter(skill_md.read_text())
+        if fm is None:
+            fails.append(f"skills/{name}/SKILL.md: no frontmatter")
+            continue
+        for field in ("name", "description"):
+            if field not in fm:
+                fails.append(f"skills/{name}/SKILL.md: missing '{field}'")
+        # Any skills/<name>/ references in the body must resolve.
+        for skill_ref in re.findall(r"skills/([\w\-]+)/", body):
             if skill_ref not in available_skills:
-                fails.append(f"{cmd.relative_to(REPO_ROOT)}: references missing skill '{skill_ref}'")
+                fails.append(f"skills/{name}/SKILL.md: references missing skill '{skill_ref}'")
     return fails
 
 

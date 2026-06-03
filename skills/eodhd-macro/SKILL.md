@@ -1,3 +1,12 @@
+---
+name: eodhd-macro
+description: >-
+  Macro-economic dashboard using EODHD data — GDP, CPI, unemployment, interest
+  rates, Treasury yield curve, real yields, and the economic events calendar.
+  Invoke as /eodhd-macro [country or region].
+argument-hint: "[country or region, e.g. USA, EU, G7]"
+---
+
 Generate a macro-economic dashboard using EODHD data.
 
 Use the `macro-dashboard` skill workflow:
