@@ -6,11 +6,12 @@
   },
   "metadata": {
     "description": "Developer-first financial data for Claude — 150k+ tickers, 70+ exchanges, MCP Server with OAuth, 7 curated workflow skills, Python client, 72 endpoint docs",
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
   "plugins": [
     {
       "name": "eodhd-api",
+      "displayName": "EODHD Claude Skills",
       "description": "Core EODHD financial data skill — historical prices, fundamentals, options, technicals, news, sentiment, macro indicators, ESG, risk analytics, Treasury rates, and more",
       "source": "./",
       "strict": true

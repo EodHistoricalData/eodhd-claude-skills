@@ -2,7 +2,7 @@
 
 ## Overview
 
-Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.5.0**.
+Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.5.1**.
 
 Includes MCP Server connector (OAuth), 8 skills (1 core + 7 workflow), financial analyst agent, 5 slash commands, 72 endpoint docs, 28 general guides, and a stdlib-only Python client.
 
@@ -12,8 +12,7 @@ Includes MCP Server connector (OAuth), 8 skills (1 core + 7 workflow), financial
 .claude-plugin/
   marketplace.json              # Plugin manifest (name, version, skills list)
   plugin.json                   # Extended plugin metadata (keywords, capabilities, MCP)
-.claude/
-  commands/                     # Slash commands
+commands/                       # Slash commands (plugin-root — auto-discovered)
     eodhd-analyze.md            # /eodhd-analyze <ticker>
     eodhd-compare.md            # /eodhd-compare <ticker1> <ticker2>
     eodhd-market.md             # /eodhd-market
@@ -62,7 +61,7 @@ registry/
 | Core SKILL.md | Full API skill (triggers, workflow, guardrails) | `skills/eodhd-api/SKILL.md` |
 | Workflow skills (7) | Curated analysis workflows | `skills/*/SKILL.md` |
 | Financial analyst | Agent definition | `agents/financial-analyst.md` |
-| Slash commands (5) | User-facing commands | `.claude/commands/*.md` |
+| Slash commands (5) | User-facing commands | `commands/*.md` |
 | eodhd_client.py | Stdlib-only Python client, 31 endpoints | `skills/eodhd-api/scripts/eodhd_client.py` |
 | Endpoint docs | Per-endpoint API reference | `skills/eodhd-api/references/endpoints/` |
 | General guides | Cross-cutting topics | `skills/eodhd-api/references/general/` |

@@ -71,8 +71,7 @@ eodhd-claude-skills/
 ├── .claude-plugin/
 │   ├── marketplace.json            # Plugin manifest for Claude Code
 │   └── plugin.json                 # Extended plugin metadata
-├── .claude/
-│   └── commands/                   # Slash commands
+├── commands/                       # Slash commands (plugin-root — auto-discovered)
 │       ├── eodhd-analyze.md        # /eodhd-analyze <ticker>
 │       ├── eodhd-compare.md        # /eodhd-compare <ticker1> <ticker2>
 │       ├── eodhd-market.md         # /eodhd-market
