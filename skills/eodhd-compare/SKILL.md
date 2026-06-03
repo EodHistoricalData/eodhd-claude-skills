@@ -1,3 +1,12 @@
+---
+name: eodhd-compare
+description: >-
+  Side-by-side comparison of two or more companies using EODHD data — valuation,
+  financials, profitability, performance, and dividends in comparison tables.
+  Invoke as /eodhd-compare <ticker1> <ticker2> ...
+argument-hint: "<ticker1> <ticker2> [ticker3 ...]"
+---
+
 Compare the following companies side-by-side using EODHD data: $ARGUMENTS
 
 Parse the arguments as ticker symbols separated by spaces or commas (e.g., "AAPL MSFT" or "AAPL.US, MSFT.US").

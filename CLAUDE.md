@@ -2,9 +2,9 @@
 
 ## Overview
 
-Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.5.1**.
+Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.5.2**.
 
-Includes MCP Server connector (OAuth), 8 skills (1 core + 7 workflow), financial analyst agent, 5 slash commands, 72 endpoint docs, 28 general guides, and a stdlib-only Python client.
+Includes MCP Server connector (OAuth), 13 skills (1 core + 7 workflow + 5 user-facing commands), financial analyst agent, 72 endpoint docs, 28 general guides, and a stdlib-only Python client. As of v0.5.2 the user commands (`eodhd-analyze` etc.) live under `skills/` as standard skills and are invoked namespaced (e.g. `/eodhd-api:eodhd-analyze`) — the legacy `commands/` directory was removed because its flat files did not load as usable commands in a live session on newer Claude Code (verified live on 2.1.158 and 2.1.161: all 13 skills load).
 
 ## File Structure
 
@@ -12,16 +12,15 @@ Includes MCP Server connector (OAuth), 8 skills (1 core + 7 workflow), financial
 .claude-plugin/
   marketplace.json              # Plugin manifest (name, version, skills list)
   plugin.json                   # Extended plugin metadata (keywords, capabilities, MCP)
-commands/                       # Slash commands (plugin-root — auto-discovered)
-    eodhd-analyze.md            # /eodhd-analyze <ticker>
-    eodhd-compare.md            # /eodhd-compare <ticker1> <ticker2>
-    eodhd-market.md             # /eodhd-market
-    eodhd-screen.md             # /eodhd-screen <criteria>
-    eodhd-macro.md              # /eodhd-macro
 .mcp.json                       # MCP Server connector → mcpv2.eodhd.dev/v2/mcp
 agents/
   financial-analyst.md          # Financial analyst agent definition
-skills/
+skills/                         # All skills incl. user commands (auto-discovered)
+  eodhd-analyze/SKILL.md        # /eodhd-api:eodhd-analyze <ticker>
+  eodhd-compare/SKILL.md        # /eodhd-api:eodhd-compare <ticker1> <ticker2>
+  eodhd-market/SKILL.md         # /eodhd-market
+  eodhd-screen/SKILL.md         # /eodhd-screen <criteria>
+  eodhd-macro/SKILL.md          # /eodhd-macro
   eodhd-api/                    # Core skill — full API access (30+ client endpoints)
     SKILL.md
     references/
@@ -61,7 +60,7 @@ registry/
 | Core SKILL.md | Full API skill (triggers, workflow, guardrails) | `skills/eodhd-api/SKILL.md` |
 | Workflow skills (7) | Curated analysis workflows | `skills/*/SKILL.md` |
 | Financial analyst | Agent definition | `agents/financial-analyst.md` |
-| Slash commands (5) | User-facing commands | `commands/*.md` |
+| Slash commands (5) | User-facing commands (standard skills, invoked `/eodhd-api:<name>`) | `skills/eodhd-{analyze,compare,market,screen,macro}/SKILL.md` |
 | eodhd_client.py | Stdlib-only Python client, 31 endpoints | `skills/eodhd-api/scripts/eodhd_client.py` |
 | Endpoint docs | Per-endpoint API reference | `skills/eodhd-api/references/endpoints/` |
 | General guides | Cross-cutting topics | `skills/eodhd-api/references/general/` |

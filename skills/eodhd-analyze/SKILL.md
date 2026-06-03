@@ -1,3 +1,12 @@
+---
+name: eodhd-analyze
+description: >-
+  Comprehensive single-company analysis using EODHD data — profile,
+  fundamentals, price action, news sentiment, insider activity, and technicals,
+  presented as a structured company brief. Invoke as /eodhd-analyze <ticker>.
+argument-hint: "<ticker or company name>"
+---
+
 Perform a comprehensive analysis of the company $ARGUMENTS using EODHD data.
 
 Use the `company-brief` skill workflow:

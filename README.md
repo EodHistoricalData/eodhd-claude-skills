@@ -71,16 +71,15 @@ eodhd-claude-skills/
 ├── .claude-plugin/
 │   ├── marketplace.json            # Plugin manifest for Claude Code
 │   └── plugin.json                 # Extended plugin metadata
-├── commands/                       # Slash commands (plugin-root — auto-discovered)
-│       ├── eodhd-analyze.md        # /eodhd-analyze <ticker>
-│       ├── eodhd-compare.md        # /eodhd-compare <ticker1> <ticker2>
-│       ├── eodhd-market.md         # /eodhd-market
-│       ├── eodhd-screen.md         # /eodhd-screen <criteria>
-│       └── eodhd-macro.md          # /eodhd-macro
 ├── .mcp.json                       # MCP Server connector (OAuth)
 ├── agents/
 │   └── financial-analyst.md        # Financial analyst agent definition
-├── skills/
+├── skills/                         # All skills incl. user commands (auto-discovered)
+│   ├── eodhd-analyze/              # /eodhd-analyze <ticker>
+│   ├── eodhd-compare/              # /eodhd-compare <ticker1> <ticker2>
+│   ├── eodhd-market/               # /eodhd-market
+│   ├── eodhd-screen/               # /eodhd-screen <criteria>
+│   ├── eodhd-macro/                # /eodhd-macro
 │   ├── eodhd-api/                  # Core skill — full API access
 │   │   ├── SKILL.md
 │   │   ├── references/
