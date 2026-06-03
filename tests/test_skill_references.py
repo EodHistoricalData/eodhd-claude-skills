@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILLS = REPO_ROOT / "skills"
-COMMANDS = REPO_ROOT / ".claude" / "commands"
+COMMANDS = REPO_ROOT / "commands"
 AGENTS = REPO_ROOT / "agents"
 CLIENT = SKILLS / "eodhd-api" / "scripts" / "eodhd_client.py"
 
@@ -122,10 +122,10 @@ def check_client_examples() -> list[str]:
 
 
 def check_slash_commands() -> list[str]:
-    """Each .claude/commands/*.md should be loadable and reference real things."""
+    """Each commands/*.md should be loadable and reference real things."""
     fails = []
     if not COMMANDS.exists():
-        return ["no .claude/commands directory"]
+        return ["no commands directory"]
     available_skills = {p.parent.name for p in SKILLS.glob("*/SKILL.md")}
     for cmd in sorted(COMMANDS.glob("*.md")):
         text = cmd.read_text()

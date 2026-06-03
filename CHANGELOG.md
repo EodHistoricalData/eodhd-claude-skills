@@ -2,6 +2,17 @@
 
 All notable changes to this plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.5.1] — 2026-06-03
+
+### Fixed
+- **Plugin loaded 0 skills and 0 slash commands** despite a clean `/doctor` (surfaced in v0.5.0 QA, EODHD-1524). Two packaging bugs:
+  - **Name mismatch** — `plugin.json` declared `name: "eodhd-claude-skills"` while the marketplace entry declared the plugin as `eodhd-api`. The mismatch broke component binding, so convention-based discovery of `skills/` never ran. `plugin.json` `name` is now `eodhd-api` (matches the install identifier `eodhd-api@eodhd-claude-skills`); added `displayName: "EODHD Claude Skills"` to the marketplace entry for the UI label.
+  - **Slash commands in the wrong directory** — commands lived in `.claude/commands/`, which is project-local config and is NOT discovered inside a plugin. Moved all 5 to `commands/` at the plugin root. `/eodhd-analyze` and the rest now register.
+- Verified locally with `claude plugin details eodhd-api`: 13 skills (8 workflow + 5 commands) + 1 agent + 1 MCP server all load.
+
+### Changed
+- `tests/test_skill_references.py` now validates commands at `commands/` (was `.claude/commands/`); `CLAUDE.md` and `README.md` file-structure diagrams updated to match.
+
 ## [0.5.0] — 2026-06-01
 
 ### Fixed
