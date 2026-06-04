@@ -34,6 +34,7 @@ import argparse
 import json
 import os
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -100,7 +101,11 @@ def get_historical_market_cap_api(symbol: str, token: str, from_date: str, to_da
         rows = [v for _, v in sorted(data.items(), key=lambda x: int(x[0]) if x[0].isdigit() else 0)]
     else:
         rows = data
-    return [{"date": r["date"], "market_cap": r["value"]} for r in rows if "date" in r]
+    return [
+        {"date": r["date"], "market_cap": r["value"]}
+        for r in rows
+        if isinstance(r, dict) and "date" in r and "value" in r
+    ]
 
 
 def compute_market_cap_series(symbol: str, token: str, from_date: str, to_date: str) -> list[dict]:
@@ -118,7 +123,11 @@ def compute_market_cap_series(symbol: str, token: str, from_date: str, to_date: 
 
     series = []
     for row in prices:
-        close = row.get("close") or row.get("adjusted_close")
+        # Explicit None check, not `a or b`: a legitimate close of 0.0 is falsy
+        # and would otherwise be discarded / silently replaced by adjusted_close.
+        close = row.get("close")
+        if close is None:
+            close = row.get("adjusted_close")
         if close is None:
             continue
         series.append({
@@ -207,7 +216,12 @@ def main() -> int:
             "end_market_cap": format_value(mcaps[-1]),
             "min_market_cap": format_value(min(mcaps)),
             "max_market_cap": format_value(max(mcaps)),
-            "change_pct": round((mcaps[-1] / mcaps[0] - 1) * 100, 2),
+            # Guard against a zero opening market cap (suspended/delisted data)
+            # which would otherwise raise ZeroDivisionError.
+            "change_pct": (
+                None if mcaps[0] == 0
+                else round((mcaps[-1] / mcaps[0] - 1) * 100, 2)
+            ),
         }
         output = {"summary": summary, "series": series}
         print(json.dumps(output, indent=2))
