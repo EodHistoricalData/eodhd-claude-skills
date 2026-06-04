@@ -89,11 +89,26 @@ import argparse
 import datetime
 import json
 import os
+import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
 BASE_URL = "https://eodhd.com/api"
+
+
+def _redact_token(url: str) -> str:
+    """Redact the api_token query value so the secret never reaches stderr/logs.
+
+    Matches the value exactly as it appears in the URL (handles URL-encoded
+    tokens), unlike a naive ``url.replace(token, '***')`` which misses encoded
+    or partially-quoted tokens. Anchored to a query-param boundary (``?``/``&``)
+    and stops at the next ``&`` or ``#`` so it neither swallows a fragment nor
+    matches a lookalike param such as ``backup_api_token=``.
+    """
+    return re.sub(r"([?&]api_token=)[^&#]*", r"\1***", url)
+
 
 # Endpoints that don't require a symbol
 NO_SYMBOL_ENDPOINTS = {
@@ -557,7 +572,7 @@ def main() -> int:
             payload = response.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as exc:
         print(f"HTTP Error {exc.code}: {exc.reason}", file=sys.stderr)
-        print(f"URL: {url.replace(token, '***')}", file=sys.stderr)
+        print(f"URL: {_redact_token(url)}", file=sys.stderr)
         try:
             error_body = exc.read().decode("utf-8", errors="replace")
             print(f"Response: {error_body}", file=sys.stderr)
@@ -566,11 +581,11 @@ def main() -> int:
         return 1
     except urllib.error.URLError as exc:
         print(f"Request failed: {exc.reason}", file=sys.stderr)
-        print(f"URL: {url.replace(token, '***')}", file=sys.stderr)
+        print(f"URL: {_redact_token(url)}", file=sys.stderr)
         return 1
     except Exception as exc:
         print(f"Request failed: {exc}", file=sys.stderr)
-        print(f"URL: {url.replace(token, '***')}", file=sys.stderr)
+        print(f"URL: {_redact_token(url)}", file=sys.stderr)
         return 1
 
     if args.raw:
