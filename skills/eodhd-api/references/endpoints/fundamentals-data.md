@@ -19,8 +19,19 @@ valuation metrics, earnings history, dividends, and company profile information.
 |-----------|----------|------|-------------|
 | api_token | Yes | string | EODHD API key |
 | {SYMBOL} | Yes | string | Symbol with exchange suffix (e.g., AAPL.US) |
-| filter | No | string | Comma-separated list of sections to return (e.g., General,Highlights,Valuation) |
+| filter | No | string | Sections to return. Comma-separated for multiple top-level sections (e.g. `General,Highlights,Valuation`); use `::` to drill into nested paths (e.g. `Financials::Balance_Sheet::yearly`, `Earnings::Trend::Quarterly`) |
 | fmt | No | string | Output format: 'json' or 'csv'. Defaults to 'json' |
+
+## API Versions
+
+Two endpoints are available and return the same top-level sections:
+
+| Version | Path | Notes |
+|---------|------|-------|
+| **v1.1** (recommended) | `/api/v1.1/fundamentals/{SYMBOL}` | `Earnings.Trend` is split into `Quarterly` and `Annual` sub-objects, each entry adds a human-readable `fiscalQuarter` (Q1–Q4) and a `type` field, and the prior Q4-data-loss bug (quarterly and annual estimates sharing a date) is fixed |
+| current/legacy | `/api/fundamentals/{SYMBOL}` | `Earnings.Trend` is a flat object keyed by period date; remains available for backward compatibility |
+
+Both consume 10 API calls and accept the same parameters. The response shape below reflects **v1.1**.
 
 ## Response (shape)
 Large nested JSON object containing multiple sections:
@@ -80,17 +91,61 @@ Large nested JSON object containing multiple sections:
     "ShortRatio": 1.5,
     "ShortPercentOfFloat": 0.008
   },
-  "Financials": {
-    "Balance_Sheet": { "quarterly": [...], "yearly": [...] },
-    "Income_Statement": { "quarterly": [...], "yearly": [...] },
-    "Cash_Flow": { "quarterly": [...], "yearly": [...] }
+  "Technicals": {
+    "Beta": 1.25,
+    "52WeekHigh": 260.1,
+    "52WeekLow": 164.08,
+    "50DayMA": 211.5,
+    "200DayMA": 222.3,
+    "SharesShort": 120000000,
+    "ShortRatio": 1.5
   },
+  "SplitsDividends": {
+    "ForwardAnnualDividendRate": 1.0,
+    "ForwardAnnualDividendYield": 0.0043,
+    "PayoutRatio": 0.15,
+    "DividendDate": "2025-02-13",
+    "ExDividendDate": "2025-02-10",
+    "LastSplitFactor": "4:1",
+    "LastSplitDate": "2020-08-31",
+    "NumberDividendsByYear": { "...": "..." }
+  },
+  "AnalystRatings": {
+    "Rating": 4.2,
+    "TargetPrice": 250.0,
+    "StrongBuy": 12,
+    "Buy": 20,
+    "Hold": 8,
+    "Sell": 1,
+    "StrongSell": 0
+  },
+  "Holders": {
+    "Institutions": { "...": "..." },
+    "Funds": { "...": "..." }
+  },
+  "InsiderTransactions": { "...": "..." },
+  "ESGScores": {
+    "Disclaimer": "...",
+    "RatingDate": "2024-12-01",
+    "TotalEsg": 16.5,
+    "EnvironmentScore": 0.6,
+    "SocialScore": 7.4,
+    "GovernanceScore": 8.5
+  },
+  "outstandingShares": { "annual": [], "quarterly": [] },
   "Earnings": {
-    "History": [...],
-    "Trend": [...],
-    "Annual": [...]
+    "History": { "2024-09-30": { "date": "2024-09-30", "epsActual": 1.64, "epsEstimate": 1.6, "epsDifference": 0.04, "surprisePercent": 2.5 } },
+    "Trend": {
+      "Quarterly": { "2026-09-30": { "date": "2026-09-30", "period": "+1q", "fiscalQuarter": "Q4", "type": "quarterly", "earningsEstimateAvg": "2.0107", "revenueEstimateAvg": "114207466420.00" } },
+      "Annual":    { "2027-09-30": { "date": "2027-09-30", "period": "+1y", "type": "yearly", "earningsEstimateAvg": "9.6552", "revenueEstimateAvg": "517815320250.00" } }
+    },
+    "Annual": { "2024-09-30": { "date": "2024-09-30", "epsActual": 6.08 } }
   },
-  "outstandingShares": { "annual": [...], "quarterly": [...] }
+  "Financials": {
+    "Balance_Sheet": { "quarterly": {}, "yearly": {} },
+    "Income_Statement": { "quarterly": {}, "yearly": {} },
+    "Cash_Flow": { "quarterly": {}, "yearly": {} }
+  }
 }
 ```
 

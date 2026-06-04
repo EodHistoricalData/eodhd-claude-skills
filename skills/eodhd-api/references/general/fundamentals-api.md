@@ -77,6 +77,25 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json
 - `filter=`: **Highly recommended** - Retrieve specific sections only
 - `from=` / `to=`: Date filtering (supported for Common Stocks and Indices)
 
+### API Versions (v1.1)
+
+A versioned endpoint is available alongside the original:
+
+```
+https://eodhd.com/api/v1.1/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json
+```
+
+**What v1.1 changes** (Common Stock `Earnings` section):
+- `Earnings.Trend` is split into **`Quarterly`** and **`Annual`** sub-objects (previously a single
+  date-keyed object where quarterly and annual estimates sharing a date could collide).
+- Each trend entry adds a human-readable **`fiscalQuarter`** (`Q1`–`Q4`) and a **`type`**
+  (`quarterly` / `yearly`) field.
+- Fixes the missing-Q4-data issue in Earnings Trend.
+
+The original `/api/fundamentals/{TICKER}` endpoint remains available for backward compatibility and
+returns the same top-level sections; only the `Earnings.Trend` shape differs. See
+[fundamentals-common-stock.md](fundamentals-common-stock.md) §Earnings for both shapes.
+
 ### Key Characteristics
 
 | Characteristic | Value |
@@ -665,6 +684,6 @@ api_token=demo
 
 ---
 
-**Last Updated**: February 2026
-**API Version**: Current
+**Last Updated**: June 2026
+**API Version**: Current + v1.1
 **Maintained By**: EODHD Skills Team

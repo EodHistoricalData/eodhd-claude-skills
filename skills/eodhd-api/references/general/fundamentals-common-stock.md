@@ -730,51 +730,69 @@ Historical quarterly earnings with estimates vs. actuals:
 
 Earnings and revenue estimates for upcoming periods:
 
+> **Two response shapes.** The shape of `Earnings.Trend` depends on the endpoint version:
+> - **v1.1** (`/api/v1.1/fundamentals/...`, recommended) — `Trend` is split into `Quarterly` and
+>   `Annual` sub-objects, each keyed by period-end date, and each entry carries `fiscalQuarter`
+>   (`Q1`–`Q4`) and `type` (`quarterly` / `yearly`).
+> - **legacy** (`/api/fundamentals/...`) — `Trend` is a single object keyed by period date
+>   (`0q`, `+1q`, `0y`, `+1y`).
+
+**v1.1 shape:**
 ```json
 {
   "Trend": {
-    "0q": {
-      "date": "2024-12-31",
-      "period": "0q",
-      "growth": "-0.1060",
-      "earningsEstimateAvg": "2.1100",
-      "earningsEstimateLow": "1.9400",
-      "earningsEstimateHigh": "2.3200",
-      "earningsEstimateNumberOfAnalysts": "34",
-      "earningsEstimateGrowth": "-0.1060",
-      "revenueEstimateAvg": "124710000000.00",
-      "revenueEstimateLow": "120500000000.00",
-      "revenueEstimateHigh": "128000000000.00",
-      "revenueEstimateNumberOfAnalysts": "30",
-      "revenueEstimateGrowth": "0.0330",
-      "epsTrendCurrent": "2.1100",
-      "epsTrend7daysAgo": "2.1200",
-      "epsTrend30daysAgo": "2.1300",
-      "epsTrend60daysAgo": "2.1200",
-      "epsTrend90daysAgo": "2.1100",
-      "epsRevisionsUpLast7days": "0",
-      "epsRevisionsUpLast30days": "1",
-      "epsRevisionsDownLast7days": null,
-      "epsRevisionsDownLast30days": null
+    "Quarterly": {
+      "2026-09-30": {
+        "date": "2026-09-30",
+        "period": "+1q",
+        "fiscalQuarter": "Q4",
+        "type": "quarterly",
+        "growth": "0.0869",
+        "earningsEstimateAvg": "2.0107",
+        "earningsEstimateLow": "1.8600",
+        "earningsEstimateHigh": "2.1400",
+        "earningsEstimateYearAgoEps": "1.8500",
+        "earningsEstimateNumberOfAnalysts": "30.0000",
+        "earningsEstimateGrowth": "0.0869",
+        "revenueEstimateAvg": "114207466420.00",
+        "revenueEstimateLow": "104929122250.00",
+        "revenueEstimateHigh": "118975100000.00",
+        "revenueEstimateNumberOfAnalysts": "27.00",
+        "revenueEstimateGrowth": "0.1146",
+        "epsTrendCurrent": "2.0107",
+        "epsTrend7daysAgo": "2.0107",
+        "epsTrend30daysAgo": "1.9695",
+        "epsRevisionsUpLast30days": "20.0000",
+        "epsRevisionsDownLast30days": "3.0000"
+      }
     },
-    "+1q": {
-      "period": "+1q"
-    },
-    "0y": {
-      "period": "0y"
-    },
-    "+1y": {
-      "period": "+1y"
+    "Annual": {
+      "2027-09-30": {
+        "date": "2027-09-30",
+        "period": "+1y",
+        "type": "yearly",
+        "earningsEstimateAvg": "9.6552",
+        "revenueEstimateAvg": "517815320250.00"
+      }
     }
   }
 }
 ```
 
-**Period Keys**:
-- `0q` - Current quarter
-- `+1q` - Next quarter
-- `0y` - Current fiscal year
-- `+1y` - Next fiscal year
+**Legacy shape** (date-keyed by period code):
+```json
+{
+  "Trend": {
+    "0q": { "date": "2024-12-31", "period": "0q", "earningsEstimateAvg": "2.1100" },
+    "+1q": { "period": "+1q" },
+    "0y": { "period": "0y" },
+    "+1y": { "period": "+1y" }
+  }
+}
+```
+
+**Period identifiers** (`period` field): `0q` current quarter, `+1q` next quarter, `0y` current
+fiscal year, `+1y` next fiscal year.
 
 **Field Descriptions**: (for each period)
 
@@ -800,6 +818,9 @@ Earnings and revenue estimates for upcoming periods:
 | `epsRevisionsUpLast30days` | string | Upward revisions (last 30 days) |
 | `epsRevisionsDownLast7days` | string/null | Downward revisions (last 7 days) |
 | `epsRevisionsDownLast30days` | string/null | Downward revisions (last 30 days) |
+| `earningsEstimateYearAgoEps` | string/null | EPS in the year-ago period (v1.1) |
+| `fiscalQuarter` | string | Human-readable fiscal quarter `Q1`–`Q4` (v1.1) |
+| `type` | string | `quarterly` or `yearly` (v1.1) |
 
 ### 11.3 Earnings::Annual
 

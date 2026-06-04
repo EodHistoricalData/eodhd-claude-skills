@@ -2,6 +2,20 @@
 
 All notable changes to this plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- **Insider Transactions reference** rewritten to document the SEC **Form 4** endpoint
+  `/api/sec-filings/{symbol}/form4` (nested non-derivative/derivative/footnote schema, EDGAR-sourced,
+  pagination, 10 calls) as the recommended source, alongside the legacy flat `/api/insider-transactions`
+  feed. Verified live: the two feeds differ in coverage (e.g. `AAPL.US` is empty on the legacy feed
+  but populated via Form 4). Closes community report on stale endpoint references.
+- **Fundamentals reference** updated for the **v1.1** endpoint (`/api/v1.1/fundamentals/{SYMBOL}`):
+  `Earnings.Trend` is now split into `Quarterly`/`Annual` with `fiscalQuarter` and `type` fields;
+  added the previously-undocumented top-level sections (`Technicals`, `SplitsDividends`,
+  `AnalystRatings`, `Holders`, `InsiderTransactions`, `ESGScores`) to the response shape; documented
+  the `::` nested-filter syntax. Both v1.1 and the legacy `/api/fundamentals` shapes are shown.
+
 ## [0.5.2] — 2026-06-03
 
 ### Fixed
