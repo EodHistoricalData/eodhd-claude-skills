@@ -163,7 +163,7 @@ https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json
 https://eodhd.com/api/fundamentals/MSFT.US?api_token=demo
 
 # Production key - End-of-Day data
-https://eodhd.com/api/eod/IBM.US?api_token=65f3a2b1c4d5e6f7.89012345&fmt=json
+https://eodhd.com/api/eod/IBM.US?api_token=YOUR_API_TOKEN&fmt=json
 ```
 
 **Advantages**:

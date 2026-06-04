@@ -389,10 +389,10 @@ def get_token():
 
 **Real example**:
 ```bash
-$ curl "https://eodhd.com/api/exchange-symbol-list/INDX?api_token=6372322e374f23.92183431&fmt=json"
+$ curl "https://eodhd.com/api/exchange-symbol-list/INDX?api_token=INVALID_OR_EXPIRED_TOKEN&fmt=json"
 Unauthenticated
 
-$ curl "https://eodhd.com/api/exchange-symbol-list/INDX?api_token=6372322e374f23.92183431&fmt=csv"
+$ curl "https://eodhd.com/api/exchange-symbol-list/INDX?api_token=INVALID_OR_EXPIRED_TOKEN&fmt=csv"
 Unauthenticated
 ```
 

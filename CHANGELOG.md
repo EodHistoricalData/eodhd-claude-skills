@@ -5,7 +5,7 @@ All notable changes to this plugin are documented here. The format follows [Keep
 ## [0.5.2] — 2026-06-03
 
 ### Fixed
-- **Plugin loaded only 5 skills and slash commands did not register on newer Claude Code (2.1.16x)** (EODHD-1524, surfaced by QA). Root cause: the plugin shipped BOTH a legacy `commands/` directory (5 flat files) and a modern `skills/` directory (8). `claude plugin details` merges them (reports 13), but the in-session loader on newer Claude Code resolved only the flat `commands/` files (5) and did not register them as `/`-commands — so `/eodhd-analyze` returned "Unknown command".
+- **Plugin loaded only 5 skills and slash commands did not register on newer Claude Code (2.1.16x)** (surfaced by manual QA). Root cause: the plugin shipped BOTH a legacy `commands/` directory (5 flat files) and a modern `skills/` directory (8). `claude plugin details` merges them (reports 13), but the in-session loader on newer Claude Code resolved only the flat `commands/` files (5) and did not register them as `/`-commands — so `/eodhd-analyze` returned "Unknown command".
 
 ### Changed
 - Consolidated all components into `skills/`. Migrated the 5 slash commands (`eodhd-analyze`, `eodhd-compare`, `eodhd-macro`, `eodhd-market`, `eodhd-screen`) from flat `commands/*.md` into `skills/<name>/SKILL.md` as standard skills with YAML frontmatter (`name`, `description`, `argument-hint`), and removed the legacy `commands/` directory. Per the Claude Code plugin docs, `skills/` is the supported directory for new plugins; consolidating removes the dual-directory ambiguity that broke loading.
@@ -14,7 +14,7 @@ All notable changes to this plugin are documented here. The format follows [Keep
 ## [0.5.1] — 2026-06-03
 
 ### Fixed
-- **Plugin loaded 0 skills and 0 slash commands** despite a clean `/doctor` (surfaced in v0.5.0 QA, EODHD-1524). Two packaging bugs:
+- **Plugin loaded 0 skills and 0 slash commands** despite a clean `/doctor` (surfaced in v0.5.0 QA). Two packaging bugs:
   - **Name mismatch** — `plugin.json` declared `name: "eodhd-claude-skills"` while the marketplace entry declared the plugin as `eodhd-api`. The mismatch broke component binding, so convention-based discovery of `skills/` never ran. `plugin.json` `name` is now `eodhd-api` (matches the install identifier `eodhd-api@eodhd-claude-skills`); added `displayName: "EODHD Claude Skills"` to the marketplace entry for the UI label.
   - **Slash commands in the wrong directory** — commands lived in `.claude/commands/`, which is project-local config and is NOT discovered inside a plugin. Moved all 5 to `commands/` at the plugin root. `/eodhd-analyze` and the rest now register.
 - Verified locally with `claude plugin details eodhd-api`: 13 skills (8 workflow + 5 commands) + 1 agent + 1 MCP server all load.
@@ -28,7 +28,7 @@ All notable changes to this plugin are documented here. The format follows [Keep
 - Plugin install failure (`conflicting manifests: both plugin.json and marketplace entry specify components`). The marketplace entry used `strict: false` while declaring a `skills` component array, conflicting with the components declared by `plugin.json` and directory conventions. Set the entry to `strict: true` and removed the redundant `skills` array — all skills, commands, the agent, and the MCP server now load via convention-based discovery.
 ## [0.4.5] — 2026-06-01
 
-Repo-side fixes from the v0.4.2 manual QA pass (EODHD-1524), verified live against the production API.
+Repo-side fixes from the v0.4.2 manual QA pass, verified live against the production API.
 
 ### Fixed
 - **Screener filters** — documented the correct request shape: `filters` must be a JSON array of `[field, operation, value]` triples (a JSON object is rejected with HTTP 422) and `sort` must be `field.direction` (e.g. `market_capitalization.desc`; a bare field name → HTTP 422). Corrected the wrong dot-notation/object mappings in the `eodhd-screen` command, `stock-screener` skill, and the endpoint reference. `dividend_yield` clarified as a fraction (0.03 = 3%).
@@ -43,7 +43,7 @@ Repo-side fixes from the v0.4.2 manual QA pass (EODHD-1524), verified live again
 - **README** — added a Troubleshooting section (macOS SSL certificate install, OAuth fallback via `EODHD_API_TOKEN`).
 
 ### Notes
-- The MCP v2 OAuth login flow (PKCE) is fixed server-side (EODHD-1536) — unrelated to this plugin release.
+- The MCP v2 OAuth login flow (PKCE) is fixed server-side — unrelated to this plugin release.
 - `eodhd_client.py` gains client-side response normalization; pass `--raw` to bypass it and see the exact API payload.
 
 ## [0.4.4] — 2026-05-29
