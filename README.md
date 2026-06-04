@@ -9,7 +9,7 @@ Developer-first financial data for Claude — 150,000+ tickers across 70+ exchan
 - **MCP Server v2** with OAuth 2.0 — 80 tools, 100+ embedded docs, smart ticker resolution
 - **7 curated workflow skills** — company briefs, earnings, market overview, screening, risk, macro, options
 - **Financial analyst agent** — autonomous multi-source analysis
-- **5 slash commands** — `/eodhd-analyze`, `/eodhd-compare`, `/eodhd-market`, `/eodhd-screen`, `/eodhd-macro`
+- **5 slash commands** — `/eodhd-api:eodhd-analyze`, `/eodhd-api:eodhd-compare`, `/eodhd-api:eodhd-market`, `/eodhd-api:eodhd-screen`, `/eodhd-api:eodhd-macro`
 - **72 endpoint docs** + 28 general reference guides
 - **Stdlib-only Python client** — zero dependencies, 30+ endpoints
 
@@ -23,6 +23,19 @@ Developer-first financial data for Claude — 150,000+ tickers across 70+ exchan
 
 # Install the plugin
 /plugin install eodhd-api@eodhd-claude-skills
+```
+
+> **Plugin commands are namespaced.** After install, invoke commands with the
+> `eodhd-api:` prefix — e.g. `/eodhd-api:eodhd-analyze AAPL`, not `/eodhd-analyze`.
+> Type `/` to see them listed under the `eodhd-api:` group.
+
+### Claude Code (Community Marketplace)
+
+If you have the Anthropic community marketplace added:
+
+```bash
+/plugin marketplace add anthropics/claude-plugins-community
+/plugin install eodhd-api@claude-community
 ```
 
 ### MCP Server (Direct)
@@ -75,11 +88,11 @@ eodhd-claude-skills/
 ├── agents/
 │   └── financial-analyst.md        # Financial analyst agent definition
 ├── skills/                         # All skills incl. user commands (auto-discovered)
-│   ├── eodhd-analyze/              # /eodhd-analyze <ticker>
-│   ├── eodhd-compare/              # /eodhd-compare <ticker1> <ticker2>
-│   ├── eodhd-market/               # /eodhd-market
-│   ├── eodhd-screen/               # /eodhd-screen <criteria>
-│   ├── eodhd-macro/                # /eodhd-macro
+│   ├── eodhd-analyze/              # /eodhd-api:eodhd-analyze <ticker>
+│   ├── eodhd-compare/              # /eodhd-api:eodhd-compare <ticker1> <ticker2>
+│   ├── eodhd-market/               # /eodhd-api:eodhd-market
+│   ├── eodhd-screen/               # /eodhd-api:eodhd-screen <criteria>
+│   ├── eodhd-macro/                # /eodhd-api:eodhd-macro
 │   ├── eodhd-api/                  # Core skill — full API access
 │   │   ├── SKILL.md
 │   │   ├── references/
@@ -116,12 +129,14 @@ export EODHD_API_TOKEN="your_token_here"
 
 ### 2. Use slash commands
 
+Plugin commands are namespaced under `eodhd-api:`:
+
 ```
-/eodhd-analyze AAPL           # Full company analysis
-/eodhd-compare AAPL MSFT      # Side-by-side comparison
-/eodhd-market                  # Market overview
-/eodhd-screen high dividend large cap   # Stock screening
-/eodhd-macro                   # Macro dashboard
+/eodhd-api:eodhd-analyze AAPL                  # Full company analysis
+/eodhd-api:eodhd-compare AAPL MSFT             # Side-by-side comparison
+/eodhd-api:eodhd-market                        # Market overview
+/eodhd-api:eodhd-screen high dividend large cap # Stock screening
+/eodhd-api:eodhd-macro                         # Macro dashboard
 ```
 
 ### 3. Use the Python client directly
@@ -169,13 +184,15 @@ The `agents/financial-analyst.md` agent autonomously:
 
 ## Slash Commands
 
+Plugin commands are namespaced under `eodhd-api:`.
+
 | Command | Description | Example |
 |---------|-------------|---------|
-| `/eodhd-analyze <ticker>` | Full company analysis | `/eodhd-analyze NVDA` |
-| `/eodhd-compare <tickers>` | Side-by-side comparison | `/eodhd-compare AAPL MSFT GOOGL` |
-| `/eodhd-market` | Broad market overview | `/eodhd-market` |
-| `/eodhd-screen <criteria>` | Stock screening | `/eodhd-screen tech P/E under 20` |
-| `/eodhd-macro` | Macro-economic dashboard | `/eodhd-macro USA vs EU` |
+| `/eodhd-api:eodhd-analyze <ticker>` | Full company analysis | `/eodhd-api:eodhd-analyze NVDA` |
+| `/eodhd-api:eodhd-compare <tickers>` | Side-by-side comparison | `/eodhd-api:eodhd-compare AAPL MSFT GOOGL` |
+| `/eodhd-api:eodhd-market` | Broad market overview | `/eodhd-api:eodhd-market` |
+| `/eodhd-api:eodhd-screen <criteria>` | Stock screening | `/eodhd-api:eodhd-screen tech P/E under 20` |
+| `/eodhd-api:eodhd-macro` | Macro-economic dashboard | `/eodhd-api:eodhd-macro USA vs EU` |
 
 ## MCP Server
 
