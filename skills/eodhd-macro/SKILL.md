@@ -15,9 +15,9 @@ Use the `macro-dashboard` skill workflow:
    - GDP growth (gdp_growth_annual)
    - Inflation / CPI (inflation_consumer_prices_annual)
    - Unemployment (unemployment_total_percent)
-   - Interest rate (interest_rate)
-   - Trade balance (trade_balance_percent_gdp)
-   - Government debt (government_debt_percent_gdp)
+   - Real interest rate (real_interest_rate)
+   - Trade balance / net exports (net_trades_goods_services — absolute USD, not % of GDP)
+   - Government debt (debt_percent_gdp — central govt debt, % of GDP)
 
 2. Fetch US Treasury yield curve:
    - Bill rates (ust/bill-rates)

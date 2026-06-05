@@ -29,13 +29,12 @@ interest rates, trade balance, and other economic metrics from sources like the 
 | gdp_growth_annual | GDP growth (annual %) |
 | inflation_consumer_prices_annual | Inflation, consumer prices (annual %) |
 | unemployment_total_percent | Unemployment, total (% of labor force) |
-| interest_rate | Central bank interest rate |
+| real_interest_rate | Real interest rate (%) — EODHD has no nominal policy-rate indicator |
 | population_total | Total population |
 | population_growth_annual | Population growth (annual %) |
-| real_interest_rate | Real interest rate (%) |
-| trade_percent_gdp | Trade (% of GDP) |
-| government_debt_percent_gdp | Government debt (% of GDP) |
-| current_account_percent_gdp | Current account balance (% of GDP) |
+| merchandise_trade_percent_gdp | Merchandise trade (% of GDP) — trade volume, not balance |
+| net_trades_goods_services | Trade balance / net exports (absolute USD, not % of GDP) |
+| debt_percent_gdp | Central government debt (% of GDP) |
 
 ## Response (shape)
 Array of time-series data points:
@@ -84,6 +83,12 @@ python eodhd_client.py --endpoint macro-indicator --symbol USA --indicator gdp_c
 ```
 
 ## Notes
+- **Invalid indicator codes fail silently**: an unrecognized `indicator` value returns plain text
+  `Indicator or Country are Not Found.` (not JSON), and a bare call without `indicator` returns only the
+  GDP series — so a wrong code can look like "GDP came back instead". Only use codes from the table above;
+  they are verified against the live API. Common traps: `interest_rate` (use `real_interest_rate`),
+  `trade_balance_percent_gdp`/`trade_percent_gdp` (use `net_trades_goods_services` or
+  `merchandise_trade_percent_gdp`), `government_debt_percent_gdp` (use `debt_percent_gdp`).
 - Country codes use ISO 3166-1 alpha-3 format (USA, GBR, DEU, JPN, CHN, etc.)
 - Data is typically annual, with varying historical depth by indicator
 - Some indicators may have gaps or missing years

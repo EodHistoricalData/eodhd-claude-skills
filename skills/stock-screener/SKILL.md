@@ -57,6 +57,12 @@ indicating its currency. So:
 - Ratio/percent fields (`pe`, `pb`, `ps`, `peg`, `roe`, `roa`, `beta`, `dividend_yield`) are
   currency-independent and safe to compare across markets.
 
+**Instrument-type noise (the screener has NO `type` filter — `["type",...]` → HTTP 422):** the combined
+`["exchange","=","us"]` includes OTC foreign cross-listings (codes ending `F`/`Y`, broken 55–110%
+`dividend_yield`) and preferred shares (codes with a `-`, e.g. `JPM-PD`). For a clean common-stock screen:
+scope to a real venue (`["exchange","=","nyse"]`/`"nasdaq"`), add `["dividend_yield","<=",0.25]` on dividend
+screens, and post-filter result rows whose `code` contains `-`.
+
 ## Available Filters
 
 The screener supports these filter fields:
@@ -115,8 +121,9 @@ For each top 5 result:
 ## Example Filters
 
 ```bash
-# High-dividend large caps (dividend_yield is a fraction: 0.03 = 3%; exchange=us keeps caps in USD)
-python eodhd_client.py --endpoint screener --filters '[["dividend_yield",">=",0.03],["market_capitalization",">=",10000000000],["exchange","=","us"]]' --sort market_capitalization.desc --limit 20
+# High-dividend large caps (dividend_yield is a fraction: 0.03 = 3%; nyse avoids OTC junk; <=0.25 caps broken yields)
+python eodhd_client.py --endpoint screener --filters '[["dividend_yield",">=",0.03],["dividend_yield","<=",0.25],["market_capitalization",">=",10000000000],["exchange","=","nyse"]]' --sort dividend_yield.desc --limit 20
+# then drop rows whose code contains '-' (preferred shares)
 
 # Undervalued growth stocks
 python eodhd_client.py --endpoint screener --filters '[["market_capitalization",">=",1000000000],["earnings_share",">=",1],["exchange","=","us"]]' --signals 200d_new_lo --limit 20
