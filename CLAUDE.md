@@ -11,7 +11,7 @@ Includes MCP Server connector (OAuth), 13 skills (1 core + 7 workflow + 5 user-f
 ```
 .claude-plugin/
   marketplace.json              # Plugin manifest (name, version, skills list)
-  plugin.json                   # Extended plugin metadata (keywords, capabilities, MCP)
+  plugin.json                   # Extended plugin metadata (keywords, author, license)
 .mcp.json                       # MCP Server connector → mcpv2.eodhd.dev/v2/mcp
 agents/
   financial-analyst.md          # Financial analyst agent definition
@@ -55,7 +55,7 @@ registry/
 | Component | Purpose | Location |
 |-----------|---------|----------|
 | marketplace.json | Plugin manifest (version, skills list) | `.claude-plugin/marketplace.json` |
-| plugin.json | Extended metadata (keywords, MCP, capabilities) | `.claude-plugin/plugin.json` |
+| plugin.json | Extended metadata (keywords, author, license) | `.claude-plugin/plugin.json` |
 | .mcp.json | MCP Server connector (OAuth HTTP) | `.mcp.json` |
 | Core SKILL.md | Full API skill (triggers, workflow, guardrails) | `skills/eodhd-api/SKILL.md` |
 | Workflow skills (7) | Curated analysis workflows | `skills/*/SKILL.md` |

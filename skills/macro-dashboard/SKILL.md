@@ -39,15 +39,17 @@ Activate when the user asks for:
 
 ## Available Macro Indicators
 
-Key indicators available via `macro-indicator` endpoint:
+Key indicators available via `macro-indicator` endpoint (codes below are
+verified valid — passing an unknown code returns `Indicator or Country are
+Not Found` or silently falls back to GDP):
 - `gdp_current_usd` — GDP in current USD
 - `gdp_growth_annual` — Annual GDP growth %
 - `inflation_consumer_prices_annual` — CPI annual %
 - `unemployment_total_percent` — Unemployment rate %
-- `interest_rate` — Central bank policy rate
-- `trade_balance_percent_gdp` — Trade balance as % of GDP
-- `current_account_percent_gdp` — Current account as % of GDP
-- `government_debt_percent_gdp` — Government debt as % of GDP
+- `real_interest_rate` — Real interest rate % (EODHD has no nominal policy-rate indicator)
+- `net_trades_goods_services` — Trade balance / net exports (absolute USD, not % of GDP)
+- `merchandise_trade_percent_gdp` — Merchandise trade as % of GDP (trade volume, not balance)
+- `debt_percent_gdp` — Central government debt as % of GDP
 - `population_total` — Total population
 - Many more (50+ indicators per country)
 

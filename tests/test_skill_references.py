@@ -7,7 +7,8 @@ Checks:
   - Python client examples (`eodhd_client.py --endpoint X`) use real endpoints
     from SUPPORTED_ENDPOINTS.
   - Slash commands reference real skills/agents.
-  - plugin.json `capabilities.tools` matches actual MCP v1 tools count (if env var set).
+  - plugin.json `capabilities.tools`, if declared, matches actual MCP v1 tools count
+    (if env var set). The field is optional and non-standard, so the check skips when absent.
 
 Stdlib-only. No network access required (unless EODHD_API_TOKEN is set,
 then the MCP tool count is cross-checked too).
@@ -174,6 +175,10 @@ def check_manifest_capabilities() -> list[str]:
     with plugin_path.open() as f:
         manifest = json.load(f)
     claimed = manifest.get("capabilities", {}).get("tools")
+    if claimed is None:
+        print("  (skipped — plugin.json declares no static tool count; "
+              "`capabilities` removed for plugin-schema compliance)")
+        return fails
     token = os.getenv("EODHD_API_TOKEN")
     if not token:
         print(f"  (skipped MCP tool-count check — no EODHD_API_TOKEN)")
