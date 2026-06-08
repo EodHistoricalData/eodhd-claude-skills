@@ -27,9 +27,15 @@ jobs:
           assert isinstance(m.get('version'), str), 'version must be string'
           assert isinstance(m.get('repository'), str), 'repository must be string URL (Claude Code schema)'
           assert m['repository'].startswith('https://'), 'repository must be https URL'
-          mcp = m.get('mcp', {}).get('eodhd', {})
-          assert mcp.get('type') == 'http', 'mcp.eodhd.type must be http'
-          assert mcp.get('url', '').startswith('https://'), 'mcp.eodhd.url must be https URL'
+          # plugin.json must carry ONLY official Claude Code plugin fields. Non-schema
+          # fields (mcp, capabilities, categories) make Claude Desktop's strict loader
+          # silently hide the plugin (EODHD-1545). The MCP server is declared in
+          # .mcp.json — the plugin-standard location — so validate it there.
+          for bad in ('mcp', 'capabilities', 'categories'):
+              assert bad not in m, f'{bad!r} is not a valid plugin.json field — Claude Desktop rejects it'
+          mcp = json.load(open('.mcp.json')).get('eodhd', {})
+          assert mcp.get('type') == 'http', '.mcp.json eodhd.type must be http'
+          assert mcp.get('url', '').startswith('https://'), '.mcp.json eodhd.url must be https URL'
           print('plugin.json OK')
           PY
 
