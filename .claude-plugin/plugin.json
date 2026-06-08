@@ -26,24 +26,5 @@
   ],
   "homepage": "https://eodhd.com",
   "repository": "https://github.com/EodHistoricalData/eodhd-claude-skills",
-  "license": "MIT",
-  "mcp": {
-    "eodhd": {
-      "type": "http",
-      "url": "https://mcpv2.eodhd.dev/v2/mcp"
-    }
-  },
-  "capabilities": {
-    "tools": 80,
-    "tickers": "150,000+",
-    "exchanges": "70+",
-    "endpoints": 72,
-    "resources": "100+ embedded docs",
-    "prompts": 3
-  },
-  "categories": [
-    "finance",
-    "data",
-    "developer-tools"
-  ]
+  "license": "MIT"
 }
