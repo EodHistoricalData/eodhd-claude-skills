@@ -123,7 +123,7 @@ def main() -> int:
     if FAILURES:
         print(f"FAILED ({len(FAILURES)}): " + "; ".join(FAILURES))
         return 1
-    print("All market_cap_series / redaction regression tests passed ✓")
+    print("All market_cap_series / redaction regression tests passed")
     return 0
 
 
