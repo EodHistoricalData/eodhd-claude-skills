@@ -26,7 +26,6 @@ Use EODHD market data APIs to fetch, normalize, and summarize financial data inc
 - ESG / environmental scores (from EODHD Marketplace — Investverte)
 - Risk analytics and multi-factor reports (from EODHD Marketplace — PRAAMS)
 - Bank financials and bond analysis (from EODHD Marketplace — PRAAMS)
-- Investment analytics: performance, volatility, risk/return (from EODHD Marketplace — Illio)
 - Tick-level market data (from EODHD Marketplace)
 - Trading hours and market status (from EODHD Marketplace — TradingHours)
 
@@ -50,7 +49,7 @@ Use this skill whenever the user's task involves **financial data, markets, inve
 - Corporate calendar events (earnings, dividends, splits, IPOs)
 - Insider trading activity (executive purchases, sales, SEC filings)
 - ESG scores and environmental data — company, sector, country level (from EODHD Marketplace — Investverte)
-- Risk scoring, volatility analytics, beta, risk/return profiles (from EODHD Marketplace — PRAAMS, Illio)
+- Risk scoring, volatility analytics, beta, risk/return profiles (from EODHD Marketplace — PRAAMS)
 - Bank balance sheets, income statements, bond analysis (from EODHD Marketplace — PRAAMS)
 - US Treasury rates (bill rates, long-term rates, yield curves, real yield curves)
 - Historical market capitalisation
@@ -65,7 +64,7 @@ Use this skill whenever the user's task involves **financial data, markets, inve
 > from `registry/capabilities.json`) for the authoritative list:
 > - **validated** — call via the Python client (`scripts/eodhd_client.py`); covered by e2e tests.
 > - **fallback** — in the Python client but not e2e-verified; works, but verify the response.
-> - **documented** — marketplace add-ons (options, ESG/Investverte, PRAAMS, Illio, TradingHours,
+> - **documented** — marketplace add-ons (options, ESG/Investverte, PRAAMS, TradingHours,
 >   tick data); call via `curl` per the endpoint doc. Not in the Python client.
 
 ### Building financial tools and applications
@@ -193,9 +192,9 @@ Activate this skill when the user is performing or asking for:
 >
 > **² Dividends calendar parameter mapping**: The API uses bracket-style parameters: `filter[symbol]`, `filter[date_from]`, `filter[date_to]`, `page[limit]`, `page[offset]`. The Python client translates `--symbol`/`--from-date`/`--to-date`/`--limit`/`--offset` automatically. For raw curl, use the bracket format directly (see `references/endpoints/upcoming-dividends.md`).
 >
-> The table above covers Python client support only. An additional 40+ endpoints (Marketplace: options, ESG/Investverte, PRAAMS, Illio, TradingHours, tick data, logos, search, WebSockets, etc.) are documented in `references/endpoints/` and require curl or manual HTTP calls. See `references/endpoints/README.md` for the full index.
+> The table above covers Python client support only. An additional 30+ endpoints (Marketplace: options, ESG/Investverte, PRAAMS, TradingHours, tick data, logos, search, WebSockets, etc.) are documented in `references/endpoints/` and require curl or manual HTTP calls. See `references/endpoints/README.md` for the full index.
 
-**API call costs**: Most endpoints cost 1 call. `technical` and `intraday` cost 5 calls. `fundamentals` costs 10 calls. News-related endpoints (`news`, `sentiment`, `news-word-weights`) cost 5 calls + 5 per ticker. Bulk endpoints cost 100 calls (+ N symbols if `--symbols` used). Marketplace endpoints (options, ESG, PRAAMS, Illio, index-components, tick data) typically cost 10 calls per request. See `references/general/rate-limits.md` for full details.
+**API call costs**: Most endpoints cost 1 call. `technical` and `intraday` cost 5 calls. `fundamentals` costs 10 calls. News-related endpoints (`news`, `sentiment`, `news-word-weights`) cost 5 calls + 5 per ticker. Bulk endpoints cost 100 calls (+ N symbols if `--symbols` used). Marketplace endpoints (options, ESG, PRAAMS, index-components, tick data) typically cost 10 calls per request. See `references/general/rate-limits.md` for full details.
 
 ## Output requirements
 
@@ -218,7 +217,7 @@ Activate this skill when the user is performing or asking for:
 - **Protect the API key**: never echo or print the token in plain text to the user. Always redact it in example commands (`EODHD_API_TOKEN=***`). If the user suspects their key is compromised, prompt them to supply a new one and re-export it
 - **Disclaim on advice**: when providing investment recommendations or analysis that could be interpreted as advice, include "This is not financial advice. Data is for informational purposes only."
 - **Warn on stale data**: for real-time/intraday endpoints outside US market hours or on weekends/holidays, note that data may be delayed or from a prior session
-- **Check Marketplace access**: before calling Marketplace endpoints (options, ESG, PRAAMS, Illio, TradingHours, tick data), warn that these require specific subscription tiers and consume 10+ API calls per request
+- **Check Marketplace access**: before calling Marketplace endpoints (options, ESG, PRAAMS, TradingHours, tick data), warn that these require specific subscription tiers and consume 10+ API calls per request
 - **Note currency context**: prices are in local exchange currency, not always USD — mention this when presenting data from non-US exchanges
 
 ## Common patterns

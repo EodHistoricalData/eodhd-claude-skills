@@ -187,7 +187,7 @@ def check_manifest_capabilities() -> list[str]:
     # Actually fetch tool count
     import urllib.request
     try:
-        url = f"https://mcpv2.eodhd.dev/v1/mcp?apikey={token}"
+        url = f"https://mcp.eodhd.com/v1/mcp?apikey={token}"
         # initialize
         req = urllib.request.Request(url, data=json.dumps({
             "jsonrpc": "2.0", "id": 1, "method": "initialize",

@@ -6,11 +6,11 @@ Developer-first financial data for Claude — 150,000+ tickers across 70+ exchan
 
 ## Highlights
 
-- **MCP Server v2** with OAuth 2.0 — 80 tools, 100+ embedded docs, smart ticker resolution
+- **MCP Server v2** with OAuth 2.0 — 72 tools, 100+ embedded docs, smart ticker resolution
 - **7 curated workflow skills** — company briefs, earnings, market overview, screening, risk, macro, options
 - **Financial analyst agent** — autonomous multi-source analysis
 - **5 slash commands** — `/eodhd-api:eodhd-analyze`, `/eodhd-api:eodhd-compare`, `/eodhd-api:eodhd-market`, `/eodhd-api:eodhd-screen`, `/eodhd-api:eodhd-macro`
-- **72 endpoint docs** + 28 general reference guides
+- **64 endpoint docs** + 28 general reference guides
 - **Stdlib-only Python client** — zero dependencies, 30+ endpoints
 
 ## Installation
@@ -46,7 +46,7 @@ The plugin includes `.mcp.json` for automatic MCP Server connection:
 {
   "eodhd": {
     "type": "http",
-    "url": "https://mcpv2.eodhd.dev/v2/mcp"
+    "url": "https://mcp.eodhd.com/v2/mcp"
   }
 }
 ```
@@ -73,7 +73,7 @@ The plugin itself is MIT-licensed and free. Data access is gated by your EODHD s
 | **EOD Historical Data — All World** ([details](skills/eodhd-api/references/subscriptions/eod-historical-data-all-world.md)) | from $19.99/mo | Full 70+ exchanges, 30+ years of EOD prices, dividends, splits. Enables `market-overview`, basic `stock-screener`. |
 | **Fundamentals Data Feed** ([details](skills/eodhd-api/references/subscriptions/fundamentals-data-feed.md)) | from $59.99/mo | Adds fundamentals, financial statements, insiders, sentiment, ratios. Enables `company-brief`, `earnings-monitor`, `portfolio-risk`. |
 | **All-In-One** ([details](skills/eodhd-api/references/subscriptions/all-in-one.md)) | from $99.99/mo | Everything above + intraday bars (1m/5m/1h), live quotes, technical indicators, screener, news, macro. Recommended for full plugin usage. |
-| **Marketplace add-ons** (separate SKUs) | varies | Required for `options-analyzer` (US options chains), Investverte ESG, PRAAMS risk/bank/bond analytics, Illio portfolio analytics, TradingHours. |
+| **Marketplace add-ons** (separate SKUs) | varies | Required for `options-analyzer` (US options chains), Investverte ESG, PRAAMS risk/bank/bond analytics, TradingHours. |
 
 Pricing on this page is indicative — see [eodhd.com/pricing](https://eodhd.com/pricing) for current rates.
 
@@ -97,7 +97,7 @@ eodhd-claude-skills/
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   │   ├── general/            # 28 general guides
-│   │   │   ├── endpoints/          # 72 endpoint docs
+│   │   │   ├── endpoints/          # 64 endpoint docs
 │   │   │   ├── subscriptions/      # 7 subscription plans
 │   │   │   └── workflows.md
 │   │   ├── scripts/
@@ -197,7 +197,7 @@ Plugin commands are namespaced under `eodhd-api:`.
 ## MCP Server
 
 The EODHD MCP Server v2 provides:
-- **80 tools** across 15 categories (prices, fundamentals, options, technicals, news, sentiment, macro, etc.)
+- **72 tools** across 15 categories (prices, fundamentals, options, technicals, news, sentiment, macro, etc.)
 - **OAuth 2.0** authentication
 - **100+ embedded docs** as MCP resources
 - **3 prompt templates** for common workflows
@@ -209,7 +209,7 @@ Connection via `.mcp.json`:
 {
   "eodhd": {
     "type": "http",
-    "url": "https://mcpv2.eodhd.dev/v2/mcp"
+    "url": "https://mcp.eodhd.com/v2/mcp"
   }
 }
 ```
@@ -232,7 +232,7 @@ Exchange list/details/tickers, index components, indices list, CBOE indices
 Macro indicators (50+ per country), US Treasury bill/long-term/yield/real-yield rates
 
 ### Marketplace
-Options (EOD chains, contracts, underlyings), tick data, trading hours, Illio analytics, Investverte ESG, PRAAMS risk/bank/bond
+Options (EOD chains, contracts, underlyings), tick data, trading hours, Investverte ESG, PRAAMS risk/bank/bond
 
 See `skills/eodhd-api/references/endpoints/README.md` for the complete index.
 

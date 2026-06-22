@@ -5,6 +5,7 @@ All notable changes to this plugin are documented here. The format follows [Keep
 ## [Unreleased]
 
 ### Changed
+- **MCP server URL** migrated to the new canonical host `https://mcp.eodhd.com/v2/mcp` (was `https://mcpv2.eodhd.dev/v2/mcp`) across `.mcp.json`, `README.md`, `CLAUDE.md`, and the MCP test suite. The new host is live (v1 API-key and v2 OAuth verified); the old `.dev` host stays DNS-compatible but is no longer the documented endpoint.
 - **Insider Transactions reference** rewritten to document the SEC **Form 4** endpoint
   `/api/sec-filings/{symbol}/form4` (nested non-derivative/derivative/footnote schema, EDGAR-sourced,
   pagination, 10 calls) as the recommended source, alongside the legacy flat `/api/insider-transactions`
@@ -15,6 +16,15 @@ All notable changes to this plugin are documented here. The format follows [Keep
   added the previously-undocumented top-level sections (`Technicals`, `SplitsDividends`,
   `AnalystRatings`, `Holders`, `InsiderTransactions`, `ESGScores`) to the response shape; documented
   the `::` nested-filter syntax. Both v1.1 and the legacy `/api/fundamentals` shapes are shown.
+
+### Removed
+- **illio Marketplace provider** removed plugin-wide (8 endpoints: market-insights
+  best-worst / beta-bands / largest-volatility / performance / risk-return / volatility,
+  plus performance-insights and risk-insights). Dropped the 8 reference docs, the registry
+  entries in `capabilities.json` (regenerated `support-matrix.md`), the index/rate-limit
+  listings, and the SKILL/README/CONTRIBUTING mentions. Counts updated: endpoint docs
+  72 → 64, registry entries 75 → 67, advertised MCP tool count 80 → 72. Mirrors the
+  provider's removal from the EODHD MCP server.
 
 ## [0.5.2] — 2026-06-03
 

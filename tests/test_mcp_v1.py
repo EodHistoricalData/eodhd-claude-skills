@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """End-to-end tests for the EODHD MCP Server v1 (API-key auth).
 
-Tests MCP JSONRPC protocol over HTTP at https://mcpv2.eodhd.dev/v1/mcp?apikey=...
+Tests MCP JSONRPC protocol over HTTP at https://mcp.eodhd.com/v1/mcp?apikey=...
 
 Steps:
   1. initialize  — handshake, get server info + capabilities
@@ -21,8 +21,8 @@ import sys
 import urllib.error
 import urllib.request
 
-MCP_V1 = "https://mcpv2.eodhd.dev/v1/mcp"
-MCP_V2 = "https://mcpv2.eodhd.dev/v2/mcp"
+MCP_V1 = "https://mcp.eodhd.com/v1/mcp"
+MCP_V2 = "https://mcp.eodhd.com/v2/mcp"
 
 
 def jsonrpc(url: str, method: str, params: dict | None = None,

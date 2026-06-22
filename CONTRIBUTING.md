@@ -17,7 +17,6 @@ Many endpoint files in `skills/eodhd-api/references/endpoints/` are currently st
 **Medium Priority:**
 - ESG endpoints (`investverte-*.md`)
 - Banking/Bond endpoints (`praams-*.md`)
-- Illio analytics endpoints (`illio-*.md`)
 
 **Documentation format:**
 ```markdown
