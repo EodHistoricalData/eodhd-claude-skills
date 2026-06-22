@@ -5,6 +5,7 @@ All notable changes to this plugin are documented here. The format follows [Keep
 ## [Unreleased]
 
 ### Changed
+- **MCP server URL** migrated to the new canonical host `https://mcp.eodhd.com/v2/mcp` (was `https://mcpv2.eodhd.dev/v2/mcp`) across `.mcp.json`, `README.md`, `CLAUDE.md`, and the MCP test suite. The new host is live (v1 API-key and v2 OAuth verified); the old `.dev` host stays DNS-compatible but is no longer the documented endpoint.
 - **Insider Transactions reference** rewritten to document the SEC **Form 4** endpoint
   `/api/sec-filings/{symbol}/form4` (nested non-derivative/derivative/footnote schema, EDGAR-sourced,
   pagination, 10 calls) as the recommended source, alongside the legacy flat `/api/insider-transactions`

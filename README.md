@@ -46,7 +46,7 @@ The plugin includes `.mcp.json` for automatic MCP Server connection:
 {
   "eodhd": {
     "type": "http",
-    "url": "https://mcpv2.eodhd.dev/v2/mcp"
+    "url": "https://mcp.eodhd.com/v2/mcp"
   }
 }
 ```
@@ -209,7 +209,7 @@ Connection via `.mcp.json`:
 {
   "eodhd": {
     "type": "http",
-    "url": "https://mcpv2.eodhd.dev/v2/mcp"
+    "url": "https://mcp.eodhd.com/v2/mcp"
   }
 }
 ```

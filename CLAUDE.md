@@ -12,7 +12,7 @@ Includes MCP Server connector (OAuth), 13 skills (1 core + 7 workflow + 5 user-f
 .claude-plugin/
   marketplace.json              # Plugin manifest (name, version, skills list)
   plugin.json                   # Extended plugin metadata (keywords, author, license)
-.mcp.json                       # MCP Server connector → mcpv2.eodhd.dev/v2/mcp
+.mcp.json                       # MCP Server connector → mcp.eodhd.com/v2/mcp
 agents/
   financial-analyst.md          # Financial analyst agent definition
 skills/                         # All skills incl. user commands (auto-discovered)
@@ -128,4 +128,4 @@ No runtime deployment. Distributed via GitHub releases.
 
 - GitHub: https://github.com/EodHistoricalData/eodhd-claude-skills
 - EODHD API: https://eodhd.com/financial-apis/
-- MCP Server: https://mcpv2.eodhd.dev/v2/mcp
+- MCP Server: https://mcp.eodhd.com/v2/mcp
