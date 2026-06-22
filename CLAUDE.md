@@ -4,7 +4,7 @@
 
 Plugin enabling AI agents (Claude Code, Codex) to work with the [EODHD financial data API](https://eodhd.com/). Distributed as a Claude Code plugin (`EodHistoricalData/eodhd-claude-skills`). Version: **0.5.2**.
 
-Includes MCP Server connector (OAuth), 13 skills (1 core + 7 workflow + 5 user-facing commands), financial analyst agent, 72 endpoint docs, 28 general guides, and a stdlib-only Python client. As of v0.5.2 the user commands (`eodhd-analyze` etc.) live under `skills/` as standard skills and are invoked namespaced (e.g. `/eodhd-api:eodhd-analyze`) — the legacy `commands/` directory was removed because its flat files did not load as usable commands in a live session on newer Claude Code (verified live on 2.1.158 and 2.1.161: all 13 skills load).
+Includes MCP Server connector (OAuth), 13 skills (1 core + 7 workflow + 5 user-facing commands), financial analyst agent, 64 endpoint docs, 28 general guides, and a stdlib-only Python client. As of v0.5.2 the user commands (`eodhd-analyze` etc.) live under `skills/` as standard skills and are invoked namespaced (e.g. `/eodhd-api:eodhd-analyze`) — the legacy `commands/` directory was removed because its flat files did not load as usable commands in a live session on newer Claude Code (verified live on 2.1.158 and 2.1.161: all 13 skills load).
 
 ## File Structure
 
@@ -25,7 +25,7 @@ skills/                         # All skills incl. user commands (auto-discovere
     SKILL.md
     references/
       general/                  # 28 general guides
-      endpoints/                # 72 endpoint docs
+      endpoints/                # 64 endpoint docs
       subscriptions/            # 7 subscription plans
       workflows.md              # 4 analysis patterns
     scripts/
@@ -45,7 +45,7 @@ adapters/
   claude/eodhd-api.md
   codex/eodhd-api.md
 registry/
-  capabilities.json             # Single source of truth for all endpoints (75 entries)
+  capabilities.json             # Single source of truth for all endpoints (67 entries)
   build.py                      # Generates support-matrix.md; --check for CI freshness
   README.md                     # Registry schema + workflow
 ```

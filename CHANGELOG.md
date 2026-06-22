@@ -17,6 +17,15 @@ All notable changes to this plugin are documented here. The format follows [Keep
   `AnalystRatings`, `Holders`, `InsiderTransactions`, `ESGScores`) to the response shape; documented
   the `::` nested-filter syntax. Both v1.1 and the legacy `/api/fundamentals` shapes are shown.
 
+### Removed
+- **illio Marketplace provider** removed plugin-wide (8 endpoints: market-insights
+  best-worst / beta-bands / largest-volatility / performance / risk-return / volatility,
+  plus performance-insights and risk-insights). Dropped the 8 reference docs, the registry
+  entries in `capabilities.json` (regenerated `support-matrix.md`), the index/rate-limit
+  listings, and the SKILL/README/CONTRIBUTING mentions. Counts updated: endpoint docs
+  72 → 64, registry entries 75 → 67, advertised MCP tool count 80 → 72. Mirrors the
+  provider's removal from the EODHD MCP server.
+
 ## [0.5.2] — 2026-06-03
 
 ### Fixed

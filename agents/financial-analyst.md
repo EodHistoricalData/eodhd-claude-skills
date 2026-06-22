@@ -37,7 +37,7 @@ All data comes from EODHD API via the installed skills:
 | `stock-screener` | Finding stocks matching specific criteria |
 | `macro-dashboard` | Economic indicators, yield curves, economic events |
 | `options-analyzer` | Options chains, IV, Greeks, strategy evaluation |
-| `eodhd-api` | Direct API access for any of 72 endpoints |
+| `eodhd-api` | Direct API access for any of 64 endpoints |
 
 ## Approach
 

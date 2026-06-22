@@ -175,9 +175,6 @@ The following Marketplace products are available (all use `/mp/` in the API path
 | **Praams Bank Financials API** | `/mp/praams/bank/income-statement/ticker/{ticker}`, `/mp/praams/bank/income-statement/isin/{isin}`, `/mp/praams/bank/balance-sheet/ticker/{ticker}`, `/mp/praams/bank/balance-sheet/isin/{isin}` | PRAAMS |
 | **Praams Smart Investment Screener API** | `/mp/praams/screener/equity`, `/mp/praams/screener/bond` | PRAAMS |
 | **Multi-Factor Investment Reports API** | `/mp/praams/reports/equity/ticker/{ticker}`, `/mp/praams/reports/equity/isin/{isin}`, `/mp/praams/reports/bond/{isin}` | PRAAMS |
-| **illio Performance Insights** | `/mp/illio/performance-insights` | illio |
-| **illio Risk Insights** | `/mp/illio/risk-insights` | illio |
-| **illio Market Insights** | `/mp/illio/market-insights/performance`, `/mp/illio/market-insights/best-worst`, `/mp/illio/market-insights/volatility`, `/mp/illio/market-insights/risk-return`, `/mp/illio/market-insights/largest-volatility`, `/mp/illio/market-insights/beta-bands` | illio |
 | **Stock Market Logos API** | `/logo/{symbol}` | Unicorn Data Services |
 | **Stock Market Logos API (SVG)** | `/logo-svg/{symbol}` | Unicorn Data Services |
 | **Market Status API (TradingHours)** | `/mp/tradinghours/markets`, `/mp/tradinghours/markets/lookup`, `/mp/tradinghours/markets/details`, `/mp/tradinghours/markets/status` | TradingHours |

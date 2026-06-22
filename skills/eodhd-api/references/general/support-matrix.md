@@ -51,21 +51,13 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 |---|---|---|---|---|
 | `index-components` | rest | `/fundamentals/{index}` | fundamentals | [index-components.md](../../references/endpoints/index-components.md) |
 
-## documented (44)
+## documented (36)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
 | `cboe-index-data` | rest | `/cboe/index` | time-series | [cboe-index-data.md](../../references/endpoints/cboe-index-data.md) |
 | `cboe-indices-list` | rest | `/cboe/indices` | listing | [cboe-indices-list.md](../../references/endpoints/cboe-indices-list.md) |
 | `historical-market-cap` | rest | `/historical-market-cap/{symbol}` | time-series | [historical-market-cap.md](../../references/endpoints/historical-market-cap.md) |
-| `illio-market-insights-best-worst` | rest | `/mp/illio/chapters/best-and-worst/{id}` | risk-report | [illio-market-insights-best-worst.md](../../references/endpoints/illio-market-insights-best-worst.md) |
-| `illio-market-insights-beta-bands` | rest | `/mp/illio/chapters/beta-bands/{id}` | risk-report | [illio-market-insights-beta-bands.md](../../references/endpoints/illio-market-insights-beta-bands.md) |
-| `illio-market-insights-largest-volatility` | rest | `/mp/illio/chapters/volume/{id}` | risk-report | [illio-market-insights-largest-volatility.md](../../references/endpoints/illio-market-insights-largest-volatility.md) |
-| `illio-market-insights-performance` | rest | `/mp/illio/chapters/performance/{id}` | risk-report | [illio-market-insights-performance.md](../../references/endpoints/illio-market-insights-performance.md) |
-| `illio-market-insights-risk-return` | rest | `/mp/illio/chapters/risk/{id}` | risk-report | [illio-market-insights-risk-return.md](../../references/endpoints/illio-market-insights-risk-return.md) |
-| `illio-market-insights-volatility` | rest | `/mp/illio/chapters/volatility/{id}` | risk-report | [illio-market-insights-volatility.md](../../references/endpoints/illio-market-insights-volatility.md) |
-| `illio-performance-insights` | rest | `/mp/illio/categories/performance/{id}` | risk-report | [illio-performance-insights.md](../../references/endpoints/illio-performance-insights.md) |
-| `illio-risk-insights` | rest | `/mp/illio/categories/risk/{id}` | risk-report | [illio-risk-insights.md](../../references/endpoints/illio-risk-insights.md) |
 | `indices-list` | rest | `/mp/unicornbay/spglobal/list` | listing | [indices-list.md](../../references/endpoints/indices-list.md) |
 | `investverte-esg-list-companies` | rest | `/mp/investverte/companies` | esg | [investverte-esg-list-companies.md](../../references/endpoints/investverte-esg-list-companies.md) |
 | `investverte-esg-list-countries` | rest | `/mp/investverte/countries` | esg | [investverte-esg-list-countries.md](../../references/endpoints/investverte-esg-list-countries.md) |
