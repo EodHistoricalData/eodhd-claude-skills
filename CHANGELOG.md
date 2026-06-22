@@ -4,6 +4,8 @@ All notable changes to this plugin are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-06-22
+
 ### Changed
 - **MCP server URL** migrated to the new canonical host `https://mcp.eodhd.com/v2/mcp` (was `https://mcpv2.eodhd.dev/v2/mcp`) across `.mcp.json`, `README.md`, `CLAUDE.md`, and the MCP test suite. The new host is live (v1 API-key and v2 OAuth verified); the old `.dev` host stays DNS-compatible but is no longer the documented endpoint.
 - **Insider Transactions reference** rewritten to document the SEC **Form 4** endpoint
