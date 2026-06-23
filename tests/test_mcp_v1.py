@@ -81,9 +81,9 @@ def test_v2_oauth_challenge() -> tuple[str, str]:
         "clientInfo": {"name": "eodhd-tests", "version": "1.0.0"},
     })
     if status == 401:
-        return ("pass", f"401 Unauthorized (OAuth required) — body: {str(body)[:80]}")
+        return ("pass", f"401 Unauthorized (OAuth required) - body: {str(body)[:80]}")
     if status == 200:
-        return ("fail", f"v2 returned 200 without auth — should require OAuth! body: {str(body)[:80]}")
+        return ("fail", f"v2 returned 200 without auth - should require OAuth! body: {str(body)[:80]}")
     return ("fail", f"unexpected HTTP {status}: {str(body)[:120]}")
 
 
@@ -220,7 +220,7 @@ def main() -> int:
     print(f"v1 initialize            {symbol(status)} {status.upper():<5}  {detail}")
 
     if status != "pass":
-        print("\nv1 initialize failed — aborting remaining MCP tests")
+        print("\nv1 initialize failed - aborting remaining MCP tests")
         return 1
 
     # Per MCP spec: must send 'initialized' notification after handshake
@@ -233,7 +233,7 @@ def main() -> int:
     print(f"v1 tools/list            {symbol(status)} {status.upper():<5}  {detail}")
 
     if status != "pass" or not tools:
-        print("\nv1 tools/list failed — cannot test individual tool calls")
+        print("\nv1 tools/list failed - cannot test individual tool calls")
         return 1
 
     # v1 tools/call — try a simple one
@@ -253,7 +253,7 @@ def main() -> int:
 
 
 def symbol(status: str) -> str:
-    return {"pass": "✓", "fail": "✗", "skip": "○"}.get(status, "?")
+    return {"pass": "PASS", "fail": "FAIL", "skip": "SKIP"}.get(status, "?")
 
 
 if __name__ == "__main__":

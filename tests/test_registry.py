@@ -32,18 +32,18 @@ RESPONSE_FAMILIES = {"time-series", "fundamentals", "calendar", "listing", "quot
 
 
 def load_registry() -> list:
-    return json.loads(REGISTRY.read_text())
+    return json.loads(REGISTRY.read_text(encoding="utf-8"))
 
 
 def supported_endpoints() -> set:
-    text = CLIENT.read_text()
+    text = CLIENT.read_text(encoding="utf-8")
     m = re.search(r"SUPPORTED_ENDPOINTS\s*=\s*\[(.*?)\]", text, re.DOTALL)
     return set(re.findall(r'"([^"]+)"', m.group(1))) if m else set()
 
 
 def e2e_tested_endpoints() -> set:
     """Names of client endpoints exercised by CASES (strips the '(sma)' suffix)."""
-    text = E2E.read_text()
+    text = E2E.read_text(encoding="utf-8")
     names = re.findall(r'\(\s*"([^"]+)"\s*,\s*\[', text)
     return {n.split("(")[0] for n in names}
 
@@ -149,10 +149,10 @@ def main() -> int:
         print(f"\n=== {name} ===")
         fails = fn(reg)
         if not fails:
-            print("  ✓ OK")
+            print("  OK")
         else:
             for f in fails:
-                print(f"  ✗ {f}")
+                print(f"  FAIL {f}")
             all_fails.extend(fails)
     print("\n" + "=" * 80)
     print(f"Total failures: {len(all_fails)}")
