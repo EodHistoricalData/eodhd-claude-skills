@@ -81,6 +81,26 @@ Examples:
 
   # US Treasury Real Yield Rates (Par Real Yield Curve)
   python eodhd_client.py --endpoint ust/real-yield-rates --filter-year 2024
+
+  # Credit & Sovereign Risk (JSON:API filter[...] + page[...])
+  python eodhd_client.py --endpoint credit-risk/sovereign/risk-premium --filter-param country=USA
+  python eodhd_client.py --endpoint credit-risk/sovereign/credit-ratings --filter-param country=Germany
+  python eodhd_client.py --endpoint credit-risk/sovereign/cds-spreads --filter-param country=France
+  python eodhd_client.py --endpoint credit-risk/sovereign/default-spreads --filter-param rating=Aaa
+  python eodhd_client.py --endpoint credit-risk/corporate/cmdi --filter-param from=2026-01-01 --filter-param to=2026-06-01
+  python eodhd_client.py --endpoint credit-risk/corporate/hqm-yields --filter-param tenor=2,5,10 --filter-param type=par
+  python eodhd_client.py --endpoint credit-risk/cds-market/aggregates --filter-param metric=gross_notional --filter-param dimension=grade
+
+  # Sanctions screening
+  python eodhd_client.py --endpoint sanctions/entities --filter-param name=Ivanov --filter-param is_active=true
+  python eodhd_client.py --endpoint sanctions/vessels --filter-param flag=Panama
+  python eodhd_client.py --endpoint sanctions/programs
+  python eodhd_client.py --endpoint sanctions/sources
+
+  # Interest Rates
+  python eodhd_client.py --endpoint rates/reference-rates --filter-param code=SOFR --filter-param from=2025-01-01
+  python eodhd_client.py --endpoint rates/policy-rates --filter-param central_bank=ECB
+  python eodhd_client.py --endpoint spreads/funding-stress --filter-param code=EFFR_SOFR --filter-param from=2026-05-01 --filter-param to=2026-05-31
 """
 
 from __future__ import annotations
@@ -110,6 +130,25 @@ def _redact_token(url: str) -> str:
     return re.sub(r"([?&]api_token=)[^&#]*", r"\1***", url)
 
 
+# JSON:API-style endpoints: no symbol; use filter[...] + page[offset]/page[limit].
+# funding-stress has no pagination but shares the filter[...] convention.
+FILTER_API_ENDPOINTS = {
+    "credit-risk/sovereign/risk-premium",
+    "credit-risk/sovereign/credit-ratings",
+    "credit-risk/sovereign/cds-spreads",
+    "credit-risk/sovereign/default-spreads",
+    "credit-risk/corporate/cmdi",
+    "credit-risk/corporate/hqm-yields",
+    "credit-risk/cds-market/aggregates",
+    "sanctions/entities",
+    "sanctions/vessels",
+    "sanctions/programs",
+    "sanctions/sources",
+    "rates/reference-rates",
+    "rates/policy-rates",
+    "spreads/funding-stress",
+}
+
 # Endpoints that don't require a symbol
 NO_SYMBOL_ENDPOINTS = {
     "screener",
@@ -125,7 +164,7 @@ NO_SYMBOL_ENDPOINTS = {
     "ust/real-yield-rates",
     "us-quote-delayed",
     "user",
-}
+} | FILTER_API_ENDPOINTS
 
 # Endpoints where --symbol means exchange code, not ticker
 EXCHANGE_CODE_ENDPOINTS = {
@@ -265,6 +304,23 @@ SUPPORTED_ENDPOINTS = [
     "ust/long-term-rates",
     "ust/yield-rates",
     "ust/real-yield-rates",
+    # Credit & Sovereign Risk
+    "credit-risk/sovereign/risk-premium",
+    "credit-risk/sovereign/credit-ratings",
+    "credit-risk/sovereign/cds-spreads",
+    "credit-risk/sovereign/default-spreads",
+    "credit-risk/corporate/cmdi",
+    "credit-risk/corporate/hqm-yields",
+    "credit-risk/cds-market/aggregates",
+    # Sanctions screening
+    "sanctions/entities",
+    "sanctions/vessels",
+    "sanctions/programs",
+    "sanctions/sources",
+    # Interest rates
+    "rates/reference-rates",
+    "rates/policy-rates",
+    "spreads/funding-stress",
 ]
 
 
@@ -325,6 +381,12 @@ Supported endpoints:
   US Quotes:      us-quote-delayed (Live v2 extended quotes)
   Account:        user
   US Treasury:    ust/bill-rates, ust/long-term-rates, ust/yield-rates, ust/real-yield-rates
+  Credit Risk:    credit-risk/sovereign/risk-premium, credit-risk/sovereign/credit-ratings,
+                  credit-risk/sovereign/cds-spreads, credit-risk/sovereign/default-spreads,
+                  credit-risk/corporate/cmdi, credit-risk/corporate/hqm-yields,
+                  credit-risk/cds-market/aggregates (use --filter-param KEY=VALUE)
+  Sanctions:      sanctions/entities, sanctions/vessels, sanctions/programs, sanctions/sources
+  Interest Rates: rates/reference-rates, rates/policy-rates, spreads/funding-stress
 
 Note: news-word-weights may have longer response times due to AI processing.
 
@@ -392,6 +454,15 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
         "--filter-year",
         type=int,
         help="Filter by year for UST endpoints (e.g., 2023)",
+    )
+    parser.add_argument(
+        "--filter-param",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="JSON:API filter for credit-risk/sanctions/rates endpoints, "
+        "repeatable (e.g., --filter-param country=USA --filter-param from=2026-01-01). "
+        "Sent as filter[KEY]=VALUE.",
     )
     parser.add_argument("--base-url", default=BASE_URL, help="Override base URL")
     parser.add_argument("--timeout", type=int, default=30, help="HTTP timeout seconds")
@@ -562,6 +633,30 @@ def main() -> int:
             params["page[limit]"] = params.pop("limit", args.limit)
         if args.offset is not None:
             params["page[offset]"] = params.pop("offset", args.offset)
+
+    # Special handling for JSON:API filter endpoints (credit-risk, sanctions, rates).
+    # Filters arrive as --filter-param KEY=VALUE and are sent as filter[KEY]=VALUE.
+    # Pagination uses page[limit]/page[offset]; funding-stress has no pagination.
+    if args.endpoint in FILTER_API_ENDPOINTS:
+        for item in args.filter_param:
+            if "=" not in item:
+                print(f"Error: --filter-param must be KEY=VALUE, got '{item}'", file=sys.stderr)
+                return 2
+            key, _, value = item.partition("=")
+            key = key.strip()
+            if not key:
+                print(f"Error: --filter-param missing key in '{item}'", file=sys.stderr)
+                return 2
+            params[f"filter[{key}]"] = value
+        if args.endpoint != "spreads/funding-stress":
+            if args.limit is not None:
+                params["page[limit]"] = params.pop("limit", args.limit)
+            if args.offset is not None:
+                params["page[offset]"] = params.pop("offset", args.offset)
+        else:
+            # funding-stress has no pagination; drop generic limit/offset if present
+            params.pop("limit", None)
+            params.pop("offset", None)
 
     query = urllib.parse.urlencode(params)
     url = args.base_url.rstrip("/") + path + "?" + query
