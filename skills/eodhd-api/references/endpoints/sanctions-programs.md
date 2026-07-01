@@ -12,7 +12,7 @@ Auth: api_token (query)
 ## Purpose
 
 Distinct list of sanctions programs with the count of designated entities per program. Use it to
-enumerate valid `filter[program]` values for `/sanctions/entities` and `/sanctions/vessels`, and to
+enumerate valid `program` values for `/sanctions/entities` and `/sanctions/vessels`, and to
 gauge program size. Returns the standard JSON envelope `{data, meta, links}`.
 
 ## Parameters
@@ -57,7 +57,7 @@ python eodhd_client.py --endpoint sanctions/programs
 ## Notes
 
 - No filters; supports `page[offset]` / `page[limit]` pagination.
-- Feeds valid values into the `filter[program]` parameter of `/sanctions/entities` and `/sanctions/vessels`.
+- Feeds valid values into the `program` parameter of `/sanctions/entities` and `/sanctions/vessels`.
 
 ## HTTP Status Codes
 

@@ -17,15 +17,19 @@ checks, and compliance workflows. Returns the standard JSON envelope `{data, met
 
 ## Parameters
 
+> **Query params are bare keys, not `filter[...]`.** Sanctions endpoints use plain query params
+> (`source`, `type`, `program`, ...) while credit-risk and interest-rate endpoints use JSON:API
+> `filter[...]`. Pagination still uses `page[limit]` / `page[offset]`.
+
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| filter[name] | No | string | Entity name (partial match) |
-| filter[program] | No | string | Sanctions program code (e.g. `RUSSIA-EO14024`) |
-| filter[country] | No | string | Country associated with the entity |
-| filter[source] | No | string | Source list (e.g. `OFAC`, `EU`, `UN`) |
-| filter[entity_type] | No | string | Entity type (e.g. `individual`, `entity`) |
-| filter[is_active] | No | boolean | Whether the listing is currently active (`true`/`false`) |
+| source | No | string | Source list. Currently only `ofac` |
+| type | No | string | Entity type: `individual`, `entity`, `vessel`, or `aircraft` |
+| program | No | string | Sanctions program code (e.g. `RUSSIA-EO14024`) |
+| country | No | string | Country associated with the entity |
+| q | No | string | Free-text search (minimum 2 characters) |
+| active | No | boolean | Whether the listing is currently active (`true`/`false`) |
 | page[offset] | No | integer | Zero-based pagination offset |
 | page[limit] | No | integer | Page size |
 | fmt | No | string | Output format: 'json' |
@@ -75,20 +79,26 @@ checks, and compliance workflows. Returns the standard JSON envelope `{data, met
 ## Example Requests
 
 ```bash
-# Search active entities in a program
-curl "https://eodhd.com/api/sanctions/entities?api_token=YOUR_TOKEN&filter%5Bprogram%5D=RUSSIA-EO14024&filter%5Bis_active%5D=true"
+# Search active entities in a program (bare query params)
+curl "https://eodhd.com/api/sanctions/entities?api_token=YOUR_TOKEN&program=RUSSIA-EO14024&type=entity&active=true"
 
-# Using the helper client
-python eodhd_client.py --endpoint sanctions/entities --filter-param program=RUSSIA-EO14024 --filter-param is_active=true
+# Free-text search
+curl "https://eodhd.com/api/sanctions/entities?api_token=YOUR_TOKEN&q=Ivanov"
+
+# Using the helper client (--filter-param maps to bare keys for sanctions)
+python eodhd_client.py --endpoint sanctions/entities --filter-param program=RUSSIA-EO14024 --filter-param type=entity --filter-param active=true
 ```
 
 ## Notes
 
-- Filters use JSON:API bracket syntax: `filter[name]`, `filter[program]`, `filter[country]`, `filter[source]`, `filter[entity_type]`, `filter[is_active]`.
+- Query params are **bare keys** (`source`, `type`, `program`, `country`, `q`, `active`) — **not** `filter[...]`.
+- `source` currently supports only `ofac`.
+- `type` accepts `individual`, `entity`, `vessel`, or `aircraft`.
+- `q` requires a minimum of 2 characters.
 - Pagination uses `page[offset]` and `page[limit]`.
 - `aliases` and `identifiers` are arrays; screen against all aliases, not just `name`.
-- Use `/sanctions/programs` and `/sanctions/sources` to enumerate valid program / source filter values.
-- Helper client: pass filters with repeatable `--filter-param KEY=VALUE`.
+- Use `/sanctions/programs` and `/sanctions/sources` to enumerate valid program / source values.
+- Helper client: pass filters with repeatable `--filter-param KEY=VALUE` (sent as bare `KEY=VALUE`).
 
 ## HTTP Status Codes
 

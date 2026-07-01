@@ -17,15 +17,19 @@ screening, and vessel due diligence. Returns the standard JSON envelope `{data, 
 
 ## Parameters
 
+> **Query params are bare keys, not `filter[...]`.** Sanctions endpoints use plain query params
+> (`source`, `imo`, `flag`, ...) while credit-risk and interest-rate endpoints use JSON:API
+> `filter[...]`. Pagination still uses `page[limit]` / `page[offset]`.
+
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| filter[name] | No | string | Vessel name (partial match) |
-| filter[imo_number] | No | string | IMO number |
-| filter[flag] | No | string | Flag state (e.g. `Panama`) |
-| filter[program] | No | string | Sanctions program code |
-| filter[country] | No | string | Associated country |
-| filter[source] | No | string | Source list |
+| source | No | string | Source list. Currently only `ofac` |
+| imo | No | string | IMO number |
+| flag | No | string | Flag state (e.g. `Panama`) |
+| vessel_type | No | string | Vessel type (e.g. `Crude Oil Tanker`) |
+| q | No | string | Free-text search |
+| program | No | string | Sanctions program code |
 | page[offset] | No | integer | Zero-based pagination offset |
 | page[limit] | No | integer | Page size |
 | fmt | No | string | Output format: 'json' |
@@ -79,19 +83,23 @@ screening, and vessel due diligence. Returns the standard JSON envelope `{data, 
 ## Example Requests
 
 ```bash
-# Sanctioned vessels by flag state
-curl "https://eodhd.com/api/sanctions/vessels?api_token=YOUR_TOKEN&filter%5Bflag%5D=Panama"
+# Sanctioned vessels by flag state (bare query params)
+curl "https://eodhd.com/api/sanctions/vessels?api_token=YOUR_TOKEN&flag=Panama"
 
-# Using the helper client
+# Look up a specific vessel by IMO number
+curl "https://eodhd.com/api/sanctions/vessels?api_token=YOUR_TOKEN&imo=9700001"
+
+# Using the helper client (--filter-param maps to bare keys for sanctions)
 python eodhd_client.py --endpoint sanctions/vessels --filter-param flag=Panama
 ```
 
 ## Notes
 
-- Filters use JSON:API bracket syntax: `filter[name]`, `filter[imo_number]`, `filter[flag]`, `filter[program]`, `filter[country]`, `filter[source]`.
+- Query params are **bare keys** (`source`, `imo`, `flag`, `vessel_type`, `q`, `program`) — **not** `filter[...]`.
+- `source` currently supports only `ofac`.
 - Pagination uses `page[offset]` and `page[limit]`.
 - `entity_source_uid` links a vessel back to its owning entity in `/sanctions/entities`.
-- Helper client: pass filters with repeatable `--filter-param KEY=VALUE`.
+- Helper client: pass filters with repeatable `--filter-param KEY=VALUE` (sent as bare `KEY=VALUE`).
 
 ## HTTP Status Codes
 

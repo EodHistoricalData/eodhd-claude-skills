@@ -12,7 +12,7 @@ Auth: api_token (query)
 ## Purpose
 
 Distinct list of source lists that feed the consolidated sanctions dataset (e.g. OFAC, EU, UN). Use it
-to enumerate valid `filter[source]` values for `/sanctions/entities` and `/sanctions/vessels`. Returns
+to enumerate valid `source` values for `/sanctions/entities` and `/sanctions/vessels`. Returns
 the standard JSON envelope `{data, meta, links}`.
 
 ## Parameters
@@ -57,7 +57,7 @@ python eodhd_client.py --endpoint sanctions/sources
 ## Notes
 
 - No filters; supports `page[offset]` / `page[limit]` pagination.
-- Feeds valid values into the `filter[source]` parameter of `/sanctions/entities` and `/sanctions/vessels`.
+- Feeds valid values into the `source` parameter of `/sanctions/entities` and `/sanctions/vessels`.
 
 ## HTTP Status Codes
 
