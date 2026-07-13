@@ -45,10 +45,11 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `ust-real-yield-rates` | rest | `/ust/real-yield-rates` | rates | [ust-real-yield-rates.md](../../references/endpoints/ust-real-yield-rates.md) |
 | `ust-yield-rates` | rest | `/ust/yield-rates` | rates | [ust-yield-rates.md](../../references/endpoints/ust-yield-rates.md) |
 
-## fallback (1)
+## fallback (2)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
+| `asx-corporate-actions` | rest | `/asx-corporate-actions` | calendar | [asx-corporate-actions.md](../../references/endpoints/asx-corporate-actions.md) |
 | `index-components` | rest | `/fundamentals/{index}` | fundamentals | [index-components.md](../../references/endpoints/index-components.md) |
 
 ## documented (36)

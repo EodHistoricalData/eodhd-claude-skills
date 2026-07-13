@@ -81,6 +81,10 @@ Examples:
 
   # US Treasury Real Yield Rates (Par Real Yield Curve)
   python eodhd_client.py --endpoint ust/real-yield-rates --filter-year 2024
+
+  # ASX Corporate Actions (BARE query params: type, symbol, date_from, date_to)
+  python eodhd_client.py --endpoint asx-corporate-actions --filter-param type=dividends --filter-param symbol=BHP.AU
+  python eodhd_client.py --endpoint asx-corporate-actions --filter-param type=splits --filter-param date_from=2026-01-01 --filter-param date_to=2026-06-30
 """
 
 from __future__ import annotations
@@ -110,6 +114,13 @@ def _redact_token(url: str) -> str:
     return re.sub(r"([?&]api_token=)[^&#]*", r"\1***", url)
 
 
+# ASX corporate-actions endpoint: no symbol in the path; uses BARE query params
+# (type, symbol, date_from, date_to) — NOT filter[...] — plus page[offset]/page[limit].
+# Returns the JSON:API-style envelope {data, meta, links}.
+ASX_API_ENDPOINTS = {
+    "asx-corporate-actions",
+}
+
 # Endpoints that don't require a symbol
 NO_SYMBOL_ENDPOINTS = {
     "screener",
@@ -125,7 +136,7 @@ NO_SYMBOL_ENDPOINTS = {
     "ust/real-yield-rates",
     "us-quote-delayed",
     "user",
-}
+} | ASX_API_ENDPOINTS
 
 # Endpoints where --symbol means exchange code, not ticker
 EXCHANGE_CODE_ENDPOINTS = {
@@ -170,6 +181,8 @@ def build_path(endpoint: str, symbol: str | None, function: str | None = None) -
             return "/us-quote-delayed"
         if endpoint == "user":
             return "/user"
+        if endpoint == "asx-corporate-actions":
+            return "/asx-corporate-actions"
         return f"/{endpoint}"
 
     # Require symbol for all other endpoints
@@ -265,6 +278,8 @@ SUPPORTED_ENDPOINTS = [
     "ust/long-term-rates",
     "ust/yield-rates",
     "ust/real-yield-rates",
+    # Corporate actions (ASX)
+    "asx-corporate-actions",
 ]
 
 
@@ -325,6 +340,7 @@ Supported endpoints:
   US Quotes:      us-quote-delayed (Live v2 extended quotes)
   Account:        user
   US Treasury:    ust/bill-rates, ust/long-term-rates, ust/yield-rates, ust/real-yield-rates
+  Corporate:      asx-corporate-actions (use --filter-param KEY=VALUE)
 
 Note: news-word-weights may have longer response times due to AI processing.
 
@@ -392,6 +408,15 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
         "--filter-year",
         type=int,
         help="Filter by year for UST endpoints (e.g., 2023)",
+    )
+    parser.add_argument(
+        "--filter-param",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="Filter for asx-corporate-actions, repeatable "
+        "(e.g., --filter-param type=dividends --filter-param symbol=BHP.AU). "
+        "Sent as bare KEY=VALUE query params.",
     )
     parser.add_argument("--base-url", default=BASE_URL, help="Override base URL")
     parser.add_argument("--timeout", type=int, default=30, help="HTTP timeout seconds")
@@ -558,6 +583,30 @@ def main() -> int:
     if args.endpoint.startswith("ust/"):
         if args.filter_year is not None:
             params["filter[year]"] = args.filter_year
+        if args.limit is not None:
+            params["page[limit]"] = params.pop("limit", args.limit)
+        if args.offset is not None:
+            params["page[offset]"] = params.pop("offset", args.offset)
+
+    # Special handling for ASX corporate-actions. Uses BARE query params
+    # (type, symbol, date_from, date_to) — NOT filter[...] — while paginating
+    # via page[limit]/page[offset]. Returns the {data, meta, links} envelope.
+    if args.endpoint in ASX_API_ENDPOINTS:
+        # Date range is passed via --filter-param date_from=/date_to=; drop the
+        # generic bare from/to that generic arg handling may have set so nothing
+        # unsupported leaks into the query.
+        params.pop("from", None)
+        params.pop("to", None)
+        for item in args.filter_param:
+            if "=" not in item:
+                print(f"Error: --filter-param must be KEY=VALUE, got '{item}'", file=sys.stderr)
+                return 2
+            key, _, value = item.partition("=")
+            key = key.strip()
+            if not key:
+                print(f"Error: --filter-param missing key in '{item}'", file=sys.stderr)
+                return 2
+            params[key] = value
         if args.limit is not None:
             params["page[limit]"] = params.pop("limit", args.limit)
         if args.offset is not None:
