@@ -51,12 +51,13 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 |---|---|---|---|---|
 | `index-components` | rest | `/fundamentals/{index}` | fundamentals | [index-components.md](../../references/endpoints/index-components.md) |
 
-## documented (36)
+## documented (37)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
 | `cboe-index-data` | rest | `/cboe/index` | time-series | [cboe-index-data.md](../../references/endpoints/cboe-index-data.md) |
 | `cboe-indices-list` | rest | `/cboe/indices` | listing | [cboe-indices-list.md](../../references/endpoints/cboe-indices-list.md) |
+| `congressional-trades` | rest | `/congressional-trades` | fundamentals | [congressional-trades.md](../../references/endpoints/congressional-trades.md) |
 | `historical-market-cap` | rest | `/historical-market-cap/{symbol}` | time-series | [historical-market-cap.md](../../references/endpoints/historical-market-cap.md) |
 | `indices-list` | rest | `/mp/unicornbay/spglobal/list` | listing | [indices-list.md](../../references/endpoints/indices-list.md) |
 | `investverte-esg-list-companies` | rest | `/mp/investverte/companies` | esg | [investverte-esg-list-companies.md](../../references/endpoints/investverte-esg-list-companies.md) |
