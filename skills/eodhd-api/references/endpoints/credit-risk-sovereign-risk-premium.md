@@ -21,7 +21,7 @@ country-risk analysis. Returns the standard JSON envelope `{data, meta, links}`.
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| filter[country] | No | string | Country name or ISO3 (e.g. `USA`, `Germany`) |
+| filter[country] | No | string | ISO 3166-1 alpha-3 code (e.g. `USA`, `DEU`, `FRA`) — full country names are not matched |
 | filter[region] | No | string | Region name (e.g. `Europe`) |
 | filter[as_of] | No | string (YYYY-MM-DD) | As-of date; defaults to the latest available snapshot |
 | page[offset] | No | integer | Zero-based pagination offset |

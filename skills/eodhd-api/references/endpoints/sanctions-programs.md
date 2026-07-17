@@ -20,8 +20,6 @@ gauge program size. Returns the standard JSON envelope `{data, meta, links}`.
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| page[offset] | No | integer | Zero-based pagination offset |
-| page[limit] | No | integer | Page size |
 | fmt | No | string | Output format: 'json' |
 
 ## Response (shape)
@@ -56,7 +54,7 @@ python eodhd_client.py --endpoint sanctions/programs
 
 ## Notes
 
-- No filters; supports `page[offset]` / `page[limit]` pagination.
+- Takes no query parameters: the public endpoint forwards no `filter[...]` or `page[...]` upstream, so pagination is not client-controllable. The upstream may apply its own default page size — do not assume `meta.total` equals the number of returned rows.
 - Feeds valid values into the `program` parameter of `/sanctions/entities` and `/sanctions/vessels`.
 
 ## HTTP Status Codes

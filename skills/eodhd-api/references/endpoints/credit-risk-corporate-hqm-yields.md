@@ -20,7 +20,7 @@ Returns the standard JSON envelope `{data, meta, links}`.
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| filter[tenor] | No | string | Tenor(s) in years, comma-separated (e.g. `2,5,10`) |
+| filter[tenor] | No | string | Tenor(s) in years, comma-separated (e.g. `2,5,10`). Allowed: 1, 2, 3, 5, 7, 10, 15, 20, 25, 30 |
 | filter[type] | No | string | Yield type: `par` or `spot` |
 | filter[from] | No | string (YYYY-MM-DD) | Start date |
 | filter[to] | No | string (YYYY-MM-DD) | End date |

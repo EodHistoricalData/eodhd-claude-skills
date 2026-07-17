@@ -20,8 +20,6 @@ the standard JSON envelope `{data, meta, links}`.
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| page[offset] | No | integer | Zero-based pagination offset |
-| page[limit] | No | integer | Page size |
 | fmt | No | string | Output format: 'json' |
 
 ## Response (shape)
@@ -56,8 +54,8 @@ python eodhd_client.py --endpoint sanctions/sources
 
 ## Notes
 
-- No filters; supports `page[offset]` / `page[limit]` pagination.
-- Feeds valid values into the `source` parameter of `/sanctions/entities` and `/sanctions/vessels`.
+- Takes no query parameters: the public endpoint forwards no `filter[...]` or `page[...]` upstream, so pagination is not client-controllable. The upstream may apply its own default page size — do not assume `meta.total` equals the number of returned rows.
+- Enumerates source lists that feed the dataset. Note: `/sanctions/entities` and `/sanctions/vessels` currently validate `source` as `ofac` only — a source appearing here is not necessarily accepted as a filter value yet.
 
 ## HTTP Status Codes
 

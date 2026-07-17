@@ -20,7 +20,7 @@ estimation, and relative-value analysis. Returns the standard JSON envelope `{da
 | Parameter | Required | Type | Description |
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
-| filter[country] | No | string | Country name or ISO3 (e.g. `France`, `FRA`) |
+| filter[country] | No | string | ISO 3166-1 alpha-3 code (e.g. `USA`, `DEU`, `FRA`) — full country names are not matched |
 | filter[as_of] | No | string (YYYY-MM-DD) | As-of date; defaults to the latest snapshot |
 | page[offset] | No | integer | Zero-based pagination offset |
 | page[limit] | No | integer | Page size |
@@ -65,7 +65,7 @@ estimation, and relative-value analysis. Returns the standard JSON envelope `{da
 curl "https://eodhd.com/api/credit-risk/sovereign/cds-spreads?api_token=YOUR_TOKEN&filter%5Bcountry%5D=France"
 
 # Using the helper client
-python eodhd_client.py --endpoint credit-risk/sovereign/cds-spreads --filter-param country=France
+python eodhd_client.py --endpoint credit-risk/sovereign/cds-spreads --filter-param country=FRA
 ```
 
 ## Notes

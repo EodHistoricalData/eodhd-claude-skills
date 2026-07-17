@@ -22,6 +22,8 @@ the standard JSON envelope `{data, meta, links}`.
 | api_token | Yes | string | Your API key |
 | filter[metric] | No | string | Metric, e.g. `gross_notional` |
 | filter[dimension] | No | string | Breakdown dimension: `grade` or `cleared_status` |
+| filter[value] | No | string | Value within the dimension, e.g. `Cleared`, `Investment Grade` |
+| filter[region] | No | string | Region scope, e.g. `Global` |
 | filter[from] | No | string (YYYY-MM-DD) | Start date |
 | filter[to] | No | string (YYYY-MM-DD) | End date |
 | page[offset] | No | integer | Zero-based pagination offset |
@@ -74,8 +76,8 @@ python eodhd_client.py --endpoint credit-risk/cds-market/aggregates --filter-par
 
 ## Notes
 
-- Filters use JSON:API bracket syntax: `filter[metric]`, `filter[dimension]`, `filter[from]`, `filter[to]`.
-- `filter[dimension]` supports `grade` and `cleared_status`.
+- Filters use JSON:API bracket syntax: `filter[metric]`, `filter[dimension]`, `filter[value]`, `filter[region]`, `filter[from]`, `filter[to]`.
+- `filter[dimension]` supports `grade` and `cleared_status`; `filter[value]` selects a value within that dimension (e.g. `Cleared`, `Investment Grade`).
 - Notional is reported in USD millions (`usd_notional_mn`).
 - Pagination uses `page[offset]` and `page[limit]`.
 - Helper client: pass filters with repeatable `--filter-param KEY=VALUE`.

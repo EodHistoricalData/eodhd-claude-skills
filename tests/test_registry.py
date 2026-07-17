@@ -48,6 +48,22 @@ def e2e_tested_endpoints() -> set:
     return {n.split("(")[0] for n in names}
 
 
+def client_sets() -> dict:
+    """Extract the client's endpoint-family sets (param-style classification)."""
+    text = CLIENT.read_text()
+
+    def extract(name: str) -> set:
+        m = re.search(name + r"\s*=\s*\{(.*?)\}", text, re.DOTALL)
+        return set(re.findall(r'"([^"]+)"', m.group(1))) if m else set()
+
+    return {
+        "filter": extract("FILTER_API_ENDPOINTS"),
+        "filter_no_page": extract("FILTER_NO_PAGINATION_ENDPOINTS"),
+        "sanctions": extract("SANCTIONS_API_ENDPOINTS"),
+        "sanctions_no_param": extract("SANCTIONS_NO_PARAM_ENDPOINTS"),
+    }
+
+
 def check_well_formed(reg) -> list:
     fails = []
     seen = set()
@@ -127,6 +143,50 @@ def check_tiers(reg) -> list:
     return fails
 
 
+def check_client_registry_style(reg) -> list:
+    """Guard against drift between the client's param-style sets and the
+    registry's optional_params (the exact drift that produced the original
+    cds-market and programs/sources defects)."""
+    fails = []
+    sets = client_sets()
+    if not (sets["filter"] or sets["sanctions"]):
+        return ["could not extract endpoint-family sets from eodhd_client.py"]
+    by_ce = {e["client_endpoint"]: e for e in reg if e.get("client_endpoint")}
+
+    stray = sets["filter_no_page"] - sets["filter"]
+    if stray:
+        fails.append(f"FILTER_NO_PAGINATION_ENDPOINTS not subset of FILTER_API_ENDPOINTS: {sorted(stray)}")
+    stray_s = sets["sanctions_no_param"] - sets["sanctions"]
+    if stray_s:
+        fails.append(f"SANCTIONS_NO_PARAM_ENDPOINTS not subset of SANCTIONS_API_ENDPOINTS: {sorted(stray_s)}")
+
+    for ce in sorted(sets["filter"] | sets["sanctions"]):
+        e = by_ce.get(ce)
+        if not e:
+            fails.append(f"client family set contains '{ce}' with no registry entry")
+            continue
+        opt = e.get("optional_params", [])
+        non_page = [p for p in opt if not p.startswith("page[")]
+        has_page = any(p.startswith("page[") for p in opt)
+        if ce in sets["sanctions_no_param"]:
+            if opt:
+                fails.append(f"{ce}: no-param endpoint but registry optional_params={opt} (expected [])")
+        elif ce in sets["filter"]:
+            if non_page and not all(p.startswith("filter[") for p in non_page):
+                fails.append(f"{ce}: FILTER_API endpoint but registry has non-filter params {non_page}")
+            no_page = ce in sets["filter_no_page"]
+            if no_page and has_page:
+                fails.append(f"{ce}: FILTER_NO_PAGINATION but registry lists page[...]")
+            if not no_page and not has_page:
+                fails.append(f"{ce}: filter endpoint expected page[...] in registry, found none")
+        elif ce in sets["sanctions"]:  # entities/vessels — bare params
+            if any(p.startswith("filter[") for p in non_page):
+                fails.append(f"{ce}: sanctions bare endpoint but registry uses filter[...] {non_page}")
+            if not has_page:
+                fails.append(f"{ce}: sanctions entities/vessels expected page[...] in registry, found none")
+    return fails
+
+
 def check_matrix_fresh(reg) -> list:
     result = subprocess.run([sys.executable, str(BUILD), "--check"],
                             capture_output=True, text=True)
@@ -142,6 +202,7 @@ def main() -> int:
         ("Client parity (SUPPORTED_ENDPOINTS)", check_client_parity),
         ("Doc parity (references/endpoints)", check_doc_parity),
         ("Tier earns its label", check_tiers),
+        ("Client↔registry param-style consistency", check_client_registry_style),
         ("Support matrix freshness", check_matrix_fresh),
     ]
     all_fails = []
