@@ -103,6 +103,18 @@ Examples:
   python eodhd_client.py --endpoint rates/reference-rates --filter-param code=SOFR --filter-param from=2025-01-01
   python eodhd_client.py --endpoint rates/policy-rates --filter-param central_bank=ECB
   python eodhd_client.py --endpoint spreads/funding-stress --filter-param code=EFFR_SOFR --filter-param from=2026-05-01 --filter-param to=2026-05-31
+
+  # Real Estate — covered countries (which datasets each carries)
+  python eodhd_client.py --endpoint real-estate/countries --limit 20
+
+  # Real Estate — Selected Property Prices (SPP, headline harmonised) for a country
+  python eodhd_client.py --endpoint real-estate --symbol US --re-type real --re-metric index
+
+  # Real Estate — Detailed Property Prices (DPP, granular national series)
+  python eodhd_client.py --endpoint real-estate/detailed --symbol AE --re-property-type 1
+
+  # Real Estate — catalogue of available detailed (DPP) series for a country
+  python eodhd_client.py --endpoint real-estate/detailed/series --symbol US
 """
 
 from __future__ import annotations
@@ -196,6 +208,7 @@ NO_SYMBOL_ENDPOINTS = {
     "ust/long-term-rates",
     "ust/yield-rates",
     "ust/real-yield-rates",
+    "real-estate/countries",
     "us-quote-delayed",
     "user",
 } | FILTER_API_ENDPOINTS | SANCTIONS_API_ENDPOINTS
@@ -239,6 +252,8 @@ def build_path(endpoint: str, symbol: str | None, function: str | None = None) -
             return "/ust/yield-rates"
         if endpoint == "ust/real-yield-rates":
             return "/ust/real-yield-rates"
+        if endpoint == "real-estate/countries":
+            return "/real-estate/countries"
         if endpoint == "us-quote-delayed":
             return "/us-quote-delayed"
         if endpoint == "user":
@@ -278,6 +293,14 @@ def build_path(endpoint: str, symbol: str | None, function: str | None = None) -
         return f"/technical/{symbol}"
     if endpoint == "macro-indicator":
         return f"/macro-indicator/{symbol}"
+
+    # Real Estate Data API — {code} is ISO alpha-2, case-insensitive (normalised to uppercase)
+    if endpoint == "real-estate":
+        return f"/real-estate/{symbol.upper()}"
+    if endpoint == "real-estate/detailed":
+        return f"/real-estate/{symbol.upper()}/detailed"
+    if endpoint == "real-estate/detailed/series":
+        return f"/real-estate/{symbol.upper()}/detailed/series"
 
     # Exchange code endpoints
     if endpoint == "exchange-symbol-list":
@@ -355,6 +378,11 @@ SUPPORTED_ENDPOINTS = [
     "rates/reference-rates",
     "rates/policy-rates",
     "spreads/funding-stress",
+    # Real Estate Data API (BIS property prices)
+    "real-estate/countries",
+    "real-estate",
+    "real-estate/detailed",
+    "real-estate/detailed/series",
 ]
 
 
@@ -378,16 +406,17 @@ def normalize_response(endpoint: str, parsed):
     Most list endpoints (eod, news, screener data, ...) return a bare array
     with lowercase keys. Two endpoints diverge and broke downstream parsing:
 
-    - BUG-05: UST endpoints wrap rows in {"meta", "data", "links"} instead of a
-      bare array, so naive `data[-1]` indexing raised KeyError. Unwrap to the
-      bare `data` array (error payloads, which lack a list `data`, pass through).
+    - BUG-05: UST and Real Estate endpoints wrap rows in {"meta", "data", "links"}
+      instead of a bare array, so naive `data[-1]` indexing raised KeyError.
+      Unwrap to the bare `data` array (error payloads, which lack a list `data`,
+      pass through).
     - BUG-06: macro-indicator returns PascalCase keys (Date/Value/CountryCode)
       while every other endpoint uses lowercase, so `d.get("date")` returned
       None. Lowercase the keys.
 
     Use --raw to bypass normalization and see the exact API payload.
     """
-    if endpoint.startswith("ust/") and isinstance(parsed, dict):
+    if (endpoint.startswith("ust/") or endpoint.startswith("real-estate")) and isinstance(parsed, dict):
         data = parsed.get("data")
         if isinstance(data, list):
             return data
@@ -421,6 +450,7 @@ Supported endpoints:
                   credit-risk/cds-market/aggregates (use --filter-param KEY=VALUE)
   Sanctions:      sanctions/entities, sanctions/vessels, sanctions/programs, sanctions/sources
   Interest Rates: rates/reference-rates, rates/policy-rates, spreads/funding-stress
+  Real Estate:    real-estate/countries, real-estate, real-estate/detailed, real-estate/detailed/series
 
 Note: news-word-weights may have longer response times due to AI processing.
 
@@ -497,6 +527,39 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
         help="Filter for credit-risk/rates/sanctions endpoints, repeatable "
         "(e.g., --filter-param country=USA --filter-param from=2026-01-01). "
         "Sent as filter[KEY]=VALUE for credit-risk/rates; as bare KEY=VALUE for sanctions.",
+    )
+    # Real Estate Data API filters (map to filter[...] query params)
+    parser.add_argument(
+        "--re-type",
+        help="Real Estate SPP price type: nominal, real (filter[type])",
+    )
+    parser.add_argument(
+        "--re-metric",
+        help="Real Estate SPP metric: index, yoy (filter[metric])",
+    )
+    parser.add_argument(
+        "--re-area",
+        help="Real Estate DPP covered-area dimension code (filter[area])",
+    )
+    parser.add_argument(
+        "--re-property-type",
+        help="Real Estate DPP property type code (filter[property_type])",
+    )
+    parser.add_argument(
+        "--re-vintage",
+        help="Real Estate DPP vintage code (filter[vintage])",
+    )
+    parser.add_argument(
+        "--re-freq",
+        help="Real Estate DPP frequency: Q, A, M, H (filter[freq])",
+    )
+    parser.add_argument(
+        "--re-from",
+        help="Real Estate period lower bound, e.g. 2020-Q1 or 2020-01 (filter[from])",
+    )
+    parser.add_argument(
+        "--re-to",
+        help="Real Estate period upper bound, e.g. 2024-Q4 or 2024-12 (filter[to])",
     )
     parser.add_argument("--base-url", default=BASE_URL, help="Override base URL")
     parser.add_argument("--timeout", type=int, default=30, help="HTTP timeout seconds")
@@ -734,6 +797,32 @@ def main() -> int:
                 params["page[limit]"] = args.limit
             if args.offset is not None:
                 params["page[offset]"] = args.offset
+
+    # Special handling for Real Estate Data API endpoints (BIS property prices).
+    # Uses bracket-style filter[...] params, sort, and page[limit]/page[offset].
+    if args.endpoint.startswith("real-estate"):
+        if args.re_type:
+            params["filter[type]"] = args.re_type
+        if args.re_metric:
+            params["filter[metric]"] = args.re_metric
+        if args.re_area:
+            params["filter[area]"] = args.re_area
+        if args.re_property_type:
+            params["filter[property_type]"] = args.re_property_type
+        if args.re_vintage:
+            params["filter[vintage]"] = args.re_vintage
+        if args.re_freq:
+            params["filter[freq]"] = args.re_freq
+        if args.re_from:
+            params["filter[from]"] = args.re_from
+        if args.re_to:
+            params["filter[to]"] = args.re_to
+        if args.sort:
+            params["sort"] = args.sort
+        if args.limit is not None:
+            params["page[limit]"] = params.pop("limit", args.limit)
+        if args.offset is not None:
+            params["page[offset]"] = params.pop("offset", args.offset)
 
     query = urllib.parse.urlencode(params)
     url = args.base_url.rstrip("/") + path + "?" + query
