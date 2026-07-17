@@ -81,6 +81,28 @@ Examples:
 
   # US Treasury Real Yield Rates (Par Real Yield Curve)
   python eodhd_client.py --endpoint ust/real-yield-rates --filter-year 2024
+
+  # Credit & Sovereign Risk (JSON:API filter[...] + page[...])
+  # filter[country] expects an ISO 3166-1 alpha-3 code (USA, DEU, FRA) — not a full name
+  python eodhd_client.py --endpoint credit-risk/sovereign/risk-premium --filter-param country=USA
+  python eodhd_client.py --endpoint credit-risk/sovereign/credit-ratings --filter-param country=DEU
+  python eodhd_client.py --endpoint credit-risk/sovereign/cds-spreads --filter-param country=FRA
+  python eodhd_client.py --endpoint credit-risk/sovereign/default-spreads --filter-param rating=Aaa
+  python eodhd_client.py --endpoint credit-risk/corporate/cmdi --filter-param from=2026-01-01 --filter-param to=2026-06-01
+  python eodhd_client.py --endpoint credit-risk/corporate/hqm-yields --filter-param tenor=2,5,10 --filter-param type=par
+  python eodhd_client.py --endpoint credit-risk/cds-market/aggregates --filter-param metric=gross_notional --filter-param dimension=grade
+
+  # Sanctions screening (BARE query params: source, type, program, q, active, imo, flag, ...)
+  python eodhd_client.py --endpoint sanctions/entities --filter-param q=Ivanov --filter-param active=true
+  python eodhd_client.py --endpoint sanctions/entities --filter-param program=RUSSIA-EO14024 --filter-param type=entity
+  python eodhd_client.py --endpoint sanctions/vessels --filter-param flag=Panama
+  python eodhd_client.py --endpoint sanctions/programs
+  python eodhd_client.py --endpoint sanctions/sources
+
+  # Interest Rates
+  python eodhd_client.py --endpoint rates/reference-rates --filter-param code=SOFR --filter-param from=2025-01-01
+  python eodhd_client.py --endpoint rates/policy-rates --filter-param central_bank=ECB
+  python eodhd_client.py --endpoint spreads/funding-stress --filter-param code=EFFR_SOFR --filter-param from=2026-05-01 --filter-param to=2026-05-31
 """
 
 from __future__ import annotations
@@ -110,6 +132,57 @@ def _redact_token(url: str) -> str:
     return re.sub(r"([?&]api_token=)[^&#]*", r"\1***", url)
 
 
+# JSON:API-style endpoints: no symbol; use filter[...] + page[offset]/page[limit].
+# funding-stress has no pagination but shares the filter[...] convention.
+FILTER_API_ENDPOINTS = {
+    "credit-risk/sovereign/risk-premium",
+    "credit-risk/sovereign/credit-ratings",
+    "credit-risk/sovereign/cds-spreads",
+    "credit-risk/sovereign/default-spreads",
+    "credit-risk/corporate/cmdi",
+    "credit-risk/corporate/hqm-yields",
+    "credit-risk/cds-market/aggregates",
+    "rates/reference-rates",
+    "rates/policy-rates",
+    "spreads/funding-stress",
+}
+
+# filter[...] endpoints whose prometheus-web controller forwards no pagination
+# (only `filter`), so page[offset]/page[limit] must not be sent.
+FILTER_NO_PAGINATION_ENDPOINTS = {
+    "spreads/funding-stress",
+}
+
+# Generic CLI-derived query keys that the new REST families (credit-risk, rates,
+# sanctions) never accept as-is — they take --filter-param (and, where allowed,
+# page[...]). Stripped before building the query so a stray --interval/--period/
+# --function/--indicator/--filter/--from-date/--to-date/--limit/--offset cannot
+# leak into the request and silently violate the documented contract.
+_GENERIC_QUERY_KEYS = (
+    "from", "to", "limit", "offset",
+    "interval", "period", "function", "indicator", "filter",
+)
+
+# Sanctions endpoints: no symbol; use BARE query params (source, type, program,
+# q, active, imo, flag, ...) — NOT filter[...]. entities/vessels also paginate
+# via page[offset]/page[limit]; programs/sources take no params (see below).
+# Verified against prometheus-web request classes + live prod (2026-07).
+SANCTIONS_API_ENDPOINTS = {
+    "sanctions/entities",
+    "sanctions/vessels",
+    "sanctions/programs",
+    "sanctions/sources",
+}
+
+# Sanctions reference endpoints that accept NO query params at all: the
+# eodhd.com proxy forwards none of them (verified vs prometheus-web
+# controllers, which proxy these with an empty param list) — not even
+# pagination. They return the full reference list.
+SANCTIONS_NO_PARAM_ENDPOINTS = {
+    "sanctions/programs",
+    "sanctions/sources",
+}
+
 # Endpoints that don't require a symbol
 NO_SYMBOL_ENDPOINTS = {
     "screener",
@@ -125,7 +198,7 @@ NO_SYMBOL_ENDPOINTS = {
     "ust/real-yield-rates",
     "us-quote-delayed",
     "user",
-}
+} | FILTER_API_ENDPOINTS | SANCTIONS_API_ENDPOINTS
 
 # Endpoints where --symbol means exchange code, not ticker
 EXCHANGE_CODE_ENDPOINTS = {
@@ -265,6 +338,23 @@ SUPPORTED_ENDPOINTS = [
     "ust/long-term-rates",
     "ust/yield-rates",
     "ust/real-yield-rates",
+    # Credit & Sovereign Risk
+    "credit-risk/sovereign/risk-premium",
+    "credit-risk/sovereign/credit-ratings",
+    "credit-risk/sovereign/cds-spreads",
+    "credit-risk/sovereign/default-spreads",
+    "credit-risk/corporate/cmdi",
+    "credit-risk/corporate/hqm-yields",
+    "credit-risk/cds-market/aggregates",
+    # Sanctions screening
+    "sanctions/entities",
+    "sanctions/vessels",
+    "sanctions/programs",
+    "sanctions/sources",
+    # Interest rates
+    "rates/reference-rates",
+    "rates/policy-rates",
+    "spreads/funding-stress",
 ]
 
 
@@ -325,6 +415,12 @@ Supported endpoints:
   US Quotes:      us-quote-delayed (Live v2 extended quotes)
   Account:        user
   US Treasury:    ust/bill-rates, ust/long-term-rates, ust/yield-rates, ust/real-yield-rates
+  Credit Risk:    credit-risk/sovereign/risk-premium, credit-risk/sovereign/credit-ratings,
+                  credit-risk/sovereign/cds-spreads, credit-risk/sovereign/default-spreads,
+                  credit-risk/corporate/cmdi, credit-risk/corporate/hqm-yields,
+                  credit-risk/cds-market/aggregates (use --filter-param KEY=VALUE)
+  Sanctions:      sanctions/entities, sanctions/vessels, sanctions/programs, sanctions/sources
+  Interest Rates: rates/reference-rates, rates/policy-rates, spreads/funding-stress
 
 Note: news-word-weights may have longer response times due to AI processing.
 
@@ -393,12 +489,29 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
         type=int,
         help="Filter by year for UST endpoints (e.g., 2023)",
     )
+    parser.add_argument(
+        "--filter-param",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="Filter for credit-risk/rates/sanctions endpoints, repeatable "
+        "(e.g., --filter-param country=USA --filter-param from=2026-01-01). "
+        "Sent as filter[KEY]=VALUE for credit-risk/rates; as bare KEY=VALUE for sanctions.",
+    )
     parser.add_argument("--base-url", default=BASE_URL, help="Override base URL")
     parser.add_argument("--timeout", type=int, default=30, help="HTTP timeout seconds")
     parser.add_argument(
         "--raw",
         action="store_true",
         help="Output raw response without JSON formatting",
+    )
+    parser.add_argument(
+        "--print-url",
+        action="store_true",
+        help="Build and print the request URL (api_token redacted) then exit, "
+        "without calling the API — useful for debugging query construction. "
+        "Note: the printed URL still contains filter values (e.g. sanctions q/imo/"
+        "country) — avoid pasting it into public/CI logs.",
     )
     return parser.parse_args()
 
@@ -563,8 +676,71 @@ def main() -> int:
         if args.offset is not None:
             params["page[offset]"] = params.pop("offset", args.offset)
 
+    # Special handling for JSON:API filter endpoints (credit-risk, rates).
+    # Filters arrive as --filter-param KEY=VALUE and are sent as filter[KEY]=VALUE.
+    # Pagination uses page[limit]/page[offset]; funding-stress has no pagination.
+    if args.endpoint in FILTER_API_ENDPOINTS:
+        # Strip every generic CLI-derived param: these endpoints take only
+        # filter[...] (from --filter-param) and, where allowed, page[...].
+        # Dates go via --filter-param from=/to= (rendered filter[from]/filter[to]).
+        for _k in _GENERIC_QUERY_KEYS:
+            params.pop(_k, None)
+        for item in args.filter_param:
+            if "=" not in item:
+                print(f"Error: --filter-param must be KEY=VALUE, got '{item}'", file=sys.stderr)
+                return 2
+            key, _, value = item.partition("=")
+            key = key.strip()
+            if not key:
+                print(f"Error: --filter-param missing key in '{item}'", file=sys.stderr)
+                return 2
+            params[f"filter[{key}]"] = value
+        if args.endpoint not in FILTER_NO_PAGINATION_ENDPOINTS:
+            if args.limit is not None:
+                params["page[limit]"] = args.limit
+            if args.offset is not None:
+                params["page[offset]"] = args.offset
+
+    # Special handling for sanctions endpoints. entities/vessels use BARE query
+    # params (source, type, program, q, active, imo, flag, ...) — NOT filter[...]
+    # — plus page[limit]/page[offset]. programs/sources take no params at all.
+    if args.endpoint in SANCTIONS_API_ENDPOINTS:
+        # Strip every generic CLI-derived param so nothing leaks; sanctions
+        # endpoints have no date range and take only the keys below.
+        for _k in _GENERIC_QUERY_KEYS:
+            params.pop(_k, None)
+        if args.endpoint in SANCTIONS_NO_PARAM_ENDPOINTS:
+            # programs/sources forward no params upstream — reject any the user
+            # passed rather than silently dropping them (false sense of filtering).
+            if args.filter_param or args.limit is not None or args.offset is not None:
+                print(
+                    f"Error: endpoint '{args.endpoint}' accepts no query parameters "
+                    "(no filters, no pagination); drop --filter-param/--limit/--offset",
+                    file=sys.stderr,
+                )
+                return 2
+        else:
+            for item in args.filter_param:
+                if "=" not in item:
+                    print(f"Error: --filter-param must be KEY=VALUE, got '{item}'", file=sys.stderr)
+                    return 2
+                key, _, value = item.partition("=")
+                key = key.strip()
+                if not key:
+                    print(f"Error: --filter-param missing key in '{item}'", file=sys.stderr)
+                    return 2
+                params[key] = value
+            if args.limit is not None:
+                params["page[limit]"] = args.limit
+            if args.offset is not None:
+                params["page[offset]"] = args.offset
+
     query = urllib.parse.urlencode(params)
     url = args.base_url.rstrip("/") + path + "?" + query
+
+    if args.print_url:
+        print(_redact_token(url))
+        return 0
 
     request = urllib.request.Request(url, headers={"Accept": "application/json"})
     try:

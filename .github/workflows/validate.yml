@@ -59,6 +59,9 @@ jobs:
       - name: Registry parity checks
         run: python3 tests/test_registry.py
 
+      - name: Client query construction (offline)
+        run: python3 tests/test_client_query.py
+
   mcp-endpoint:
     runs-on: ubuntu-latest
     steps:

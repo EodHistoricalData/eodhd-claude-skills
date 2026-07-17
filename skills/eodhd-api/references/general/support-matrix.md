@@ -45,11 +45,25 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `ust-real-yield-rates` | rest | `/ust/real-yield-rates` | rates | [ust-real-yield-rates.md](../../references/endpoints/ust-real-yield-rates.md) |
 | `ust-yield-rates` | rest | `/ust/yield-rates` | rates | [ust-yield-rates.md](../../references/endpoints/ust-yield-rates.md) |
 
-## fallback (1)
+## fallback (15)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
+| `credit-risk-cds-market-aggregates` | rest | `/credit-risk/cds-market/aggregates` | risk-report | [credit-risk-cds-market-aggregates.md](../../references/endpoints/credit-risk-cds-market-aggregates.md) |
+| `credit-risk-corporate-cmdi` | rest | `/credit-risk/corporate/cmdi` | risk-report | [credit-risk-corporate-cmdi.md](../../references/endpoints/credit-risk-corporate-cmdi.md) |
+| `credit-risk-corporate-hqm-yields` | rest | `/credit-risk/corporate/hqm-yields` | risk-report | [credit-risk-corporate-hqm-yields.md](../../references/endpoints/credit-risk-corporate-hqm-yields.md) |
+| `credit-risk-sovereign-cds-spreads` | rest | `/credit-risk/sovereign/cds-spreads` | risk-report | [credit-risk-sovereign-cds-spreads.md](../../references/endpoints/credit-risk-sovereign-cds-spreads.md) |
+| `credit-risk-sovereign-credit-ratings` | rest | `/credit-risk/sovereign/credit-ratings` | risk-report | [credit-risk-sovereign-credit-ratings.md](../../references/endpoints/credit-risk-sovereign-credit-ratings.md) |
+| `credit-risk-sovereign-default-spreads` | rest | `/credit-risk/sovereign/default-spreads` | risk-report | [credit-risk-sovereign-default-spreads.md](../../references/endpoints/credit-risk-sovereign-default-spreads.md) |
+| `credit-risk-sovereign-risk-premium` | rest | `/credit-risk/sovereign/risk-premium` | risk-report | [credit-risk-sovereign-risk-premium.md](../../references/endpoints/credit-risk-sovereign-risk-premium.md) |
 | `index-components` | rest | `/fundamentals/{index}` | fundamentals | [index-components.md](../../references/endpoints/index-components.md) |
+| `rates-policy-rates` | rest | `/rates/policy-rates` | rates | [rates-policy-rates.md](../../references/endpoints/rates-policy-rates.md) |
+| `rates-reference-rates` | rest | `/rates/reference-rates` | rates | [rates-reference-rates.md](../../references/endpoints/rates-reference-rates.md) |
+| `sanctions-entities` | rest | `/sanctions/entities` | reference | [sanctions-entities.md](../../references/endpoints/sanctions-entities.md) |
+| `sanctions-programs` | rest | `/sanctions/programs` | reference | [sanctions-programs.md](../../references/endpoints/sanctions-programs.md) |
+| `sanctions-sources` | rest | `/sanctions/sources` | reference | [sanctions-sources.md](../../references/endpoints/sanctions-sources.md) |
+| `sanctions-vessels` | rest | `/sanctions/vessels` | reference | [sanctions-vessels.md](../../references/endpoints/sanctions-vessels.md) |
+| `spreads-funding-stress` | rest | `/spreads/funding-stress` | rates | [spreads-funding-stress.md](../../references/endpoints/spreads-funding-stress.md) |
 
 ## documented (36)
 
