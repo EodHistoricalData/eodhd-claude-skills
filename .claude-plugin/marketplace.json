@@ -5,8 +5,8 @@
     "email": "supportlevel1@eodhistoricaldata.com"
   },
   "metadata": {
-    "description": "Developer-first financial data for Claude — 150k+ tickers, 70+ exchanges, MCP Server with OAuth, 7 curated workflow skills, Python client, 64 endpoint docs",
-    "version": "0.6.0"
+    "description": "Developer-first financial data for Claude — 150k+ tickers, 70+ exchanges, MCP Server with OAuth, 7 curated workflow skills, Python client, 79 endpoint docs",
+    "version": "0.7.0"
   },
   "plugins": [
     {

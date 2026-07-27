@@ -4,6 +4,23 @@ All notable changes to this plugin are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-07-27
+
+### Added
+- **14 new endpoints across three data families** (documented tier), with reference docs and
+  registry entries:
+  - **Credit risk (7):** CDS market aggregates, corporate CMDI, corporate HQM yields,
+    sovereign CDS spreads, sovereign credit ratings, sovereign default spreads,
+    sovereign risk premium.
+  - **Sanctions (4):** entities, programs, sources, vessels (OFAC screening data).
+  - **Interest rates (2):** policy rates, reference rates.
+  - **Spreads (1):** funding-stress spreads.
+- New query-param validation for the added endpoints; sanctions endpoints use bare query
+  params (not `filter[...]`). Registry and reference docs reconciled from review.
+
+### Changed
+- Endpoint reference docs 64 → 79; registry entries 67 → 81.
+
 ## [0.6.0] — 2026-06-22
 
 ### Changed
