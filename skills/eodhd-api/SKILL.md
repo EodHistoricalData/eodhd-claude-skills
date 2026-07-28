@@ -183,10 +183,10 @@ Activate this skill when the user is performing or asking for:
 | `index-components` | Index constituents + historical membership | `--symbol` (index ID, e.g. `GSPC.INDX`) |
 | `user` | Account details and API usage | (no parameters needed) |
 | `us-quote-delayed` | US extended quotes (Live v2) | `--symbol` (comma-separated for batch), `--limit`, `--offset` |
-| `ust/bill-rates` | US Treasury Bill Rates | `--filter-year`, `--limit`, `--offset` |
-| `ust/long-term-rates` | US Treasury Long-Term Rates | `--filter-year`, `--limit`, `--offset` |
-| `ust/yield-rates` | US Treasury Par Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
-| `ust/real-yield-rates` | US Treasury Par Real Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
+| `ust/bill-rates` | US Treasury Bill Rates | `--filter-year` (no pagination) |
+| `ust/long-term-rates` | US Treasury Long-Term Rates | `--filter-year` (no pagination) |
+| `ust/yield-rates` | US Treasury Par Yield Curve Rates | `--filter-year` (no pagination) |
+| `ust/real-yield-rates` | US Treasury Par Real Yield Curve Rates | `--filter-year` (no pagination) |
 
 > **¹ Calendar parameter mapping**: The Python client accepts `--symbol`, but the underlying API parameter is `symbols=` (plural). If you build curl commands directly, use `symbols=AAPL.US,MSFT.US` — using `symbol=` (singular) will be silently ignored, returning empty results with HTTP 200. For `calendar/earnings`, providing `symbols=` causes the API to ignore `from`/`to` dates.
 >
@@ -298,7 +298,7 @@ python eodhd_client.py --endpoint user
 python eodhd_client.py --endpoint us-quote-delayed --symbol AAPL.US,TSLA.US
 
 # US Treasury Bill Rates for 2012
-python eodhd_client.py --endpoint ust/bill-rates --filter-year 2012 --limit 100
+python eodhd_client.py --endpoint ust/bill-rates --filter-year 2012
 
 # US Treasury Long-Term Rates for 2020
 python eodhd_client.py --endpoint ust/long-term-rates --filter-year 2020

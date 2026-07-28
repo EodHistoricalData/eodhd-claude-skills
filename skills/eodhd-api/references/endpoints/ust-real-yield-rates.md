@@ -19,9 +19,9 @@ Provides Daily Treasury Par Real Yield Curve Rates (real yield curve by tenor). 
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
 | filter[year] | No | integer | Filter by year (1900 – current year + 1). If not mentioned – current year |
-| page[limit] | No | integer | Number of results per page |
-| page[offset] | No | integer | Pagination offset |
 | fmt | No | string | Output format: 'json' |
+
+> These endpoints are **not paginated** and do **not** support date-range filtering: `page[limit]`, `page[offset]`, `from` and `to` are silently ignored by the API, which always returns the full dataset for the requested year. `filter[year]` is the only real filter.
 
 ## Response (shape)
 
@@ -69,9 +69,9 @@ Provides Daily Treasury Par Real Yield Curve Rates (real yield curve by tenor). 
 
 | Field | Type | Description |
 |-------|------|-------------|
-| meta | object | Metadata including total record count |
+| meta | object | Metadata; contains only `total` (the record count) |
 | data | array | Array of real yield rate records |
-| links | object | Pagination links (next page URL or null) |
+| links | object | Always `{"next": null}` — these endpoints are not paginated |
 
 **Data item fields:**
 
@@ -100,6 +100,7 @@ python eodhd_client.py --endpoint ust/real-yield-rates --filter-year 2024
 - Real yields reflect inflation-adjusted returns (derived from TIPS)
 - Comparing nominal yields (from yield-rates endpoint) with real yields gives implied inflation expectations (breakeven inflation)
 - If `filter[year]` is omitted, defaults to the current year
+- Not paginated: `links.next` is always null and `page[limit]`/`page[offset]` are ignored (the full year is always returned)
 - API call consumption: 1 call per request
 - Part of the US Treasury (UST) Interest Rates API (beta)
 - **Helper client normalization**: `eodhd_client.py` unwraps the `{"meta", "data", "links"}` envelope and

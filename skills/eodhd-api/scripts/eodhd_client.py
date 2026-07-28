@@ -71,7 +71,7 @@ Examples:
   python eodhd_client.py --endpoint user
 
   # US Treasury Bill Rates
-  python eodhd_client.py --endpoint ust/bill-rates --filter-year 2012 --limit 100
+  python eodhd_client.py --endpoint ust/bill-rates --filter-year 2012
 
   # US Treasury Long-Term Rates
   python eodhd_client.py --endpoint ust/long-term-rates --filter-year 2020
@@ -667,14 +667,16 @@ def main() -> int:
         if args.version:
             params["version"] = args.version
 
-    # Special handling for UST endpoints (filter[year], page[limit], page[offset])
+    # Special handling for UST endpoints. filter[year] (integer; defaults to the
+    # current year if omitted) is the ONLY real query param. These endpoints are
+    # NOT paginated and do NOT support date-range filtering — page[limit],
+    # page[offset] and from/to are silently ignored by the API and the full
+    # dataset is always returned, so strip them and never send them.
     if args.endpoint.startswith("ust/"):
+        for stray in ("limit", "offset", "from", "to"):
+            params.pop(stray, None)
         if args.filter_year is not None:
             params["filter[year]"] = args.filter_year
-        if args.limit is not None:
-            params["page[limit]"] = params.pop("limit", args.limit)
-        if args.offset is not None:
-            params["page[offset]"] = params.pop("offset", args.offset)
 
     # Special handling for JSON:API filter endpoints (credit-risk, rates).
     # Filters arrive as --filter-param KEY=VALUE and are sent as filter[KEY]=VALUE.

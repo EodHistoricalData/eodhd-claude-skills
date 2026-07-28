@@ -19,9 +19,9 @@ Provides Daily Treasury Par Yield Curve Rates (nominal yield curve by tenor). Re
 |-----------|----------|------|-------------|
 | api_token | Yes | string | Your API key |
 | filter[year] | No | integer | Filter by year (1900 – current year + 1). If not mentioned – current year |
-| page[limit] | No | integer | Number of results per page |
-| page[offset] | No | integer | Pagination offset |
 | fmt | No | string | Output format: 'json' |
+
+> These endpoints are **not paginated** and do **not** support date-range filtering: `page[limit]`, `page[offset]`, `from` and `to` are silently ignored by the API, which always returns the full dataset for the requested year. `filter[year]` is the only real filter.
 
 ## Response (shape)
 
@@ -79,9 +79,9 @@ Provides Daily Treasury Par Yield Curve Rates (nominal yield curve by tenor). Re
 
 | Field | Type | Description |
 |-------|------|-------------|
-| meta | object | Metadata including total record count |
+| meta | object | Metadata; contains only `total` (the record count) |
 | data | array | Array of yield rate records |
-| links | object | Pagination links (next page URL or null) |
+| links | object | Always `{"next": null}` — these endpoints are not paginated |
 
 **Data item fields:**
 
@@ -112,9 +112,10 @@ python eodhd_client.py --endpoint ust/yield-rates --filter-year 2023
 - Useful for constructing yield curves, calculating spreads (e.g., 2Y-10Y spread), and term structure analysis
 - API call consumption: 1 call per request
 - Part of the US Treasury (UST) Interest Rates API (beta)
+- Not paginated: `links.next` is always null and `page[limit]`/`page[offset]` are ignored (the full year is always returned)
 - **Helper client normalization**: the raw API wraps rows in a `{"meta", "data", "links"}` envelope, but
   `eodhd_client.py` unwraps it and returns the bare `data` array (consistent with other list endpoints, so
-  `data[-1]` works). Pass `--raw` to see the full envelope with `meta`/`links` pagination info.
+  `data[-1]` works). Pass `--raw` to see the full envelope with `meta`/`links`.
 
 ## HTTP Status Codes
 

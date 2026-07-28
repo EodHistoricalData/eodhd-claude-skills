@@ -85,14 +85,15 @@ CASES: list[tuple[str, list[str]]] = [
     # Account
     ("user", ["--endpoint", "user"]),
     # US Treasury
+    # UST endpoints take only filter[year] — no pagination (page[limit]/page[offset] ignored)
     ("ust/bill-rates", ["--endpoint", "ust/bill-rates",
-                        "--filter-year", "2024", "--limit", "5"]),
+                        "--filter-year", "2024"]),
     ("ust/long-term-rates", ["--endpoint", "ust/long-term-rates",
-                             "--filter-year", "2024", "--limit", "5"]),
+                             "--filter-year", "2024"]),
     ("ust/yield-rates", ["--endpoint", "ust/yield-rates",
-                         "--filter-year", "2024", "--limit", "5"]),
+                         "--filter-year", "2024"]),
     ("ust/real-yield-rates", ["--endpoint", "ust/real-yield-rates",
-                              "--filter-year", "2024", "--limit", "5"]),
+                              "--filter-year", "2024"]),
 ]
 
 
