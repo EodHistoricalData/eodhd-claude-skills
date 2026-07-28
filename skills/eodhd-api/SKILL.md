@@ -187,10 +187,16 @@ Activate this skill when the user is performing or asking for:
 | `ust/long-term-rates` | US Treasury Long-Term Rates | `--filter-year`, `--limit`, `--offset` |
 | `ust/yield-rates` | US Treasury Par Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
 | `ust/real-yield-rates` | US Treasury Par Real Yield Curve Rates | `--filter-year`, `--limit`, `--offset` |
+| `real-estate/countries` | Real Estate — covered countries + datasets (BIS) | `--sort`, `--limit`, `--offset` |
+| `real-estate` | Real Estate — Selected Property Prices (SPP) for a country | `--symbol` (country code)³, `--re-type`, `--re-metric`, `--re-from`, `--re-to`, `--sort`, `--limit`, `--offset` |
+| `real-estate/detailed` | Real Estate — Detailed Property Prices (DPP) | `--symbol` (country code)³, `--re-area`, `--re-property-type`, `--re-vintage`, `--re-freq`, `--re-from`, `--re-to`, `--sort`, `--limit`, `--offset` |
+| `real-estate/detailed/series` | Real Estate — catalogue of available DPP series | `--symbol` (country code)³ |
 
 > **¹ Calendar parameter mapping**: The Python client accepts `--symbol`, but the underlying API parameter is `symbols=` (plural). If you build curl commands directly, use `symbols=AAPL.US,MSFT.US` — using `symbol=` (singular) will be silently ignored, returning empty results with HTTP 200. For `calendar/earnings`, providing `symbols=` causes the API to ignore `from`/`to` dates.
 >
 > **² Dividends calendar parameter mapping**: The API uses bracket-style parameters: `filter[symbol]`, `filter[date_from]`, `filter[date_to]`, `page[limit]`, `page[offset]`. The Python client translates `--symbol`/`--from-date`/`--to-date`/`--limit`/`--offset` automatically. For raw curl, use the bracket format directly (see `references/endpoints/upcoming-dividends.md`).
+>
+> **³ Real Estate parameter mapping**: For the Real Estate endpoints, `--symbol` carries the ISO 3166-1 alpha-2 country `{code}` (case-insensitive, e.g. `US`). The API uses bracket-style filters (`filter[type]`, `filter[metric]`, `filter[area]`, `filter[property_type]`, `filter[vintage]`, `filter[freq]`, `filter[from]`, `filter[to]`) plus `sort`, `page[limit]`, `page[offset]`; the Python client translates `--re-*`/`--sort`/`--limit`/`--offset` automatically. `--re-from`/`--re-to` take period values (`YYYY-Qn` for SPP). See `references/endpoints/real-estate-selected-property-prices.md`.
 >
 > The table above covers Python client support only. An additional 30+ endpoints (Marketplace: options, ESG/Investverte, PRAAMS, TradingHours, tick data, logos, search, WebSockets, etc.) are documented in `references/endpoints/` and require curl or manual HTTP calls. See `references/endpoints/README.md` for the full index.
 

@@ -45,7 +45,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `ust-real-yield-rates` | rest | `/ust/real-yield-rates` | rates | [ust-real-yield-rates.md](../../references/endpoints/ust-real-yield-rates.md) |
 | `ust-yield-rates` | rest | `/ust/yield-rates` | rates | [ust-yield-rates.md](../../references/endpoints/ust-yield-rates.md) |
 
-## fallback (15)
+## fallback (19)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
@@ -59,6 +59,10 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `index-components` | rest | `/fundamentals/{index}` | fundamentals | [index-components.md](../../references/endpoints/index-components.md) |
 | `rates-policy-rates` | rest | `/rates/policy-rates` | rates | [rates-policy-rates.md](../../references/endpoints/rates-policy-rates.md) |
 | `rates-reference-rates` | rest | `/rates/reference-rates` | rates | [rates-reference-rates.md](../../references/endpoints/rates-reference-rates.md) |
+| `real-estate-countries` | rest | `/real-estate/countries` | listing | [real-estate-countries.md](../../references/endpoints/real-estate-countries.md) |
+| `real-estate-detailed-property-prices` | rest | `/real-estate/{code}/detailed` | time-series | [real-estate-detailed-property-prices.md](../../references/endpoints/real-estate-detailed-property-prices.md) |
+| `real-estate-detailed-series` | rest | `/real-estate/{code}/detailed/series` | listing | [real-estate-detailed-series.md](../../references/endpoints/real-estate-detailed-series.md) |
+| `real-estate-selected-property-prices` | rest | `/real-estate/{code}` | time-series | [real-estate-selected-property-prices.md](../../references/endpoints/real-estate-selected-property-prices.md) |
 | `sanctions-entities` | rest | `/sanctions/entities` | reference | [sanctions-entities.md](../../references/endpoints/sanctions-entities.md) |
 | `sanctions-programs` | rest | `/sanctions/programs` | reference | [sanctions-programs.md](../../references/endpoints/sanctions-programs.md) |
 | `sanctions-sources` | rest | `/sanctions/sources` | reference | [sanctions-sources.md](../../references/endpoints/sanctions-sources.md) |
