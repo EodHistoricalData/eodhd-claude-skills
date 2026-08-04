@@ -637,10 +637,10 @@ The API is accessible over both HTTPS and HTTP, across primary and legacy domain
 |--------|----------|----------|
 | `eodhd.com` | HTTPS | Recommended — secure connection |
 | `eodhistoricaldata.com` | HTTPS | Legacy domain (redirects to eodhd.com) |
-| `nonsecure.eodhd.com` | HTTP | HTTP-only API endpoint (no SSL) |
-| `nonsecure.eodhistoricaldata.com` | HTTP | HTTP-only legacy API endpoint |
+| `nonsecure.eodhd.com` | HTTP | HTTP-only endpoint — legacy compatibility only |
+| `nonsecure.eodhistoricaldata.com` | HTTP | HTTP-only legacy endpoint |
 
-**Always prefer HTTPS** (`eodhd.com`) for production use.
+**Always use HTTPS** (`eodhd.com`). The `api_token` is passed in the request URL, so a plain-HTTP request sends your live token in cleartext — it can be captured in transit and lands in proxy, CDN, and access logs. **Do not use the `nonsecure.*` HTTP endpoints with a real API token.**
 
 ## CORS & AJAX
 
@@ -655,7 +655,7 @@ If you are currently making cross-origin requests and encounter errors, EODHD ca
 If you encounter `SSL: CERTIFICATE_VERIFY_FAILED` or port 443 errors:
 
 1. **Verify your SSL library**: EODHD uses HTTP/2 with TLS 1.2+. Ensure your environment uses **OpenSSL 1.1.0 or later**.
-2. **Quick workaround**: Use `http://nonsecure.eodhd.com` instead of `https://eodhd.com` to bypass SSL entirely.
+2. **Update your CA bundle**: Most `CERTIFICATE_VERIFY_FAILED` errors are a stale or missing root certificate store, not an EODHD problem. Update the trust store instead of disabling TLS — for Python `pip install --upgrade certifi`; on Linux refresh the system bundle (`update-ca-certificates` / `ca-certificates` package); behind a corporate proxy, install the proxy's CA certificate into that store. Never disable certificate verification (`verify=False`, `CERT_NONE`) against a live token.
 3. **Certificate check**: EODHD's certificate is valid — verify at https://www.ssllabs.com/ssltest/analyze.html?d=eodhd.com
 4. **Legacy root CA**: The DST Root CA X3 expiration (September 2021) may cause issues on older systems. See: https://letsencrypt.org/docs/dst-root-ca-x3-expiration-september-2021/
 
