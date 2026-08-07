@@ -45,7 +45,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `ust-real-yield-rates` | rest | `/ust/real-yield-rates` | rates | [ust-real-yield-rates.md](../../references/endpoints/ust-real-yield-rates.md) |
 | `ust-yield-rates` | rest | `/ust/yield-rates` | rates | [ust-yield-rates.md](../../references/endpoints/ust-yield-rates.md) |
 
-## fallback (19)
+## fallback (23)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
@@ -67,6 +67,10 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `sanctions-programs` | rest | `/sanctions/programs` | reference | [sanctions-programs.md](../../references/endpoints/sanctions-programs.md) |
 | `sanctions-sources` | rest | `/sanctions/sources` | reference | [sanctions-sources.md](../../references/endpoints/sanctions-sources.md) |
 | `sanctions-vessels` | rest | `/sanctions/vessels` | reference | [sanctions-vessels.md](../../references/endpoints/sanctions-vessels.md) |
+| `sec-filings` | rest | `/sec-filings/{symbol}` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
+| `sec-filings-10k` | rest | `/sec-filings/{symbol}/10k` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
+| `sec-filings-10q` | rest | `/sec-filings/{symbol}/10q` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
+| `sec-filings-8k` | rest | `/sec-filings/{symbol}/8k` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
 | `spreads-funding-stress` | rest | `/spreads/funding-stress` | rates | [spreads-funding-stress.md](../../references/endpoints/spreads-funding-stress.md) |
 
 ## documented (36)
