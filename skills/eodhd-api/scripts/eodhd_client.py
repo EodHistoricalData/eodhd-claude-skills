@@ -316,6 +316,16 @@ def build_path(endpoint: str, symbol: str | None, function: str | None = None) -
     if endpoint == "index-components":
         return f"/fundamentals/{symbol}"  # index components via fundamentals
 
+    # SEC Filings API — overview + per-form sub-resources (US filings)
+    if endpoint == "sec-filings":
+        return f"/sec-filings/{symbol}"
+    if endpoint == "sec-filings/10k":
+        return f"/sec-filings/{symbol}/10k"
+    if endpoint == "sec-filings/10q":
+        return f"/sec-filings/{symbol}/10q"
+    if endpoint == "sec-filings/8k":
+        return f"/sec-filings/{symbol}/8k"
+
     raise ClientError(f"Unsupported endpoint: {endpoint}")
 
 
@@ -383,6 +393,11 @@ SUPPORTED_ENDPOINTS = [
     "real-estate",
     "real-estate/detailed",
     "real-estate/detailed/series",
+    # SEC Filings API (US regulatory filings + parsed financials)
+    "sec-filings",
+    "sec-filings/10k",
+    "sec-filings/10q",
+    "sec-filings/8k",
 ]
 
 
@@ -451,6 +466,7 @@ Supported endpoints:
   Sanctions:      sanctions/entities, sanctions/vessels, sanctions/programs, sanctions/sources
   Interest Rates: rates/reference-rates, rates/policy-rates, spreads/funding-stress
   Real Estate:    real-estate/countries, real-estate, real-estate/detailed, real-estate/detailed/series
+  SEC Filings:    sec-filings, sec-filings/10k, sec-filings/10q, sec-filings/8k (per-form: --limit/--offset paginate)
 
 Note: news-word-weights may have longer response times due to AI processing.
 
@@ -823,6 +839,19 @@ def main() -> int:
             params["page[limit]"] = params.pop("limit", args.limit)
         if args.offset is not None:
             params["page[offset]"] = params.pop("offset", args.offset)
+
+    # Special handling for SEC Filings API. Symbol lives in the path; these
+    # endpoints take no date range or bare limit/offset. The overview
+    # (sec-filings) is not paginated; the per-form endpoints (10k/10q/8k)
+    # paginate via page[offset]/page[limit] (default offset 0, limit 20, max 100).
+    if args.endpoint == "sec-filings" or args.endpoint.startswith("sec-filings/"):
+        for _k in ("from", "to", "interval", "limit", "offset"):
+            params.pop(_k, None)
+        if args.endpoint != "sec-filings":
+            if args.limit is not None:
+                params["page[limit]"] = args.limit
+            if args.offset is not None:
+                params["page[offset]"] = args.offset
 
     query = urllib.parse.urlencode(params)
     url = args.base_url.rstrip("/") + path + "?" + query
