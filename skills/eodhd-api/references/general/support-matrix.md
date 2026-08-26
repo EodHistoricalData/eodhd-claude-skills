@@ -69,7 +69,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `sanctions-vessels` | rest | `/sanctions/vessels` | reference | [sanctions-vessels.md](../../references/endpoints/sanctions-vessels.md) |
 | `spreads-funding-stress` | rest | `/spreads/funding-stress` | rates | [spreads-funding-stress.md](../../references/endpoints/spreads-funding-stress.md) |
 
-## documented (36)
+## documented (37)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
@@ -96,6 +96,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `praams-risk-scoring-by-ticker` | rest | `/mp/praams/analyse/equity/ticker/{ticker}` | risk-report | [praams-risk-scoring-by-ticker.md](../../references/endpoints/praams-risk-scoring-by-ticker.md) |
 | `praams-smart-investment-screener-bond` | rest | `/mp/praams/explore/bond` | risk-report | [praams-smart-investment-screener-bond.md](../../references/endpoints/praams-smart-investment-screener-bond.md) |
 | `praams-smart-investment-screener-equity` | rest | `/mp/praams/explore/equity` | risk-report | [praams-smart-investment-screener-equity.md](../../references/endpoints/praams-smart-investment-screener-equity.md) |
+| `realtime-minute-bars` | rest | `/history` | time-series | [realtime-minute-bars.md](../../references/endpoints/realtime-minute-bars.md) |
 | `stock-market-logos` | rest | `/logo/{symbol}` | reference | [stock-market-logos.md](../../references/endpoints/stock-market-logos.md) |
 | `stock-market-logos-svg` | rest | `/logo-svg/{symbol}` | reference | [stock-market-logos-svg.md](../../references/endpoints/stock-market-logos-svg.md) |
 | `stocks-from-search` | rest | `/search/{query_string}` | listing | [stocks-from-search.md](../../references/endpoints/stocks-from-search.md) |
