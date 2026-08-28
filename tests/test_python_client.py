@@ -97,7 +97,7 @@ CASES: list[tuple[str, list[str]]] = [
 
 
 def classify_stderr(stderr: str) -> str:
-    """Classify an error stderr blob — return 'skip' for subscription-gated,
+    """Classify an error stderr blob - return 'skip' for subscription-gated,
     'fail' for everything else."""
     s = stderr.lower()
     if "402" in s or "403" in s or "subscription" in s or "not authorized" in s or "forbidden" in s:
@@ -131,7 +131,7 @@ def run_case(name: str, args: list[str], timeout: int = 30) -> tuple[str, str]:
     if proc.returncode != 0:
         kind = classify_stderr(proc.stderr)
         first_line = (proc.stderr.strip().splitlines() or [""])[0][:160]
-        return (kind, f"exit={proc.returncode} ({elapsed:.1f}s) — {first_line}")
+        return (kind, f"exit={proc.returncode} ({elapsed:.1f}s) - {first_line}")
 
     if not proc.stdout.strip():
         return ("fail", f"empty stdout ({elapsed:.1f}s)")
@@ -163,8 +163,8 @@ def main() -> int:
     for name, args in CASES:
         status, detail = run_case(name, args)
         results[status].append((name, detail))
-        emoji = {"pass": "✓", "skip": "○", "fail": "✗"}[status]
-        print(f"{name:<{width}} {emoji} {status.upper():<5}  {detail}")
+        marker = {"pass": "PASS", "skip": "SKIP", "fail": "FAIL"}[status]
+        print(f"{name:<{width}} {marker:<5} {status.upper():<5}  {detail}")
 
     print()
     print("=" * 100)

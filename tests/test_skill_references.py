@@ -68,7 +68,7 @@ def parse_frontmatter(text: str) -> tuple[dict | None, str]:
 
 def supported_endpoints() -> set[str]:
     """Extract SUPPORTED_ENDPOINTS from eodhd_client.py without importing it."""
-    text = CLIENT.read_text()
+    text = CLIENT.read_text(encoding="utf-8")
     m = re.search(r"SUPPORTED_ENDPOINTS\s*=\s*\[(.*?)\]", text, re.DOTALL)
     if not m:
         return set()
@@ -79,7 +79,7 @@ def check_skill_frontmatter() -> list[str]:
     """Each SKILL.md must have name/description in frontmatter."""
     fails = []
     for skill in sorted(SKILLS.glob("*/SKILL.md")):
-        fm, _ = parse_frontmatter(skill.read_text())
+        fm, _ = parse_frontmatter(skill.read_text(encoding="utf-8"))
         if fm is None:
             fails.append(f"{skill.relative_to(REPO_ROOT)}: no YAML frontmatter")
             continue
@@ -100,7 +100,7 @@ def check_endpoint_references() -> list[str]:
     endpoints_dir = SKILLS / "eodhd-api" / "references" / "endpoints"
     available = {p.name for p in endpoints_dir.glob("*.md")} if endpoints_dir.exists() else set()
     for md in sorted(SKILLS.glob("**/*.md")):
-        text = md.read_text()
+        text = md.read_text(encoding="utf-8")
         for ref in ENDPOINT_PATTERN.findall(text):
             base = Path(ref).name
             if base not in available:
@@ -118,7 +118,7 @@ def check_client_examples() -> list[str]:
     for md in sorted(REPO_ROOT.glob("**/*.md")):
         if ".git" in md.parts or "node_modules" in md.parts:
             continue
-        for endpoint in pattern.findall(md.read_text()):
+        for endpoint in pattern.findall(md.read_text(encoding="utf-8")):
             # Strip trailing quotes/punctuation
             endpoint = endpoint.strip('`",;)\'')
             if endpoint not in supported:
@@ -139,7 +139,7 @@ def check_slash_commands() -> list[str]:
         fails.append("legacy commands/ directory present — commands must live in skills/ (see v0.5.2)")
     for name in sorted(COMMAND_SKILLS & available_skills):
         skill_md = SKILLS / name / "SKILL.md"
-        fm, body = parse_frontmatter(skill_md.read_text())
+        fm, body = parse_frontmatter(skill_md.read_text(encoding="utf-8"))
         if fm is None:
             fails.append(f"skills/{name}/SKILL.md: no frontmatter")
             continue
@@ -159,7 +159,7 @@ def check_agents() -> list[str]:
     if not AGENTS.exists():
         return ["no agents directory"]
     for agent in sorted(AGENTS.glob("*.md")):
-        fm, _ = parse_frontmatter(agent.read_text())
+        fm, _ = parse_frontmatter(agent.read_text(encoding="utf-8"))
         if fm is None:
             fails.append(f"{agent.relative_to(REPO_ROOT)}: no frontmatter")
             continue
@@ -172,16 +172,16 @@ def check_manifest_capabilities() -> list[str]:
     """plugin.json claims a tool count; compare with MCP if token available."""
     fails = []
     plugin_path = REPO_ROOT / ".claude-plugin" / "plugin.json"
-    with plugin_path.open() as f:
+    with plugin_path.open(encoding="utf-8") as f:
         manifest = json.load(f)
     claimed = manifest.get("capabilities", {}).get("tools")
     if claimed is None:
-        print("  (skipped — plugin.json declares no static tool count; "
+        print("  (skipped - plugin.json declares no static tool count; "
               "`capabilities` removed for plugin-schema compliance)")
         return fails
     token = os.getenv("EODHD_API_TOKEN")
     if not token:
-        print(f"  (skipped MCP tool-count check — no EODHD_API_TOKEN)")
+        print(f"  (skipped MCP tool-count check - no EODHD_API_TOKEN)")
         print(f"  plugin.json claims {claimed} tools")
         return fails
     # Actually fetch tool count
@@ -253,10 +253,10 @@ def main() -> int:
         print(f"\n=== {name} ===")
         fails = fn()
         if not fails:
-            print("  ✓ OK")
+            print("  OK")
         else:
             for f in fails:
-                print(f"  ✗ {f}")
+                print(f"  FAIL {f}")
             all_fails.extend(fails)
     print()
     print("=" * 80)
