@@ -52,11 +52,9 @@ You can calculate historical metrics from financials and prices using the EOD AP
 
 ### Sector and Industry Classification
 
-The sector/industry classification used by EODHD is similar to the Morningstar classification (though not identical — there may be differences on select stocks). It is not source-specific and is used by many open sources.
+The sector/industry classification used by EODHD is not source-specific and is used by many open sources.
 
 A full classification list is available at: https://eodhd.com/download/SectorIndustries.csv
-
-Reference: https://indexes.morningstar.com/resources/PDF/Methodology%20Documents/SectorArticle.pdf
 
 ### Duplicate Sectors and Industries
 
@@ -292,7 +290,7 @@ Market cap classification follows standard industry definitions (see: https://ww
 
 ### ETF — Equity Weights and Relative-to-Category
 
-In ETF fundamentals, "equity weights" show the weight distribution of holdings. The "relative-to-category" weights compare the ETF's values against averages for similar ETFs within its category. Categories are the same as used by MorningStar (though not officially published as a complete list by EODHD).
+In ETF fundamentals, "equity weights" show the weight distribution of holdings. The "relative-to-category" weights compare the ETF's values against averages for similar ETFs within its category. The complete list of categories is not officially published by EODHD.
 
 ### ETF — UCITS Compliance
 
@@ -336,7 +334,7 @@ Annual outstanding shares data is generated slightly later than quarterly data. 
 
 ## Sector Distribution Standard
 
-EODHD uses a common sector structure (similar to Reuters, Yahoo, WSJ, and others) for stocks. For funds/ETFs, a MorningStar-style sector structure is used. Different formats are used because it is not possible to apply the same standard across all asset types.
+EODHD uses a common sector structure (similar to Reuters, Yahoo, WSJ, and others) for stocks. For funds/ETFs, a separate sector structure is used. Different formats are used because it is not possible to apply the same standard across all asset types.
 
 The known sector values include: "Basic Materials", "Communication Services", "Conglomerates", "Consumer Cyclical", "Consumer Defensive", "Consumer Goods", "Distribution", "Energy", "Financial", "Financial Services", "Health", "Healthcare", "Industrial Goods", "Industrials", "Other", "Property", "Real Estate", "Services", "Technology", "Utilities".
 
