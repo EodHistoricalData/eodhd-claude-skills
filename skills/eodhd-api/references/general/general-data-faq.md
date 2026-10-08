@@ -175,9 +175,9 @@ EODHD does not provide order book data (for crypto or any other asset class).
 
 EODHD does not support investment certificates at this time.
 
-### MorningStar Categories for Equities
+### Category Data for Equities
 
-ETFs and Mutual Funds have MorningStar category data in the Fundamentals API, but **equities do not**. MorningStar categories are only available for funds and ETFs.
+ETFs and Mutual Funds have category data in the Fundamentals API, but **equities do not**. Categories are only available for funds and ETFs.
 
 ---
 
