@@ -250,7 +250,6 @@ ETF Fundamentals
     ├── Top_10_Holdings (top holdings)
     ├── Holdings (all holdings - very large)
     ├── Valuations_Growth (valuation & growth rates)
-    ├── MorningStar (ratings)
     └── Performance (returns & risk)
 ```
 
@@ -542,8 +541,7 @@ Complete guide covering:
 - Sector weights
 - Valuation and growth metrics
 - Performance and risk statistics
-- Morningstar ratings
-- All 11 ETF_Data subsections with detailed examples
+- All 10 ETF_Data subsections with detailed examples
 
 **Tickers for testing**: `VTI.US`, `SPY.US`, `QQQ.US`
 

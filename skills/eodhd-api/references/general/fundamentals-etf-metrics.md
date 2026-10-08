@@ -2225,7 +2225,6 @@ For comprehensive ETF analysis, combine Fundamentals API with:
 
 ### Further Reading
 
-- Morningstar ETF Research
 - ETF.com Education Center
 - CFA Institute: ETF Analysis
 - Index Fund Advisors: Portfolio Construction
