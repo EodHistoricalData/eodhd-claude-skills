@@ -151,7 +151,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `CUSIP` | string | CUSIP identifier (US securities) |
 | `Fund_Summary` | string | Detailed description of fund strategy and objectives |
 | `Fund_Family` | string | Fund provider/family name |
-| `Fund_Category` | string | Morningstar category (e.g., "Large Blend") |
+| `Fund_Category` | string | Fund category (e.g., "Large Blend") |
 | `Fund_Style` | string | Investment style classification |
 | `Fiscal_Year_End` | string | Fiscal year end month |
 | `MarketCapitalization` | number | Market capitalization (typically 0 for funds) |
@@ -194,9 +194,6 @@ These fields are returned with `&filter=MutualFund_Data`:
   "Update_Date": "2024-09-30",
   "Portfolio_Net_Assets": "72273490000",
   "Share_Class_Net_Assets": "0",
-  "Morning_Star_Rating": null,
-  "Morning_Star_Risk_Rating": null,
-  "Morning_Star_Category": null,
   "Inception_Date": "1997-05-19",
   "Currency": "USD",
   "Domicile": "United States",
@@ -225,16 +222,13 @@ These fields are returned with `&filter=MutualFund_Data`:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Fund_Category` | string | Morningstar category |
+| `Fund_Category` | string | Fund category |
 | `Fund_Style` | string | Investment style |
 | `Nav` | string | Net Asset Value (price per share) |
 | `Prev_Close_Price` | string | Previous closing price |
 | `Update_Date` | string | Last update date (YYYY-MM-DD) |
 | `Portfolio_Net_Assets` | string | Total net assets under management |
 | `Share_Class_Net_Assets` | string | Net assets for this share class |
-| `Morning_Star_Rating` | number/null | Morningstar star rating (1-5) |
-| `Morning_Star_Risk_Rating` | number/null | Morningstar risk rating |
-| `Morning_Star_Category` | string/null | Morningstar category |
 | `Inception_Date` | string | Fund inception date (YYYY-MM-DD) |
 | `Currency` | string | Currency code |
 | `Domicile` | string | Country of domicile |
@@ -960,11 +954,11 @@ for idx, sector in sector_weights.items():
 Not all funds have all fields:
 
 ```python
-morningstar_rating = data.get("MutualFund_Data", {}).get("Morning_Star_Rating")
-if morningstar_rating is None:
-    print("Morningstar rating not available")
+net_assets = data.get("MutualFund_Data", {}).get("Share_Class_Net_Assets")
+if net_assets is None:
+    print("Share class net assets not available")
 else:
-    print(f"Rating: {morningstar_rating} stars")
+    print(f"Share class net assets: {net_assets}")
 ```
 
 ## Error Handling
@@ -1207,7 +1201,7 @@ pct = float(weight.rstrip('%'))  # 6.88
 
 Most subsections include comparison fields:
 
-- **Category_Average**: Average for Morningstar category
+- **Category_Average**: Average for the fund category
 - **Benchmark**: Benchmark index value
 - **Stock_Portfolio** / **Portfolio_%** / **Amount_%**: Fund's actual value
 
