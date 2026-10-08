@@ -135,7 +135,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `CountryISO` | string | ISO 3166-1 alpha-2 country code |
 | `OpenFigi` | string | OpenFIGI identifier |
 | `Description` | string | Detailed description of ETF strategy |
-| `Category` | string | Morningstar category |
+| `Category` | string | Category classification |
 | `UpdatedAt` | string | Last update date (YYYY-MM-DD) |
 
 ## Section 2: Technicals
@@ -242,8 +242,7 @@ The `ETF_Data` section contains the following subsections:
 7. **Top_10_Holdings** - Top 10 holdings
 8. **Holdings** - All holdings (can be very large)
 9. **Valuations_Growth** - Valuation and growth metrics
-10. **MorningStar** - Morningstar ratings
-11. **Performance** - Performance metrics
+10. **Performance** - Performance metrics
 
 ### 3.1 ETF_Data Top-Level Fields
 
@@ -276,7 +275,6 @@ These fields are returned with `&filter=ETF_Data`:
   "Top_10_Holdings": {...},
   "Holdings": {...},
   "Valuations_Growth": {...},
-  "MorningStar": {...},
   "Performance": {...}
 }
 ```
@@ -558,7 +556,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `Equity_%` | Percentage of equity allocated to this sector |
 | `Relative_to_Category` | ETF's allocation relative to category average |
 
-**Sectors** (following Morningstar classification):
+**Sectors**:
 - Basic Materials
 - Consumer Cyclicals
 - Consumer Defensive
@@ -839,52 +837,7 @@ Same growth metrics, but showing the category average for comparison.
 
 **All values are percentages represented as strings**.
 
-### 3.10 MorningStar
-
-Morningstar ratings and benchmark information.
-
-**Request**:
-```
-https://eodhd.com/api/fundamentals/VTI.US?api_token=demo&fmt=json&filter=ETF_Data::MorningStar
-```
-
-Or generally:
-```
-https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filter=ETF_Data::MorningStar
-```
-
-**Response**:
-```json
-{
-  "Ratio": "3",
-  "Category_Benchmark": "S&P 500 TR USD",
-  "Sustainability_Ratio": "2"
-}
-```
-
-**Field Descriptions**:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `Ratio` | string | Morningstar star rating (1-5 stars) |
-| `Category_Benchmark` | string | Benchmark index for category |
-| `Sustainability_Ratio` | string | Morningstar sustainability rating (1-5 globes) |
-
-**Morningstar Star Ratings**:
-- `5` - Excellent (top 10%)
-- `4` - Above average (next 22.5%)
-- `3` - Average (middle 35%)
-- `2` - Below average (next 22.5%)
-- `1` - Poor (bottom 10%)
-
-**Sustainability Ratings**:
-- `5` - Leader (top 10%)
-- `4` - Above average (next 25%)
-- `3` - Average (middle 30%)
-- `2` - Below average (next 25%)
-- `1` - Laggard (bottom 10%)
-
-### 3.11 Performance
+### 3.10 Performance
 
 Historical performance metrics and risk statistics.
 
@@ -975,9 +928,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 
 # Valuation and growth metrics
 &filter=ETF_Data::Valuations_Growth
-
-# Morningstar ratings
-&filter=ETF_Data::MorningStar
 
 # Performance statistics
 &filter=ETF_Data::Performance
@@ -1252,9 +1202,6 @@ ETF_Data
 │   ├── Valuations_Rates_To_Category
 │   ├── Growth_Rates_Portfolio
 │   └── Growth_Rates_To_Category
-├── MorningStar
-│   ├── Ratio
-│   └── Sustainability_Ratio
 └── Performance
     ├── Returns_YTD
     ├── Returns_1Y
