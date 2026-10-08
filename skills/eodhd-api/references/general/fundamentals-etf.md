@@ -135,7 +135,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `CountryISO` | string | ISO 3166-1 alpha-2 country code |
 | `OpenFigi` | string | OpenFIGI identifier |
 | `Description` | string | Detailed description of ETF strategy |
-| `Category` | string | Morningstar category |
+| `Category` | string | Category classification |
 | `UpdatedAt` | string | Last update date (YYYY-MM-DD) |
 
 ## Section 2: Technicals
@@ -556,7 +556,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `Equity_%` | Percentage of equity allocated to this sector |
 | `Relative_to_Category` | ETF's allocation relative to category average |
 
-**Sectors** (following Morningstar classification):
+**Sectors**:
 - Basic Materials
 - Consumer Cyclicals
 - Consumer Defensive
