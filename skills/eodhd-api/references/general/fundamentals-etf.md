@@ -76,7 +76,6 @@ For ETFs, the following fields are provided:
 
 ### Valuations and Growth
 - Valuation rates for portfolio
-- Comparison to ETF category
 - Growth rates (earnings, sales, cash flow, book value)
 
 ### Performance Metrics
@@ -115,7 +114,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "CountryISO": "US",
   "OpenFigi": "BBG000HR9779",
   "Description": "The fund employs an indexing investment approach designed to track the performance of the index, which represents approximately 100% of the investable U.S. stock market and includes large-, mid-, small-, and micro-cap stocks. It invests by sampling the index, meaning that it holds a broadly diversified collection of securities that, in the aggregate, approximates the full index in terms of key characteristics. The fund is non-diversified.",
-  "Category": "Large Blend",
+  "Category": null,
   "UpdatedAt": "2024-11-26"
 }
 ```
@@ -135,7 +134,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `CountryISO` | string | ISO 3166-1 alpha-2 country code |
 | `OpenFigi` | string | OpenFIGI identifier |
 | `Description` | string | Detailed description of ETF strategy |
-| `Category` | string | Category classification |
+| `Category` | string | Currently null |
 | `UpdatedAt` | string | Last update date (YYYY-MM-DD) |
 
 ## Section 2: Technicals
@@ -424,44 +423,34 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 ```json
 {
   "North America": {
-    "Equity_%": "99.521",
-    "Relative_to_Category": "98.023"
+    "Equity_%": "99.521"
   },
   "United Kingdom": {
-    "Equity_%": "0.08822",
-    "Relative_to_Category": "0.46516"
+    "Equity_%": "0.08822"
   },
   "Europe Developed": {
-    "Equity_%": "0.305",
-    "Relative_to_Category": "1.105"
+    "Equity_%": "0.305"
   },
   "Europe Emerging": {
-    "Equity_%": "0",
-    "Relative_to_Category": "0"
+    "Equity_%": "0"
   },
   "Africa/Middle East": {
-    "Equity_%": "0.005",
-    "Relative_to_Category": "0.019"
+    "Equity_%": "0.005"
   },
   "Japan": {
-    "Equity_%": "0",
-    "Relative_to_Category": "0.061"
+    "Equity_%": "0"
   },
   "Australasia": {
-    "Equity_%": "0",
-    "Relative_to_Category": "0.002"
+    "Equity_%": "0"
   },
   "Asia Developed": {
-    "Equity_%": "0.044",
-    "Relative_to_Category": "0.235"
+    "Equity_%": "0.044"
   },
   "Asia Emerging": {
-    "Equity_%": "0.012",
-    "Relative_to_Category": "0.036"
+    "Equity_%": "0.012"
   },
   "Latin America": {
-    "Equity_%": "0.025",
-    "Relative_to_Category": "0.052"
+    "Equity_%": "0.025"
   }
 }
 ```
@@ -471,7 +460,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | Field | Description |
 |-------|-------------|
 | `Equity_%` | Percentage of equity allocated to this region |
-| `Relative_to_Category` | ETF's allocation relative to category average |
 
 **Regions**:
 - North America
@@ -503,48 +491,37 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 ```json
 {
   "Basic Materials": {
-    "Equity_%": "2.13447",
-    "Relative_to_Category": "2.51562"
+    "Equity_%": "2.13447"
   },
   "Consumer Cyclicals": {
-    "Equity_%": "10.32982",
-    "Relative_to_Category": "9.97737"
+    "Equity_%": "10.32982"
   },
   "Financial Services": {
-    "Equity_%": "13.39844",
-    "Relative_to_Category": "13.5007"
+    "Equity_%": "13.39844"
   },
   "Real Estate": {
-    "Equity_%": "2.87257",
-    "Relative_to_Category": "2.04371"
+    "Equity_%": "2.87257"
   },
   "Communication Services": {
-    "Equity_%": "8.48693",
-    "Relative_to_Category": "8.40353"
+    "Equity_%": "8.48693"
   },
   "Energy": {
-    "Equity_%": "3.52266",
-    "Relative_to_Category": "3.4342"
+    "Equity_%": "3.52266"
   },
   "Industrials": {
-    "Equity_%": "8.90539",
-    "Relative_to_Category": "9.78099"
+    "Equity_%": "8.90539"
   },
   "Technology": {
-    "Equity_%": "30.77272",
-    "Relative_to_Category": "29.6431"
+    "Equity_%": "30.77272"
   },
   "Consumer Defensive": {
-    "Equity_%": "5.47789",
-    "Relative_to_Category": "5.90142"
+    "Equity_%": "5.47789"
   },
   "Healthcare": {
-    "Equity_%": "11.51794",
-    "Relative_to_Category": "12.25982"
+    "Equity_%": "11.51794"
   },
   "Utilities": {
-    "Equity_%": "2.58117",
-    "Relative_to_Category": "2.53955"
+    "Equity_%": "2.58117"
   }
 }
 ```
@@ -554,7 +531,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | Field | Description |
 |-------|-------------|
 | `Equity_%` | Percentage of equity allocated to this sector |
-| `Relative_to_Category` | ETF's allocation relative to category average |
 
 **Sectors**:
 - Basic Materials
@@ -587,32 +563,25 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 ```json
 {
   "EffectiveDuration": {
-    "Fund_%": "0",
-    "Relative_to_Category": "-0.41644"
+    "Fund_%": "0"
   },
   "ModifiedDuration": {
-    "Fund_%": "0",
-    "Relative_to_Category": "-0.986"
+    "Fund_%": "0"
   },
   "EffectiveMaturity": {
-    "Fund_%": "0",
-    "Relative_to_Category": "2.47738"
+    "Fund_%": "0"
   },
   "CreditQuality": {
-    "Fund_%": "0",
-    "Relative_to_Category": "0"
+    "Fund_%": "0"
   },
   "Coupon": {
-    "Fund_%": "0",
-    "Relative_to_Category": "0"
+    "Fund_%": "0"
   },
   "Price": {
-    "Fund_%": "0",
-    "Relative_to_Category": "0"
+    "Fund_%": "0"
   },
   "YieldToMaturity": {
-    "Fund_%": "0",
-    "Relative_to_Category": "2.93132"
+    "Fund_%": "0"
   }
 }
 ```
@@ -631,7 +600,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 
 Each metric includes:
 - `Fund_%` - Value for the ETF
-- `Relative_to_Category` - Comparison to category average
 
 **Note**: For equity-only ETFs (like VTI), these values will be 0.
 
@@ -775,33 +743,19 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
     "Price/Cash Flow": "14.40407",
     "Dividend-Yield Factor": "1.43128"
   },
-  "Valuations_Rates_To_Category": {
-    "Price/Prospective Earnings": "21.06387",
-    "Price/Book": "4.57773",
-    "Price/Sales": "2.64899",
-    "Price/Cash Flow": "14.99994",
-    "Dividend-Yield Factor": "1.42725"
-  },
   "Growth_Rates_Portfolio": {
     "Long-Term Projected Earnings Growth": "11.5817",
     "Historical Earnings Growth": "5.95988",
     "Sales Growth": "7.7793",
     "Cash-Flow Growth": "8.75405",
     "Book-Value Growth": "5.95312"
-  },
-  "Growth_Rates_To_Category": {
-    "Long-Term Projected Earnings Growth": "11.51378",
-    "Historical Earnings Growth": "10.85208",
-    "Sales Growth": "10.74037",
-    "Cash-Flow Growth": "15.9931",
-    "Book-Value Growth": "8.60095"
   }
 }
 ```
 
 **Structure**:
 
-The response has four subsections:
+The response has two subsections:
 
 #### Valuations_Rates_Portfolio
 
@@ -815,10 +769,6 @@ Valuation metrics for the ETF's portfolio (weighted average of holdings):
 | `Price/Cash Flow` | Price to cash flow ratio |
 | `Dividend-Yield Factor` | Dividend yield metric |
 
-#### Valuations_Rates_To_Category
-
-Same valuation metrics, but showing the category average for comparison.
-
 #### Growth_Rates_Portfolio
 
 Growth metrics for the ETF's portfolio:
@@ -830,10 +780,6 @@ Growth metrics for the ETF's portfolio:
 | `Sales Growth` | Revenue growth rate (%) |
 | `Cash-Flow Growth` | Cash flow growth rate (%) |
 | `Book-Value Growth` | Book value growth rate (%) |
-
-#### Growth_Rates_To_Category
-
-Same growth metrics, but showing the category average for comparison.
 
 **All values are percentages represented as strings**.
 
@@ -1080,20 +1026,6 @@ if holdings_count == 0:
     print("Holdings data not available")
 ```
 
-### 6. Compare to Category Benchmarks
-
-Use `Relative_to_Category` fields for context:
-
-```python
-sector_weights = data["ETF_Data"]["Sector_Weights"]
-for sector, metrics in sector_weights.items():
-    etf_weight = float(metrics["Equity_%"])
-    category_weight = float(metrics["Relative_to_Category"])
-
-    if etf_weight > category_weight * 1.2:
-        print(f"{sector} is overweight")
-```
-
 ## Error Handling
 
 ### Common Issues
@@ -1199,9 +1131,7 @@ ETF_Data
 │   └── {TICKER.EXCHANGE}
 ├── Valuations_Growth
 │   ├── Valuations_Rates_Portfolio
-│   ├── Valuations_Rates_To_Category
-│   ├── Growth_Rates_Portfolio
-│   └── Growth_Rates_To_Category
+│   └── Growth_Rates_Portfolio
 └── Performance
     ├── Returns_YTD
     ├── Returns_1Y

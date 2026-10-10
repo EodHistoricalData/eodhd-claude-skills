@@ -126,8 +126,8 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "CUSIP": "808509855",
   "Fund_Summary": "The fund generally invests at least 80% of its net assets (including, for this purpose, any borrowings for investment purposes) in these stocks; typically, the actual percentage is considerably higher. It generally will seek to replicate the performance of the index by giving the same weight to a given stock as the index does. The index includes the stocks of 500 leading U.S. publicly traded companies from a broad range of industries. The fund is non-diversified.",
   "Fund_Family": "Schwab Funds",
-  "Fund_Category": "Large Blend",
-  "Fund_Style": "Large Blend",
+  "Fund_Category": null,
+  "Fund_Style": null,
   "Fiscal_Year_End": "October",
   "MarketCapitalization": 0
 }
@@ -151,8 +151,8 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `CUSIP` | string | CUSIP identifier (US securities) |
 | `Fund_Summary` | string | Detailed description of fund strategy and objectives |
 | `Fund_Family` | string | Fund provider/family name |
-| `Fund_Category` | string | Fund category (e.g., "Large Blend") |
-| `Fund_Style` | string | Investment style classification |
+| `Fund_Category` | string | Currently null |
+| `Fund_Style` | string | Currently null |
 | `Fiscal_Year_End` | string | Fiscal year end month |
 | `MarketCapitalization` | number | Market capitalization (typically 0 for funds) |
 
@@ -187,8 +187,8 @@ These fields are returned with `&filter=MutualFund_Data`:
 
 ```json
 {
-  "Fund_Category": "Large Blend",
-  "Fund_Style": "Large Blend",
+  "Fund_Category": null,
+  "Fund_Style": null,
   "Nav": "92.59",
   "Prev_Close_Price": "92.26",
   "Update_Date": "2024-09-30",
@@ -222,8 +222,8 @@ These fields are returned with `&filter=MutualFund_Data`:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Fund_Category` | string | Fund category |
-| `Fund_Style` | string | Investment style |
+| `Fund_Category` | string | Currently null |
+| `Fund_Style` | string | Currently null |
 | `Nav` | string | Net Asset Value (price per share) |
 | `Prev_Close_Price` | string | Previous closing price |
 | `Update_Date` | string | Last update date (YYYY-MM-DD) |
@@ -264,7 +264,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
     "Long_%": "0.34539",
     "Type": "Cash",
     "Short_%": null,
-    "Category_Average": "1.39629",
     "Benchmark": "0.00000"
   },
   "1": {
@@ -272,7 +271,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
     "Long_%": "0.0",
     "Type": "Not Classified",
     "Short_%": null,
-    "Category_Average": "0.02486",
     "Benchmark": "0.0"
   }
 }
@@ -288,7 +286,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 | `Net_%` | string | Net allocation percentage |
 | `Long_%` | string | Long positions percentage |
 | `Short_%` | string/null | Short positions percentage (if applicable) |
-| `Category_Average` | string | Average allocation for this category |
 | `Benchmark` | string | Benchmark allocation for comparison |
 
 **Common Asset Types**:
@@ -301,7 +298,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 
 ### 2.3 Value Growth Measures
 
-Valuation metrics comparing the fund's portfolio to category average and benchmark.
+Valuation metrics comparing the fund's portfolio to its benchmark.
 
 **Request**:
 ```
@@ -318,13 +315,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 {
   "0": {
     "Name": "Price/Prospective Earnings",
-    "Category_Average": 21.06387,
     "Benchmark": 21.21499,
     "Stock_Portfolio": 21.18843
   },
   "1": {
     "Name": "Price/Book",
-    "Category_Average": 4.57773,
     "Benchmark": 4.24585,
     "Stock_Portfolio": 4.26978
   }
@@ -339,7 +334,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 |-------|------|-------------|
 | `Name` | string | Name of the valuation metric |
 | `Stock_Portfolio` | number | Value for the fund's portfolio |
-| `Category_Average` | number | Average value for the fund category |
 | `Benchmark` | number | Benchmark value for comparison |
 
 **Common Valuation Metrics**:
@@ -355,7 +349,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 - `Book-Value Growth` - Book value growth rate
 
 **Interpretation**:
-- Compare `Stock_Portfolio` to `Category_Average` and `Benchmark`
+- Compare `Stock_Portfolio` to `Benchmark`
 - Higher P/E, P/B, P/S, P/CF suggests growth orientation
 - Lower values suggest value orientation
 - Growth metrics show expected/historical growth rates
@@ -422,13 +416,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 {
   "0": {
     "Size": "AverageMarketCap",
-    "Category_Average": 365268.10945,
     "Benchmark": 292063.35139,
     "Portfolio_%": 328535.75957
   },
   "1": {
     "Size": "Giant",
-    "Category_Average": 56.16412,
     "Benchmark": 45.02014,
     "Portfolio_%": 46.91601
   }
@@ -443,7 +435,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 |-------|------|-------------|
 | `Size` | string | Market cap category or metric |
 | `Portfolio_%` | number | Value for the fund's portfolio |
-| `Category_Average` | number | Average for the fund category |
 | `Benchmark` | number | Benchmark value for comparison |
 
 **Market Cap Categories**:
@@ -457,7 +448,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 **Interpretation**:
 - `AverageMarketCap`: Dollar value in millions
 - Size categories: Percentage of portfolio
-- Compare to `Category_Average` and `Benchmark` to understand style tilt
+- Compare to `Benchmark` to understand style tilt
 
 ### 2.6 Sector Weights
 
@@ -479,13 +470,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Cyclical": {
     "0": {
       "Name": "Basic Materials",
-      "Category_Average": 2.51562,
       "Amount_%": 1.93346,
       "Benchmark": 2.0688
     },
     "1": {
       "Name": "Consumer Cyclical",
-      "Category_Average": 9.97737,
       "Amount_%": 10.20911,
       "Benchmark": 10.28619
     }
@@ -493,13 +482,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Defensive": {
     "0": {
       "Name": "Consumer Defensive",
-      "Category_Average": 5.90142,
       "Amount_%": 5.7586,
       "Benchmark": 5.64783
     },
     "1": {
       "Name": "Healthcare",
-      "Category_Average": 12.25982,
       "Amount_%": 11.17687,
       "Benchmark": 11.22479
     }
@@ -507,13 +494,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Sensitive": {
     "0": {
       "Name": "Communication Services",
-      "Category_Average": 8.40353,
       "Amount_%": 9.10839,
       "Benchmark": 9.12729
     },
     "1": {
       "Name": "Energy",
-      "Category_Average": 3.4342,
       "Amount_%": 3.36916,
       "Benchmark": 3.44415
     }
@@ -521,14 +506,12 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Bond Sector": {
     "0": {
       "Name": "Government",
-      "Category_Average": 17.8382,
       "Amount_%": 2.69783,
       "Stocks_%": 0,
       "Benchmark": null
     },
     "1": {
       "Name": "Municipal",
-      "Category_Average": 0.00243,
       "Amount_%": 2.69783,
       "Stocks_%": 0,
       "Benchmark": null
@@ -587,13 +570,12 @@ For bond-based or balanced funds:
 |-------|------|-------------|
 | `Name` | string | Sector name |
 | `Amount_%` | number | Fund's allocation to this sector (percentage) |
-| `Category_Average` | number | Average allocation for category |
 | `Benchmark` | number/null | Benchmark allocation |
 | `Stocks_%` | number | Stock allocation (for bond sectors) |
 
 **Notes**:
 - `Amount_%` is the fund's actual allocation
-- Compare to `Category_Average` to identify over/underweight positions
+- Compare to `Benchmark` to identify over/underweight positions
 - Bond sectors may appear in balanced funds
 - `Stocks_%` in Bond Sector shows equity portion (typically 0)
 
@@ -617,13 +599,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Americas": {
     "0": {
       "Name": "North America",
-      "Category_Average": 98.023,
       "Stocks_%": 99.399,
       "Benchmark": 99.172
     },
     "1": {
       "Name": "Latin America",
-      "Category_Average": 0.052,
       "Stocks_%": 0,
       "Benchmark": 0.226
     }
@@ -631,13 +611,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Greater Asia": {
     "0": {
       "Name": "Japan",
-      "Category_Average": 0.061,
       "Stocks_%": 0,
       "Benchmark": 0
     },
     "1": {
       "Name": "Australasia",
-      "Category_Average": 0.002,
       "Stocks_%": 0,
       "Benchmark": 0
     }
@@ -645,13 +623,11 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
   "Greater Europe": {
     "0": {
       "Name": "United Kingdom",
-      "Category_Average": 0.46516,
       "Stocks_%": 0.09689,
       "Benchmark": 0.11856
     },
     "1": {
       "Name": "Europe Developed",
-      "Category_Average": 1.105,
       "Stocks_%": 0.46,
       "Benchmark": 0.443
     }
@@ -691,13 +667,12 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 |-------|------|-------------|
 | `Name` | string | Region/country name |
 | `Stocks_%` | number | Fund's equity allocation to this region (percentage) |
-| `Category_Average` | number | Average allocation for category |
 | `Benchmark` | number | Benchmark allocation |
 
 **Notes**:
 - Only applicable for equity and balanced funds
 - `Stocks_%` shows percentage of equity portfolio (not total portfolio)
-- Compare to `Category_Average` to identify geographic tilts
+- Compare to `Benchmark` to identify geographic tilts
 - Developed vs. emerging market exposure visible through regions
 
 ### 2.8 Top Countries
@@ -719,7 +694,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 {
   "0": {
     "Name": "United Kingdom",
-    "Category_Average": 0.46516,
     "Stocks_%": 0.09689,
     "Benchmark": 0.11856
   }
@@ -734,7 +708,6 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 |-------|------|-------------|
 | `Name` | string | Country name |
 | `Stocks_%` | number | Fund's allocation to this country (percentage) |
-| `Category_Average` | number | Average allocation for category |
 | `Benchmark` | number | Benchmark allocation |
 
 **Notes**:
@@ -933,23 +906,7 @@ for idx, holding in top_holdings.items():
     print(f"{name}: {weight_float}%")
 ```
 
-### 6. Compare to Category Average
-
-Use category comparisons for context:
-
-```python
-sector_weights = data["MutualFund_Data"]["Sector_Weights"]["Cyclical"]
-
-for idx, sector in sector_weights.items():
-    name = sector["Name"]
-    fund_weight = sector["Amount_%"]
-    category_avg = sector["Category_Average"]
-
-    if fund_weight > category_avg * 1.2:
-        print(f"{name} is overweight ({fund_weight}% vs {category_avg}%)")
-```
-
-### 7. Handle Missing/Null Fields
+### 6. Handle Missing/Null Fields
 
 Not all funds have all fields:
 
@@ -1056,13 +1013,11 @@ MutualFund_Data
 │       ├── Net_%
 │       ├── Long_%
 │       ├── Short_%
-│       ├── Category_Average
 │       └── Benchmark
 ├── Value_Growth
 │   └── [Array of metrics]
 │       ├── Name
 │       ├── Stock_Portfolio
-│       ├── Category_Average
 │       └── Benchmark
 ├── Top_Holdings
 │   └── [Array of holdings]
@@ -1072,7 +1027,6 @@ MutualFund_Data
 │   └── [Array of size categories]
 │       ├── Size
 │       ├── Portfolio_%
-│       ├── Category_Average
 │       └── Benchmark
 ├── Sector_Weights
 │   ├── Cyclical
@@ -1094,7 +1048,6 @@ MutualFund_Data
     └── [Array of countries]
         ├── Name
         ├── Stocks_%
-        ├── Category_Average
         └── Benchmark
 ```
 
@@ -1201,13 +1154,12 @@ pct = float(weight.rstrip('%'))  # 6.88
 
 Most subsections include comparison fields:
 
-- **Category_Average**: Average for the fund category
 - **Benchmark**: Benchmark index value
 - **Stock_Portfolio** / **Portfolio_%** / **Amount_%**: Fund's actual value
 
 **Use these to identify**:
-- Overweight positions (fund > average)
-- Underweight positions (fund < average)
+- Overweight positions (fund > benchmark)
+- Underweight positions (fund < benchmark)
 - Style tilts (value vs. growth, large vs. small cap)
 
 ---

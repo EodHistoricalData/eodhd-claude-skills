@@ -249,7 +249,7 @@ EODHD does not provide EPS for ETFs directly, but it can be calculated. For US a
 
 ### Fixed Income Fields
 
-For bond ETFs (e.g., BND), the figures under `Fixed_Income` are **averages for the bonds in the ETF's portfolio**. The `Relative_to_Category` figures are comparison averages for similar ETFs. A coupon value of 0 means there is no coupon data available for the bonds in that portfolio.
+For bond ETFs (e.g., BND), the figures under `Fixed_Income` are **averages for the bonds in the ETF's portfolio**. A coupon value of 0 means there is no coupon data available for the bonds in that portfolio.
 
 ### Replication Data
 
@@ -288,9 +288,9 @@ Market cap classification follows standard industry definitions (see: https://ww
 | Micro-cap | $50 million to $300 million |
 | Nano-cap | Under $50 million |
 
-### ETF — Equity Weights and Relative-to-Category
+### ETF — Equity Weights
 
-In ETF fundamentals, "equity weights" show the weight distribution of holdings. The "relative-to-category" weights compare the ETF's values against averages for similar ETFs within its category. The complete list of categories is not officially published by EODHD.
+In ETF fundamentals, "equity weights" show the weight distribution of holdings.
 
 ### ETF — UCITS Compliance
 
