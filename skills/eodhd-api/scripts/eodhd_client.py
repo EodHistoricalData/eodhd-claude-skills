@@ -325,6 +325,8 @@ def build_path(endpoint: str, symbol: str | None, function: str | None = None) -
         return f"/sec-filings/{symbol}/10q"
     if endpoint == "sec-filings/8k":
         return f"/sec-filings/{symbol}/8k"
+    if endpoint == "sec-filings/form4":
+        return f"/sec-filings/{symbol}/form4"
 
     raise ClientError(f"Unsupported endpoint: {endpoint}")
 
@@ -398,6 +400,7 @@ SUPPORTED_ENDPOINTS = [
     "sec-filings/10k",
     "sec-filings/10q",
     "sec-filings/8k",
+    "sec-filings/form4",
 ]
 
 
@@ -466,7 +469,7 @@ Supported endpoints:
   Sanctions:      sanctions/entities, sanctions/vessels, sanctions/programs, sanctions/sources
   Interest Rates: rates/reference-rates, rates/policy-rates, spreads/funding-stress
   Real Estate:    real-estate/countries, real-estate, real-estate/detailed, real-estate/detailed/series
-  SEC Filings:    sec-filings, sec-filings/10k, sec-filings/10q, sec-filings/8k (per-form: --limit/--offset paginate)
+  SEC Filings:    sec-filings, sec-filings/10k, sec-filings/10q, sec-filings/8k, sec-filings/form4 (per-form: --limit/--offset paginate)
 
 Note: news-word-weights may have longer response times due to AI processing.
 
