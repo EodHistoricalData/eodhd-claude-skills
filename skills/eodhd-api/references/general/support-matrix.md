@@ -45,7 +45,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `ust-real-yield-rates` | rest | `/ust/real-yield-rates` | rates | [ust-real-yield-rates.md](../../references/endpoints/ust-real-yield-rates.md) |
 | `ust-yield-rates` | rest | `/ust/yield-rates` | rates | [ust-yield-rates.md](../../references/endpoints/ust-yield-rates.md) |
 
-## fallback (23)
+## fallback (24)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
@@ -71,6 +71,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `sec-filings-10k` | rest | `/sec-filings/{symbol}/10k` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
 | `sec-filings-10q` | rest | `/sec-filings/{symbol}/10q` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
 | `sec-filings-8k` | rest | `/sec-filings/{symbol}/8k` | fundamentals | [sec-filings-api.md](../../references/endpoints/sec-filings-api.md) |
+| `sec-filings-form4` | rest | `/sec-filings/{symbol}/form4` | fundamentals | [insider-transactions.md](../../references/endpoints/insider-transactions.md) |
 | `spreads-funding-stress` | rest | `/spreads/funding-stress` | rates | [spreads-funding-stress.md](../../references/endpoints/spreads-funding-stress.md) |
 
 ## documented (37)

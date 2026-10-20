@@ -1509,5 +1509,22 @@
     "aliases": [],
     "response_family": "fundamentals",
     "doc_path": "references/endpoints/sec-filings-api.md"
+  },
+  {
+    "id": "sec-filings-form4",
+    "path": "/sec-filings/{symbol}/form4",
+    "transport": "rest",
+    "support_tier": "fallback",
+    "client_endpoint": "sec-filings/form4",
+    "required_params": [
+      "symbol"
+    ],
+    "optional_params": [
+      "page[offset]",
+      "page[limit]"
+    ],
+    "aliases": [],
+    "response_family": "fundamentals",
+    "doc_path": "references/endpoints/insider-transactions.md"
   }
 ]
