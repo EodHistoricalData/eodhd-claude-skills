@@ -27,7 +27,7 @@ Example: 10 API calls for one request with two tickers.
 | from | No | string (YYYY-MM-DD) | Start date for filtering news |
 | to | No | string (YYYY-MM-DD) | End date for filtering news |
 | limit | No | integer | Number of results (default: 50, min: 1, max: 1000) |
-| offset | No | integer | Offset for pagination (default: 0) |
+| offset | No | integer | Offset for pagination (default: 0, max: 9000; to reach older articles, narrow the period with from and to) |
 | fmt | No | string | Response format: json or xml (default: json) |
 | api_token | Yes | string | Your API access token |
 
