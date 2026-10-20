@@ -832,98 +832,6 @@ for sector, weight in result["top_3_sectors"]:
 
 ---
 
-### 5.2 Sector Relative Positioning
-
-**Description**: Compare ETF sector weights to category average to identify tilts.
-
-**Formula**:
-```
-Sector Tilt = ETF Sector Weight - Category Sector Weight
-Relative Weight = (ETF Sector Weight / Category Sector Weight) - 1
-```
-
-**Fields Used**:
-- `ETF_Data::Sector_Weights::{SECTOR}::Equity_%` (ETF weight)
-- `ETF_Data::Sector_Weights::{SECTOR}::Relative_to_Category` (Category weight)
-
-**Python Example**:
-```python
-def analyze_sector_tilts(ticker, api_token):
-    """
-    Identify sector over/underweights relative to category.
-
-    Returns sectors where ETF deviates significantly from category average.
-    """
-    url = f"https://eodhd.com/api/fundamentals/{ticker}"
-    params = {
-        "api_token": api_token,
-        "fmt": "json",
-        "filter": "ETF_Data::Sector_Weights"
-    }
-
-    response = requests.get(url, params=params).json()
-
-    sector_analysis = {}
-
-    for sector_name, sector_data in response.items():
-        if isinstance(sector_data, dict):
-            etf_weight = float(sector_data.get("Equity_%", "0"))
-            category_weight = float(sector_data.get("Relative_to_Category", "0"))
-
-            # Calculate absolute and relative difference
-            absolute_tilt = etf_weight - category_weight
-            relative_tilt = ((etf_weight / category_weight) - 1) * 100 if category_weight != 0 else 0
-
-            # Categorize tilt
-            if abs(absolute_tilt) > 5:
-                if absolute_tilt > 0:
-                    tilt_category = "Significantly Overweight"
-                else:
-                    tilt_category = "Significantly Underweight"
-            elif abs(absolute_tilt) > 2:
-                if absolute_tilt > 0:
-                    tilt_category = "Moderately Overweight"
-                else:
-                    tilt_category = "Moderately Underweight"
-            else:
-                tilt_category = "Neutral"
-
-            sector_analysis[sector_name] = {
-                "etf_weight": etf_weight,
-                "category_weight": category_weight,
-                "absolute_tilt": absolute_tilt,
-                "relative_tilt_pct": relative_tilt,
-                "tilt_category": tilt_category
-            }
-
-    # Identify most significant tilts
-    significant_tilts = {
-        name: data for name, data in sector_analysis.items()
-        if data["tilt_category"] in ["Significantly Overweight", "Significantly Underweight"]
-    }
-
-    return {
-        "sector_analysis": sector_analysis,
-        "significant_tilts": significant_tilts
-    }
-
-# Example usage
-result = analyze_sector_tilts("VTI.US", "demo")
-print("\nSignificant Sector Tilts:")
-for sector, data in result["significant_tilts"].items():
-    print(f"{sector}: {data['tilt_category']}")
-    print(f"  ETF: {data['etf_weight']:.2f}% vs Category: {data['category_weight']:.2f}%")
-    print(f"  Difference: {data['absolute_tilt']:+.2f}% ({data['relative_tilt_pct']:+.1f}%)")
-```
-
-**Interpretation**:
-- **Overweight (>+5%)**: ETF has intentional bias toward sector
-- **Underweight (<-5%)**: ETF avoids or minimizes sector exposure
-- **Neutral (±2%)**: ETF mirrors category/market weight
-- **Active Share**: Sum of absolute tilts / 2 = measure of active management
-
----
-
 ## 6. Geographic Diversification
 
 ### 6.1 Regional Allocation
@@ -932,7 +840,6 @@ for sector, data in result["significant_tilts"].items():
 
 **Fields Used**:
 - `ETF_Data::World_Regions::{REGION}::Equity_%`
-- `ETF_Data::World_Regions::{REGION}::Relative_to_Category`
 
 **Available Regions**:
 - North America
@@ -963,10 +870,8 @@ def analyze_geographic_diversification(ticker, api_token):
     for region_name, region_data in response.items():
         if isinstance(region_data, dict):
             equity_pct = float(region_data.get("Equity_%", "0"))
-            category_pct = float(region_data.get("Relative_to_Category", "0"))
             regions[region_name] = {
-                "equity_pct": equity_pct,
-                "category_pct": category_pct
+                "equity_pct": equity_pct
             }
 
     # Calculate developed vs emerging
@@ -1078,12 +983,11 @@ def calculate_geographic_hhi(ticker, api_token):
 
 **Fields Used**:
 - `ETF_Data::Valuations_Growth::Valuations_Rates_Portfolio::Price/Prospective Earnings` (Portfolio P/E)
-- `ETF_Data::Valuations_Growth::Valuations_Rates_To_Category::Price/Prospective Earnings` (Category P/E)
 
 **Python Example**:
 ```python
 def analyze_valuation_metrics(ticker, api_token):
-    """Analyze portfolio valuation relative to category."""
+    """Analyze portfolio valuation using the ETF's own valuation ratios."""
     url = f"https://eodhd.com/api/fundamentals/{ticker}"
     params = {
         "api_token": api_token,
@@ -1094,7 +998,6 @@ def analyze_valuation_metrics(ticker, api_token):
     response = requests.get(url, params=params).json()
 
     portfolio = response["Valuations_Rates_Portfolio"]
-    category = response["Valuations_Rates_To_Category"]
 
     # Extract valuation metrics
     pe_portfolio = float(portfolio.get("Price/Prospective Earnings", "0"))
@@ -1102,30 +1005,13 @@ def analyze_valuation_metrics(ticker, api_token):
     ps_portfolio = float(portfolio.get("Price/Sales", "0"))
     pcf_portfolio = float(portfolio.get("Price/Cash Flow", "0"))
 
-    pe_category = float(category.get("Price/Prospective Earnings", "0"))
-    pb_category = float(category.get("Price/Book", "0"))
-    ps_category = float(category.get("Price/Sales", "0"))
-    pcf_category = float(category.get("Price/Cash Flow", "0"))
-
-    # Calculate relative valuations
-    pe_relative = ((pe_portfolio / pe_category) - 1) * 100 if pe_category != 0 else 0
-    pb_relative = ((pb_portfolio / pb_category) - 1) * 100 if pb_category != 0 else 0
-    ps_relative = ((ps_portfolio / ps_category) - 1) * 100 if ps_category != 0 else 0
-    pcf_relative = ((pcf_portfolio / pcf_category) - 1) * 100 if pcf_category != 0 else 0
-
-    # Overall valuation assessment
-    avg_relative = (pe_relative + pb_relative + ps_relative + pcf_relative) / 4
-
-    if avg_relative < -10:
-        valuation_assessment = "Undervalued vs Category"
-    elif avg_relative < -5:
-        valuation_assessment = "Slightly Undervalued vs Category"
-    elif avg_relative < 5:
-        valuation_assessment = "Fairly Valued vs Category"
-    elif avg_relative < 10:
-        valuation_assessment = "Slightly Overvalued vs Category"
+    # Valuation style based on forward P/E
+    if pe_portfolio < 15:
+        valuation_assessment = "Value-oriented"
+    elif pe_portfolio <= 25:
+        valuation_assessment = "Market valuation"
     else:
-        valuation_assessment = "Overvalued vs Category"
+        valuation_assessment = "Growth-oriented"
 
     return {
         "portfolio": {
@@ -1134,27 +1020,13 @@ def analyze_valuation_metrics(ticker, api_token):
             "ps_ratio": ps_portfolio,
             "pcf_ratio": pcf_portfolio
         },
-        "category": {
-            "pe_ratio": pe_category,
-            "pb_ratio": pb_category,
-            "ps_ratio": ps_category,
-            "pcf_ratio": pcf_category
-        },
-        "relative_valuation": {
-            "pe_relative_pct": pe_relative,
-            "pb_relative_pct": pb_relative,
-            "ps_relative_pct": ps_relative,
-            "pcf_relative_pct": pcf_relative,
-            "average_relative_pct": avg_relative
-        },
         "valuation_assessment": valuation_assessment
     }
 
 # Example usage
 result = analyze_valuation_metrics("VTI.US", "demo")
 print(f"Portfolio P/E: {result['portfolio']['pe_ratio']:.2f}")
-print(f"Category P/E: {result['category']['pe_ratio']:.2f}")
-print(f"Relative Valuation: {result['relative_valuation']['pe_relative_pct']:+.2f}%")
+print(f"Portfolio P/B: {result['portfolio']['pb_ratio']:.2f}")
 print(f"Assessment: {result['valuation_assessment']}")
 ```
 
@@ -1162,10 +1034,6 @@ print(f"Assessment: {result['valuation_assessment']}")
 - **P/E < 15**: Value-oriented portfolio
 - **P/E 15-25**: Market valuation
 - **P/E > 25**: Growth-oriented portfolio
-- **Relative Valuation**:
-  - < -10%: Significantly cheaper than category
-  - ±10%: Similar valuation to category
-  - > +10%: Significantly more expensive than category
 
 ---
 
@@ -1262,7 +1130,6 @@ def calculate_valuation_score(ticker, api_token, market_pe=20, market_pb=3, mark
 **Fields Used**:
 - `ETF_Data::Valuations_Growth::Growth_Rates_Portfolio::Long-Term Projected Earnings Growth`
 - `ETF_Data::Valuations_Growth::Growth_Rates_Portfolio::Historical Earnings Growth`
-- `ETF_Data::Valuations_Growth::Growth_Rates_To_Category::Long-Term Projected Earnings Growth`
 
 **Python Example**:
 ```python
@@ -1278,7 +1145,6 @@ def analyze_growth_metrics(ticker, api_token):
     response = requests.get(url, params=params).json()
 
     portfolio_growth = response["Growth_Rates_Portfolio"]
-    category_growth = response["Growth_Rates_To_Category"]
 
     # Extract growth metrics
     earnings_growth_projected = float(portfolio_growth.get("Long-Term Projected Earnings Growth", "0"))
@@ -1286,12 +1152,6 @@ def analyze_growth_metrics(ticker, api_token):
     sales_growth = float(portfolio_growth.get("Sales Growth", "0"))
     cashflow_growth = float(portfolio_growth.get("Cash-Flow Growth", "0"))
     bookvalue_growth = float(portfolio_growth.get("Book-Value Growth", "0"))
-
-    # Category comparisons
-    earnings_growth_category = float(category_growth.get("Long-Term Projected Earnings Growth", "0"))
-
-    # Calculate relative growth
-    earnings_relative = earnings_growth_projected - earnings_growth_category
 
     # Growth consistency score (lower variance = more consistent)
     growth_rates = [earnings_growth_historical, sales_growth, cashflow_growth, bookvalue_growth]
@@ -1318,10 +1178,6 @@ def analyze_growth_metrics(ticker, api_token):
             "bookvalue_growth_pct": bookvalue_growth,
             "average_growth_pct": avg_growth
         },
-        "relative_to_category": {
-            "earnings_difference": earnings_relative,
-            "vs_category": "Higher" if earnings_relative > 2 else "Similar" if earnings_relative > -2 else "Lower"
-        },
         "growth_style": growth_style,
         "consistency_score": consistency_score
     }
@@ -1331,7 +1187,6 @@ result = analyze_growth_metrics("VTI.US", "demo")
 print(f"Growth Style: {result['growth_style']}")
 print(f"Projected Earnings Growth: {result['portfolio_growth']['earnings_projected_pct']:.2f}%")
 print(f"Sales Growth: {result['portfolio_growth']['sales_growth_pct']:.2f}%")
-print(f"vs Category: {result['relative_to_category']['vs_category']}")
 ```
 
 **Interpretation**:
@@ -2135,12 +1990,10 @@ class ETFAnalyzer:
 
         # 5. Valuation Analysis
         portfolio_pe = float(valuations.get("Valuations_Rates_Portfolio", {}).get("Price/Prospective Earnings", "0"))
-        category_pe = float(valuations.get("Valuations_Rates_To_Category", {}).get("Price/Prospective Earnings", "0"))
 
         valuation_analysis = {
             "portfolio_pe": portfolio_pe,
-            "category_pe": category_pe,
-            "relative_valuation": "Cheap" if portfolio_pe < category_pe * 0.9 else "Expensive" if portfolio_pe > category_pe * 1.1 else "Fair"
+            "valuation_style": "Value" if portfolio_pe < 15 else "Growth" if portfolio_pe > 25 else "Blend"
         }
 
         # 6. Income Analysis
@@ -2196,8 +2049,6 @@ print(json.dumps(result, indent=2))
 - Avoid fetching full data when only one section is needed
 
 ### 3. Comparison Analysis
-- Compare ETF metrics to category averages
-- Use relative metrics (vs category) for context
 - Consider peer group comparisons
 
 ### 4. Multi-Factor Analysis

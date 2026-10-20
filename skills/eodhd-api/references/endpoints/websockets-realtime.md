@@ -4,7 +4,7 @@ Status: complete
 Source: financial-apis
 Provider: EODHD (sourced from Finage, proxied via EODHD ACDC service)
 Base URL: `wss://ws.eodhistoricaldata.com`
-Path: `/ws/{market}` where market is `us`, `us-quote`, `forex`, or `crypto`
+Path: `/ws/{market}` where market is one of `us`, `us-quote`, `us-candles`, `us-status`, `eu`, `eu-quote`, `eu-candles`, `eu-status`, `forex`, `crypto`
 Method: WebSocket (persistent connection)
 Auth: `api_token` query parameter validated during handshake
 API Calls Consumption: Does not consume API calls
@@ -40,7 +40,7 @@ EODHD offers real-time finance data for US markets, 1100+ Forex pairs, and 1000+
 **Key Features**:
 - Real-time streaming data (not polling)
 - 50 tickers simultaneously (upgradeable via dashboard)
-- US stocks: pre-market and post-market hours (4 AM - 8 PM EST)
+- US stocks: pre-market and post-market hours (4 AM - 8 PM ET)
 - No API call consumption
 - Persistent connection with push updates
 
@@ -88,13 +88,45 @@ WebSockets is a communication protocol that provides **full-duplex communication
 **Available Streams**:
 - **Trade stream** (`/ws/us`): Last price, size, trade conditions, dark pool indicator
 - **Quote stream** (`/ws/us-quote`): Bid/ask prices and sizes
+- **Minute-bar stream** (`/ws/us-candles`, `/ws/eu-candles`): rolling one-minute OHLCV bars
+- **Trading-status stream** (`/ws/us-status`, `/ws/eu-status`): venue trading status and halts
+- **European equities** (`/ws/eu`, `/ws/eu-quote`): same schemas as the US streams; symbols use
+  `TICKER.EXCHANGE` (`GSK.LSE`, `SAP.XETRA`). EU quotes are a **consolidated** best bid and offer
+  across Cboe BXE, CXE and DXE — best price wins and equal prices add their sizes — whereas the US
+  quote stream is single-venue Cboe EDGX top of book, not an NBBO.
+
+### Things that surprise clients
+
+- **`c` is always an empty array** on the equity trade streams: the exchange top-of-book source
+  carries no per-trade sale conditions. `dp` is always false for the same reason. On the
+  **minute-bar** streams `c` is the CLOSE price instead — the same letter, a different meaning.
+- **The current minute bar is re-sent on every update**, so the same `t` arrives repeatedly with a
+  growing `v`. Take the newest message per `t`; never sum them.
+- **Two error shapes, and the key is the discriminator.** Authentication failures arrive as
+  `{"status": 403, "message": "Server error"}` — key `status` — and they arrive **over the socket
+  after a successful handshake**, so opening the connection does not prove the token was accepted.
+  Everything else uses `status_code`: the 200 ack, 404 for an unknown market, the 422 family for bad
+  subscribe commands, 429 for the connection cap, 500. A parser that only checks `status_code` will
+  hand an auth denial to its data callback as if it were a tick.
+- **64 concurrent connections per API token**, shared across every market.
+- **Unknown or wrongly formatted symbols are ignored silently** — no error, the symbol simply never
+  streams. The one input mistake that does error is sending `symbols` as a JSON array instead of a
+  comma-separated string.
+- **European dual-class tickers** work under their normal name (`ERIC-B.ST`), and the un-hyphenated
+  alias (`ERICB.ST`) is accepted too — but **every message reports the canonical hyphenated ticker
+  in `s`**, whichever form was subscribed. Key state on the `s` received, not the string sent.
+- **Recent closed minute bars are also available over REST**, without a socket:
+  `GET https://ws.eodhistoricaldata.com/history?market={us|eu}&symbol={symbol}&api_token=…`, which
+  returns bars oldest-first in the same shape as the minute-bar stream. Only minutes in which the
+  symbol traded produce a bar, so the array is sparse; an unknown market or symbol, and the crypto
+  and forex markets, return an empty array rather than an error.
 
 **Exchanges Covered**:
 - NASDAQ
 - NYSE
 - Other primary US exchanges
 
-**Extended Hours**: Pre-market and post-market trading supported (4 AM - 8 PM EST)
+**Extended Hours**: Pre-market and post-market trading supported (4 AM - 8 PM ET)
 
 ### Forex
 
@@ -154,7 +186,7 @@ https://eodhd.com/api/exchange-symbol-list/CC?api_token=YOUR_API_KEY&fmt=json
 For US stocks, each message includes a `ms` (market status) field:
 - `open` - Regular trading hours
 - `closed` - Market closed
-- `extended hours` - Pre-market or post-market trading
+- `extended-hours` - Pre-market or post-market trading (hyphenated on the wire)
 
 ---
 
@@ -277,7 +309,7 @@ wss://ws.eodhistoricaldata.com/ws/us?api_token=demo
   "v": 100,            // trade size (number of shares)
   "c": 12,             // trade condition code (numeric, see glossary)
   "dp": false,         // dark pool indicator (true/false)
-  "ms": "open",        // market status: "open" | "closed" | "extended hours"
+  "ms": "open",        // market status: "open" | "closed" | "extended-hours"
   "t": 1725198451165   // timestamp (epoch milliseconds)
 }
 ```
@@ -291,7 +323,7 @@ wss://ws.eodhistoricaldata.com/ws/us?api_token=demo
 | `v` | integer | Trade size in shares |
 | `c` | integer | Trade condition code (see EODHD glossary PDF) |
 | `dp` | boolean | Dark pool indicator - true if off-exchange trade |
-| `ms` | string | Market status: "open", "closed", or "extended hours" |
+| `ms` | string | Market status: "open", "closed", or "extended-hours" |
 | `t` | integer | Timestamp in epoch milliseconds |
 
 **Note**: Trade condition codes (`c` field) map to specific trade types. See the downloadable glossary in EODHD documentation.
@@ -1264,7 +1296,7 @@ Each connection can have multiple tickers subscribed, with a total of **50 symbo
 
 ### Test Ticker
 
-There is no test ticker for US that works 24/7. You should test WebSockets during working hours, including pre-market and post-market hours (4 AM - 8 PM EST).
+There is no test ticker for US that works 24/7. You should test WebSockets during working hours, including pre-market and post-market hours (4 AM - 8 PM ET).
 
 ### Crypto Data Source
 
@@ -1359,7 +1391,7 @@ The EODHD WebSockets Real-Time Data API provides:
 ✅ **Ultra-low latency** streaming data (<50ms transport delay)
 ✅ **50 concurrent symbols** (upgradeable via dashboard)
 ✅ **Zero API call consumption** (does not count toward API limits)
-✅ **Extended hours support** for US stocks (4 AM - 8 PM EST)
+✅ **Extended hours support** for US stocks (4 AM - 8 PM ET)
 ✅ **1100+ Forex pairs** and **1000+ cryptocurrencies**
 ✅ **Trade and quote streams** for US equities
 ✅ **Persistent connections** with push updates

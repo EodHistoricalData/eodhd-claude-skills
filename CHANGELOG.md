@@ -2,7 +2,28 @@
 
 All notable changes to this plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+
 ## [Unreleased]
+
+## [0.8.0] — 2026-08-26
+
+### Added
+
+- Real-time WebSocket reference now covers all ten markets the service serves — the European
+  equity streams and the derived minute-bar and trading-status ones — with the behaviours that
+  otherwise surface as support tickets: `c` is empty on the trade streams but the close price on
+  the candle streams, the current bar is re-sent and must not be summed, unknown symbols are
+  ignored silently, and a European dual-class ticker always answers under its canonical
+  hyphenated name whichever alias was subscribed.
+- New endpoint reference and registry entry for `GET /history`, the recent closed one-minute bars
+  used to fill a gap after a dropped socket. Registered as `documented` with no client endpoint on
+  purpose: it is served by the real-time host rather than `BASE_URL`.
+
+### Fixed
+
+- Pre/post-market hours are stated as ET rather than EST in four places. The clock times were
+  right, but half the year that is EDT, and the `ms` wire value is hyphenated (`extended-hours`).
+
 
 ## [0.7.0] — 2026-07-27
 
