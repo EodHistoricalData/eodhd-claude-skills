@@ -27,11 +27,14 @@ Example: 10 API calls for one request with two tickers.
 | from | No | string (YYYY-MM-DD) | Start date for filtering news |
 | to | No | string (YYYY-MM-DD) | End date for filtering news |
 | limit | No | integer | Number of results (default: 50, min: 1, max: 1000) |
-| offset | No | integer | Offset for pagination (default: 0, max: 9000; to reach older articles, narrow the period with from and to) |
+| offset | No | integer | Offset for pagination (default: 0, max: 10000; `offset + limit` must not exceed 10000; to reach older articles, narrow the period with from and to) |
+| direction | No | integer | `0` (default) = newest first. `1` = articles in the order they entered the database, so you can page forward with `offset` without duplicates. With `direction=1`, `from` and `to` are required and the window between them must not exceed 31 days (both ends counted); otherwise the API returns 422. Any other value returns 422 |
 | fmt | No | string | Response format: json or xml (default: json) |
 | api_token | Yes | string | Your API access token |
 
 **Note**: At least one of `s` (ticker) or `t` (tag) is required.
+
+**Forward pagination (`direction=1`)**: pages follow arrival order, not publication date, so dates inside a page are not strictly ascending. Keep `from`/`to` fixed, increase `offset` by `limit` each request, and stop when a page returns fewer than `limit` articles or `offset + limit` would exceed 10000.
 
 ## Response (shape)
 
@@ -92,8 +95,14 @@ curl "https://eodhd.com/api/news?t=technology&limit=10&api_token=demo&fmt=json"
 # News with date range
 curl "https://eodhd.com/api/news?s=AAPL.US&from=2025-01-01&to=2025-01-31&api_token=demo&fmt=json"
 
+# Forward pagination in arrival order (from/to required, max 31 days); next page: offset=100
+curl "https://eodhd.com/api/news?s=AAPL.US&from=2025-01-01&to=2025-01-31&direction=1&limit=100&offset=0&api_token=demo&fmt=json"
+
 # Using the helper client
 python eodhd_client.py --endpoint news --symbol AAPL.US --limit 10
+
+# Forward pagination with the helper client
+python eodhd_client.py --endpoint news --symbol AAPL.US --from-date 2025-01-01 --to-date 2025-01-31 --direction 1 --limit 100 --offset 0
 
 # With date filtering
 python eodhd_client.py --endpoint news --symbol TSLA.US --from-date 2025-01-01 --to-date 2025-01-31 --limit 20
@@ -133,7 +142,7 @@ For testing with the "demo" API key, these tickers are available:
 - News is aggregated from multiple financial news portals
 - AI-powered tags make search more flexible beyond standard 50 tags
 - Content may be truncated for some sources
-- Use pagination (`offset`, `limit`) for large result sets
+- Use pagination (`offset`, `limit`) for large result sets; `offset + limit` is capped at 10000. For stable forward paging use `direction=1` with a `from`/`to` window of up to 31 days
 - Available in: Standalone package, All-In-One, EOD Historical Data, Fundamentals Data Feed, Free plan
 - **One topic per request**: You can request only one tag/topic per API request.
 - **Timezone**: All news timestamps are in **UTC**.
