@@ -160,7 +160,7 @@ Activate this skill when the user is performing or asking for:
 | `intraday` | Intraday bars | `--symbol`, `--interval` (1m/5m/1h) |
 | `real-time` | Live quotes | `--symbol` |
 | `fundamentals` | Company data | `--symbol` |
-| `news` | Financial news with sentiment | `--symbol`, `--limit`, `--from-date` |
+| `news` | Financial news with sentiment | `--symbol`, `--limit`, `--from-date`, `--direction` |
 | `sentiment` | Daily sentiment scores | `--symbol`, `--from-date`, `--to-date` |
 | `news-word-weights` | Trending topics in news (AI-processed, higher latency) | `--symbol`, `--from-date`, `--to-date`, `--limit` |
 | `technical` | Technical indicators | `--symbol`, `--function`, `--period` |

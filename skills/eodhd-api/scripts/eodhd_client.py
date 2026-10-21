@@ -16,6 +16,8 @@ Examples:
 
   # Company news
   python eodhd_client.py --endpoint news --symbol AAPL.US --limit 10
+  # News in arrival order, paging forward (window max 31 days)
+  python eodhd_client.py --endpoint news --symbol AAPL.US --from-date 2025-01-01 --to-date 2025-01-31 --direction 1 --limit 100 --offset 0
 
   # Dividends
   python eodhd_client.py --endpoint dividends --symbol AAPL.US --from-date 2020-01-01
@@ -493,6 +495,13 @@ For exchange-symbol-list and eod-bulk-last-day, use exchange code (e.g., US, LSE
     parser.add_argument("--limit", type=int, help="Limit results")
     parser.add_argument("--offset", type=int, help="Offset for pagination")
     parser.add_argument(
+        "--direction",
+        type=int,
+        choices=[0, 1],
+        help="News only: 0 = newest first (default); 1 = arrival order for forward "
+        "paging with --offset (requires --from-date and --to-date, window max 31 days)",
+    )
+    parser.add_argument(
         "--function",
         help="Technical indicator function (sma, ema, wma, rsi, macd, stoch, cci, adx, atr, bbands)",
     )
@@ -662,6 +671,8 @@ def main() -> int:
     # Special handling for news endpoint (uses 's' parameter)
     if args.endpoint == "news" and args.symbol:
         params["s"] = args.symbol
+    if args.endpoint == "news" and args.direction is not None:
+        params["direction"] = args.direction
 
     # Special handling for sentiment endpoint
     if args.endpoint == "sentiment" and args.symbol:

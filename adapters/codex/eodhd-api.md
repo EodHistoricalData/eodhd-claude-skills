@@ -73,6 +73,13 @@ python skills/eodhd-api/scripts/eodhd_client.py \
   --endpoint news \
   --symbol TSLA.US \
   --limit 10
+
+# Forward pagination in arrival order (from/to required, max 31 days)
+python skills/eodhd-api/scripts/eodhd_client.py \
+  --endpoint news \
+  --symbol TSLA.US \
+  --from-date 2025-01-01 --to-date 2025-01-31 \
+  --direction 1 --limit 100 --offset 0
 ```
 
 ### Stock screening
