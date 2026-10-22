@@ -48,6 +48,7 @@ https://eodhd.com/api/fundamentals/{TICKER}?api_token={API_TOKEN}&fmt=json&filte
 2. **Percentage Formats**: Some are decimals (e.g., "0.00030" = 0.03%), others are percentages (e.g., "0.03" = 0.03%)
 3. **API Consumption**: Each request consumes 10 API calls
 4. **Response Size**: Full ETF data can exceed 100 KB; use filters to reduce payload
+5. **Numeric types in `ETF_Data` are not stable (known regression, reported 2026-10-22).** The fields documented as numeric strings (`Yield`, `NetExpenseRatio`, `TotalAssets`, `Performance.*`, `Asset_Allocation.*`, `Market_Capitalisation.*`, `*.Equity_%`, `Fixed_Income.*.Fund_%`) can arrive as JSON numbers when the value is non-zero and fractional. Coerce with `float(x)` and treat `null`, `"NA"`, `"0000-00-00"` as missing before any calculation.
 
 ---
 

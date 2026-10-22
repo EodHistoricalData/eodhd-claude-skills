@@ -230,6 +230,12 @@ https://eodhd.com/api/fundamentals/VTI.US?api_token=demo&fmt=json&filter=ETF_Dat
 
 ### ETF_Data Subsections
 
+> **Type note — parse numeric fields tolerantly (known regression, reported 2026-10-22).** In `ETF_Data` the numeric values listed below are documented, and normally returned, as **numeric strings** (`"1.330000"`). A known issue currently returns some of them as JSON **numbers**: only values that are non-zero and fractional are affected, while `"0"`, `"0.00"` and whole-number values stay strings. So the same field can be a string for one ticker and a number for another, and a single response can mix both. Accept either type.
+>
+> Affected: `Yield`, `Max_Annual_Mgmt_Charge`, `Ongoing_Charge`, `NetExpenseRatio`, `AnnualHoldingsTurnover`, `TotalAssets`, `Average_Mkt_Cap_Mil`; `Performance.*` (`1y_Volatility`, `3y_Volatility`, `3y_ExpReturn`, `3y_SharpRatio`, `Returns_YTD`, `Returns_1Y`, `Returns_3Y`, `Returns_5Y`, `Returns_10Y`); `Market_Capitalisation.*`; `Asset_Allocation.*` (`Long_%`, `Short_%`, `Net_Assets_%`); `World_Regions.*.Equity_%`; `Sector_Weights.*.Equity_%`; `Fixed_Income.*.Fund_%`.
+> Not affected: `Holdings` / `Top_10_Holdings` (`Assets_%` is always a number), `Holdings_Count` (integer), `Valuations_Growth` (always `null`).
+> Missing values are not uniform: `null`, `"NA"`, `"0.00"`, `"0.0000"` and `"0000-00-00"` all occur.
+
 The `ETF_Data` section contains the following subsections:
 
 1. **Top-level fields** - Basic ETF information

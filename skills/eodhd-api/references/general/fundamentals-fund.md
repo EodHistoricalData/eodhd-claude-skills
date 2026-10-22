@@ -170,6 +170,11 @@ https://eodhd.com/api/fundamentals/SWPPX.US?api_token=demo&fmt=json&filter=Mutua
 
 ### MutualFund_Data Subsections
 
+> **Type note — parse numeric fields tolerantly (known regression, reported 2026-10-22).** In `MutualFund_Data` the values below are documented, and normally returned, as **numeric strings**. A known issue currently returns some of them as JSON **numbers** (only non-zero fractional values; zero and whole-number values stay strings), so one field can differ between funds and a response can mix both. Accept either type.
+>
+> Affected: `Yield`, `Yield_YTD`, `Yield_1Year_YTD`, `Yield_3Year_YTD`, `Yield_5Year_YTD`, `Expense_Ratio`, `Nav`, `Prev_Close_Price`; `Asset_Allocation.*` (`Long_%`, `Short_%`, `Net_%`).
+> `Portfolio_Net_Assets` and `Share_Class_Net_Assets` are whole numbers and stay strings. Fields that come from JSON sources (`Market_Capitalization.*.Portfolio_%`, `Sector_Weights`, `World_Regions`) keep the type they had.
+
 The `MutualFund_Data` section contains the following subsections:
 
 1. **Top-level fields** - Basic fund metrics (NAV, yields, expense ratio)
