@@ -99,6 +99,10 @@ Examples:
   python eodhd_client.py --endpoint sanctions/programs
   python eodhd_client.py --endpoint sanctions/sources
 
+  # ETF Holdings (beta, US-listed ETFs only; 10 API calls per request)
+  python eodhd_client.py --endpoint etf/holdings --symbol XLE
+  python eodhd_client.py --endpoint etf/held-by --symbol NVDA --limit 3 --offset 0
+
   # Interest Rates
   python eodhd_client.py --endpoint rates/reference-rates --filter-param code=SOFR --filter-param from=2025-01-01
   python eodhd_client.py --endpoint rates/policy-rates --filter-param central_bank=ECB
@@ -328,6 +332,12 @@ def build_path(endpoint: str, symbol: str | None, function: str | None = None) -
     if endpoint == "sec-filings/form4":
         return f"/sec-filings/{symbol}/form4"
 
+    # ETF Holdings API (beta, US-listed ETFs only; SEC N-PORT)
+    if endpoint == "etf/holdings":
+        return f"/etf/holdings/{urllib.parse.quote(symbol, safe='')}"
+    if endpoint == "etf/held-by":
+        return f"/etf/security/{urllib.parse.quote(symbol, safe='')}/held-by"
+
     raise ClientError(f"Unsupported endpoint: {endpoint}")
 
 
@@ -401,6 +411,9 @@ SUPPORTED_ENDPOINTS = [
     "sec-filings/10q",
     "sec-filings/8k",
     "sec-filings/form4",
+    # ETF Holdings API (beta; US-listed ETFs only)
+    "etf/holdings",
+    "etf/held-by",
 ]
 
 
@@ -470,6 +483,7 @@ Supported endpoints:
   Interest Rates: rates/reference-rates, rates/policy-rates, spreads/funding-stress
   Real Estate:    real-estate/countries, real-estate, real-estate/detailed, real-estate/detailed/series
   SEC Filings:    sec-filings, sec-filings/10k, sec-filings/10q, sec-filings/8k, sec-filings/form4 (per-form: --limit/--offset paginate)
+  ETF Holdings:   etf/holdings (--symbol VTI), etf/held-by (--symbol NVDA; --limit/--offset paginate) — beta, US-listed ETFs only
 
 Note: news-word-weights may have longer response times due to AI processing.
 
@@ -855,6 +869,25 @@ def main() -> int:
                 params["page[limit]"] = args.limit
             if args.offset is not None:
                 params["page[offset]"] = args.offset
+
+    # ETF Holdings API (beta). Symbol lives in the path. Neither endpoint takes
+    # fmt or a date range. etf/holdings returns every position in one response
+    # (no pagination); etf/held-by paginates via page[offset]/page[limit]
+    # (default offset 0, limit 100, max 5000).
+    if args.endpoint in ("etf/holdings", "etf/held-by"):
+        for _k in ("fmt", "from", "to", "interval", "limit", "offset"):
+            params.pop(_k, None)
+        if args.endpoint == "etf/held-by":
+            if args.limit is not None:
+                params["page[limit]"] = args.limit
+            if args.offset is not None:
+                params["page[offset]"] = args.offset
+        elif args.limit is not None or args.offset is not None:
+            print(
+                "Error: endpoint 'etf/holdings' is not paginated; drop --limit/--offset",
+                file=sys.stderr,
+            )
+            return 2
 
     query = urllib.parse.urlencode(params)
     url = args.base_url.rstrip("/") + path + "?" + query

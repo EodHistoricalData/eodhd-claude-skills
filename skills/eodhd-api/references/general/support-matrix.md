@@ -45,7 +45,7 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `ust-real-yield-rates` | rest | `/ust/real-yield-rates` | rates | [ust-real-yield-rates.md](../../references/endpoints/ust-real-yield-rates.md) |
 | `ust-yield-rates` | rest | `/ust/yield-rates` | rates | [ust-yield-rates.md](../../references/endpoints/ust-yield-rates.md) |
 
-## fallback (24)
+## fallback (26)
 
 | id | transport | path | response_family | doc |
 |---|---|---|---|---|
@@ -56,6 +56,8 @@ Source of truth: `registry/capabilities.json`. Regenerate with `python registry/
 | `credit-risk-sovereign-credit-ratings` | rest | `/credit-risk/sovereign/credit-ratings` | risk-report | [credit-risk-sovereign-credit-ratings.md](../../references/endpoints/credit-risk-sovereign-credit-ratings.md) |
 | `credit-risk-sovereign-default-spreads` | rest | `/credit-risk/sovereign/default-spreads` | risk-report | [credit-risk-sovereign-default-spreads.md](../../references/endpoints/credit-risk-sovereign-default-spreads.md) |
 | `credit-risk-sovereign-risk-premium` | rest | `/credit-risk/sovereign/risk-premium` | risk-report | [credit-risk-sovereign-risk-premium.md](../../references/endpoints/credit-risk-sovereign-risk-premium.md) |
+| `etf-held-by` | rest | `/etf/security/{symbol}/held-by` | fundamentals | [etf-held-by.md](../../references/endpoints/etf-held-by.md) |
+| `etf-holdings` | rest | `/etf/holdings/{symbol}` | fundamentals | [etf-holdings.md](../../references/endpoints/etf-holdings.md) |
 | `index-components` | rest | `/fundamentals/{index}` | fundamentals | [index-components.md](../../references/endpoints/index-components.md) |
 | `rates-policy-rates` | rest | `/rates/policy-rates` | rates | [rates-policy-rates.md](../../references/endpoints/rates-policy-rates.md) |
 | `rates-reference-rates` | rest | `/rates/reference-rates` | rates | [rates-reference-rates.md](../../references/endpoints/rates-reference-rates.md) |
