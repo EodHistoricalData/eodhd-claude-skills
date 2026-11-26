@@ -1526,5 +1526,36 @@
     "aliases": [],
     "response_family": "fundamentals",
     "doc_path": "references/endpoints/insider-transactions.md"
+  },
+  {
+    "id": "etf-holdings",
+    "path": "/etf/holdings/{symbol}",
+    "transport": "rest",
+    "support_tier": "fallback",
+    "client_endpoint": "etf/holdings",
+    "required_params": [
+      "symbol"
+    ],
+    "optional_params": [],
+    "aliases": [],
+    "response_family": "fundamentals",
+    "doc_path": "references/endpoints/etf-holdings.md"
+  },
+  {
+    "id": "etf-held-by",
+    "path": "/etf/security/{symbol}/held-by",
+    "transport": "rest",
+    "support_tier": "fallback",
+    "client_endpoint": "etf/held-by",
+    "required_params": [
+      "symbol"
+    ],
+    "optional_params": [
+      "page[offset]",
+      "page[limit]"
+    ],
+    "aliases": [],
+    "response_family": "fundamentals",
+    "doc_path": "references/endpoints/etf-held-by.md"
   }
 ]
